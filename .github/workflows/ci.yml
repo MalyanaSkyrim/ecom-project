@@ -1,0 +1,47 @@
+name: Continuous Integration
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  ci:
+    name: 'Continuous Integration'
+    runs-on: ubuntu-latest
+    container:
+      image: node:22
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📦 Add yarn
+        run: |
+          curl -fsSL --create-dirs -o $HOME/bin/yarn \
+          https://github.com/yarnpkg/yarn/releases/download/v1.22.22/yarn-1.22.22.js
+          chmod +x $HOME/bin/yarn
+          echo "$HOME/bin" >> $GITHUB_PATH
+
+      - name: 🌍 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.11.0'
+
+      - name: 🚚 Install dependencies
+        run: yarn install
+
+      - name: Prisma generate
+        run: yarn db:generate
+
+      - name: Run Spellcheck
+        run: yarn spell
+
+      - name: Check code formatting
+        run: yarn check:prettier
+
+      - name: Lint and typecheck the code
+        run: yarn typecheck && yarn lint
+
+      - name: Build
+        run: yarn run build

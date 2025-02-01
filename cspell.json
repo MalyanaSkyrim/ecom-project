@@ -1,0 +1,65 @@
+{
+  "version": "0.2",
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "words": [
+    "cockroachdb",
+    "crdb",
+    "ianvs",
+    "MALYANA",
+    "manypkg",
+    "nextjs",
+    "preconfigured",
+    "serviceworker",
+    "shadcn",
+    "trivago",
+    "trpc",
+    "tsup",
+    "turbopack",
+    "Turborepo",
+    "typecheck"
+  ],
+  "enableFiletypes": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "markdown",
+    "mdx",
+    "json"
+  ],
+  "files": [
+    ".changeset/*.md",
+    "**/*.md",
+    "**/*.mdx",
+    "**/*.json",
+    "**/*.cjs",
+    "**/*.mjs",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "useGitignore": true,
+  "overrides": [
+    {
+      // set caseSensitive to false. Some language dictionaries (like German, French, Spanish) turn on case sensitivity by default. Setting the global "caseSensitive": false is not sufficient
+      "filename": "*",
+      "languageSettings": [
+        {
+          "languageId": "*",
+          "caseSensitive": false
+        }
+      ]
+    },
+    {
+      "filename": "**/locales/fr/*.json",
+      "language": "en,fr"
+    },
+    {
+      "filename": "**/locales/fr.json",
+      "language": "en,fr"
+    }
+  ],
+  "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
+  "ignorePaths": ["node_modules", "**/CHANGELOG.md"]
+}

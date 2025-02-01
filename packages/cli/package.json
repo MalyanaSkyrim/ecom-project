@@ -1,0 +1,31 @@
+{
+  "name": "turbo-stack",
+  "version": "1.2.5",
+  "description": "Turbo-stack CLI is a command-line tool to bootstrap a preconfigured monorepo architecture optimized for modern development workflows",
+  "main": "build/index.cjs",
+  "module": "build/index.js",
+  "license": "MIT",
+  "type": "module",
+  "homepage": "https://github.com/MalyanaSkyrim/turbo-stack/tree/master/packages/cli#readme",
+  "repository": "https://github.com/MalyanaSkyrim/turbo-stack",
+  "bin": {
+    "turbo-stack": "./build/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "lint": "eslint .",
+    "start": "node build/index.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@types/adm-zip": "^0.5.7",
+    "adm-zip": "^0.5.16",
+    "chalk": "^5.4.1",
+    "commander": "^13.0.0",
+    "inquirer": "^12.3.0",
+    "node-fetch": "^3.3.2",
+    "ora": "^8.1.1",
+    "simple-git": "^3.27.0",
+    "zx": "^8.3.0"
+  }
+}

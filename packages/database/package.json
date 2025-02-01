@@ -1,0 +1,26 @@
+{
+  "name": "@ecom/database",
+  "version": "0.0.0",
+  "description": "Manage access to database using Prisma ORM",
+  "license": "MIT",
+  "main": "build/index.js",
+  "types": "src/index.ts",
+  "scripts": {
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:seed": "tsx prisma/seeds/initialSeed.ts",
+    "dev": "prisma studio --browser none",
+    "build": "NODE_ENV=production tsup",
+    "db:generate": "prisma generate",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@ecom/config": "*",
+    "prisma": "^6.1.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.1.0",
+    "exponential-backoff": "^3.1.1"
+  }
+}

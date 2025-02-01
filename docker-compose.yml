@@ -1,0 +1,11 @@
+services:
+  cockroach:
+    container_name: monorepo-starter-cockroach-dev
+    image: cockroachdb/cockroach:latest
+    restart: always
+    ports:
+      - '26258:26257'
+      - '8082:8080'
+    command: start-single-node --insecure
+    volumes:
+      - '${PWD}/cockroach-data/crdb:/cockroach/cockroach-data'

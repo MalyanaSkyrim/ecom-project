@@ -1,0 +1,50 @@
+{
+  "name": "ecom-project",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "turbo start",
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "spell": "cspell lint --no-progress --relative",
+    "typecheck": "turbo typecheck",
+    "postinstall": "yarn manypkg check",
+    "with-env": "dotenv -e .env --",
+    "check:prettier": "yarn prettier -c .",
+    "db:start": "docker compose -f docker-compose.yml up -d",
+    "db:generate": "yarn with-env turbo db:generate",
+    "db:stop": "docker compose -f docker-compose.yml down",
+    "db:push": "yarn with-env yarn workspace @ecom/database db:push",
+    "db:migrate": "yarn with-env yarn workspace @ecom/database db:migrate",
+    "db:seed": "yarn with-env yarn build --filter @ecom/database --filter @ecom/auth-kit && yarn workspace @ecom/database db:seed",
+    "clean": "find . -name node_modules -o -name build -o -name .next -o -name .turbo -o -name dist -o -name .docusaurus -o -name generated -type d -prune | xargs rm -rf"
+  },
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@cspell/dict-fr-fr": "^2.2.5",
+    "@ecom/config": "*",
+    "@manypkg/cli": "^0.23.0",
+    "@t3-oss/env-core": "^0.6.0",
+    "@t3-oss/env-nextjs": "^0.6.0",
+    "@types/node": "^22.9.0",
+    "cspell": "^8.17.1",
+    "dotenv": "^16.4.7",
+    "dotenv-cli": "^8.0.0",
+    "next-intl": "^3.26.3",
+    "prettier": "^3.2.5",
+    "tsc": "^2.0.4",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
+  }
+}
