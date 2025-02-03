@@ -1,6 +1,6 @@
 services:
   cockroach:
-    container_name: monorepo-starter-cockroach-dev
+    container_name: ecom-project-cockroach-dev
     image: cockroachdb/cockroach:latest
     restart: always
     ports:

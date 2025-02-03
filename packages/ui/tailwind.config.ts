@@ -13,6 +13,7 @@ const config = {
       fontFamily: {
         sans: ['var(--font-sans)'],
         mono: ['var(--font-mono)'],
+        integralCF: ['var(--font-integral-cf)'],
       },
       colors: {
         border: 'hsl(var(--border))',

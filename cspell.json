@@ -4,6 +4,7 @@
   "words": [
     "cockroachdb",
     "crdb",
+    "ecom",
     "ianvs",
     "MALYANA",
     "manypkg",
@@ -60,6 +61,11 @@
       "language": "en,fr"
     }
   ],
-  "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
-  "ignorePaths": ["node_modules", "**/CHANGELOG.md"]
+  "import": [
+    "@cspell/dict-fr-fr/cspell-ext.json"
+  ],
+  "ignorePaths": [
+    "node_modules",
+    "**/CHANGELOG.md"
+  ]
 }
