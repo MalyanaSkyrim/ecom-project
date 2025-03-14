@@ -8,6 +8,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.6",
     "@radix-ui/react-slot": "^1.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -17,6 +18,7 @@
     "react-dom": "^19.0.0",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
+    "vaul": "^1.1.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -30,13 +32,14 @@
     "tailwindcss": "^3.4.14"
   },
   "exports": {
+    "./*": "./src/index.ts",
     "./globals.css": "./src/styles/globals.css",
     "./postcss.config": "./postcss.config.mjs",
     "./tailwind.config": "./tailwind.config.ts",
     "./postcss.config.mjs": "./postcss.config.mjs",
     "./lib/*": "./src/lib/*.ts",
     "./components/*": "./src/components/*.tsx",
-    "./hooks/*": "./src/hooks/*.ts",
+    "./hooks": "./src/hooks/index.ts",
     "./src/styles/globals.css": "./src/styles/globals.css",
     "./src/**/*.stories.tsx": "./src/**/*.stories.tsx"
   }

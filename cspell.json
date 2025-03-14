@@ -17,7 +17,8 @@
     "tsup",
     "turbopack",
     "Turborepo",
-    "typecheck"
+    "typecheck",
+    "vaul"
   ],
   "enableFiletypes": [
     "javascript",

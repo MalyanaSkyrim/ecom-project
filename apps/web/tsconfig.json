@@ -4,7 +4,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
-      "@ecom/ui/*": ["../../packages/ui/src/*"]
+      "@ecom/ui/*": ["../../packages/ui/src/*"],
+      "@ecom/ui": ["../../packages/ui/src/index.ts"],
+      "@ecom/ui/hooks": ["../../packages/ui/src/hooks/index.ts"]
     },
     "plugins": [
       {

@@ -4,7 +4,9 @@
     //"outDir": "dist"
     "baseUrl": ".",
     "paths": {
-      "@ecom/ui/*": ["./src/*"]
+      "@ecom/ui": ["./src/index.ts"],
+      "@ecom/ui/*": ["./src/*"],
+      "@ecom/ui/hooks": ["./src/hooks/index.ts"]
     },
     "jsx": "react"
   },
