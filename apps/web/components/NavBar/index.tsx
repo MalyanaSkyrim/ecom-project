@@ -21,14 +21,14 @@ const LeftNavBar = () => {
           SHOP.CO
         </Link>
       </div>
-      <div className="hidden items-center space-x-3 whitespace-nowrap text-sm md:flex lg:space-x-6 lg:text-base">
+      <div className="hidden items-center space-x-3 whitespace-nowrap text-sm md:flex lg:space-x-4 lg:text-base">
         {navItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
             className={classMerge(
-              'px-1 py-[2px] font-medium outline-none transition-all',
-              'border-b-2 border-transparent hover:border-gray-800',
+              'px-1 py-[2px] outline-none transition-all',
+              'border-b-[1.5px] border-transparent hover:border-gray-800',
               'focus:rounded focus:ring-2 focus:ring-neutral-700',
             )}>
             {item.label}

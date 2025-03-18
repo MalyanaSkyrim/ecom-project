@@ -1,0 +1,16 @@
+import { Button, GoogleLogo } from '@ecom/ui'
+import { signIn } from 'next-auth/react'
+
+const GoogleSignInButton = () => {
+  return (
+    <Button
+      onClick={() => signIn('google')}
+      className="w-full"
+      variant="outline">
+      <GoogleLogo className="h-6 w-6" />
+      <span>Sign up with Google</span>
+    </Button>
+  )
+}
+
+export default GoogleSignInButton
