@@ -1,6 +1,16 @@
 {
-  "HomePage": {
-    "title": "Hello world!",
-    "about": "Go to the about page"
+  "profile": "Profile",
+  "signin": "Sign In",
+  "signup": "Sign Up",
+  "logout": "Logout",
+  "languages": "Languages",
+  "en": "English",
+  "fr": "French",
+  "app_description": "Discover Quality. Shop with Confidence.",
+  "navigation": {
+    "shop": "Shop",
+    "new_arrivals": "New Arrivals",
+    "brands": "Brands",
+    "about": "About"
   }
 }

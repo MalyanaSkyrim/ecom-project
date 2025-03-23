@@ -13,12 +13,15 @@ import {
 import { useWindowSize } from '@ecom/ui/hooks'
 import { classMerge } from '@ecom/ui/lib/utils'
 import { Menu, X } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 
 const MobileNavBar = () => {
   const { width } = useWindowSize()
 
   const isMobile = width < 640
+
+  const t = useTranslations('navigation')
 
   return (
     <Drawer direction={isMobile ? 'bottom' : 'left'} fixed modal>
@@ -50,10 +53,10 @@ const MobileNavBar = () => {
               href={item.href}
               className={classMerge(
                 'block rounded px-6 py-2 text-lg outline-none transition-all',
-                'focus:ring-2 focus:ring-neutral-700',
+                'focus:ring-1 focus:ring-neutral-700',
                 'hover:bg-primary hover:text-white',
               )}>
-              {item.label}
+              {t(item.label)}
             </Link>
           ))}
         </div>

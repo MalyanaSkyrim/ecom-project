@@ -24,7 +24,7 @@ const Layout = async ({
       <body
         className={`${fontSans.variable} ${fontMono.variable} ${fontIntegralCF.variable} flex min-h-screen flex-col bg-[#F2F0F1] font-sans antialiased`}>
         <SessionWrapper>
-          <NextIntlClientProvider messages={messages}>
+          <NextIntlClientProvider locale={locale} messages={messages}>
             <Providers>{children}</Providers>
           </NextIntlClientProvider>
         </SessionWrapper>

@@ -2,11 +2,13 @@
 
 import { navItems } from '@/lib/navigation'
 import { classMerge } from '@ecom/ui/lib/utils'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 
 import MobileNavBar from './MobileNavBar'
 
 const LeftNavBar = () => {
+  const t = useTranslations('navigation')
   return (
     <div className="flex items-center space-x-5 lg:space-x-10">
       <div className="flex items-center space-x-2">
@@ -28,9 +30,9 @@ const LeftNavBar = () => {
             className={classMerge(
               'px-1 py-[2px] outline-none transition-all',
               'border-b-[1.5px] border-transparent hover:border-gray-800',
-              'focus:rounded focus:ring-2 focus:ring-neutral-700',
+              'focus:rounded focus:ring-1 focus:ring-neutral-700',
             )}>
-            {item.label}
+            {t(item.label)}
           </Link>
         ))}
       </div>

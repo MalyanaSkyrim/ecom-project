@@ -1,6 +1,7 @@
 {
   "extends": "@ecom/config/typescript/nextjs.json",
   "compilerOptions": {
+    "allowArbitraryExtensions": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
@@ -15,6 +16,8 @@
     ]
   },
   "include": [
+    "global.d.ts",
+    "types/**/*.d.ts",
     "types/**/*.ts",
     "next-env.d.ts",
     "next.config.mjs",

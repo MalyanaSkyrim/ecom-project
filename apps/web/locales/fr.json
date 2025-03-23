@@ -1,6 +1,16 @@
 {
-  "HomePage": {
-    "title": "Bonjour le monde!",
-    "about": "Aller à la page à propos"
+  "profile": "Profile",
+  "signin": "Connexion",
+  "signup": "Créer un compte",
+  "logout": "Déconnexion",
+  "languages": "Langues",
+  "en": "Anglais",
+  "fr": "Français",
+  "app_description": "Découvrez la qualité. Faites vos achats en toute confiance.",
+  "navigation": {
+    "shop": "Boutique",
+    "new_arrivals": "Nouveautés",
+    "brands": "Marques",
+    "about": "À propos"
   }
 }

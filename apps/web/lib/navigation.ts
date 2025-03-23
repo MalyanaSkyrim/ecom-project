@@ -1,23 +1,25 @@
+import { NestedKeyOf } from 'next-intl'
+
 export type NavItem = {
-  label: string
+  label: NestedKeyOf<IntlMessages['navigation']>
   href: string
 }
 
 export const navItems = [
   {
-    label: 'Shop',
+    label: 'shop',
     href: '/shop',
   },
   {
-    label: 'On Sale',
-    href: '/on-sale',
-  },
-  {
-    label: 'New Arrivals',
+    label: 'new_arrivals',
     href: '/new-arrivals',
   },
   {
-    label: 'Brands',
+    label: 'brands',
     href: '/brands',
+  },
+  {
+    label: 'about',
+    href: '/about',
   },
 ] satisfies NavItem[]
