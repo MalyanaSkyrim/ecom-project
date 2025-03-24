@@ -1,0 +1,12 @@
+{
+  "extends": "@ecom/config/typescript/server.json",
+  "compilerOptions": {
+    "jsx": "react",
+    "outDir": "./build/",
+    "paths": {
+      "@ecom/config/*": ["../../packages/config/*"]
+    }
+  },
+  "include": ["./src/", "./scripts/", "./tsup.config.ts"],
+  "exclude": ["**/node_modules", "**/.*/"]
+}
