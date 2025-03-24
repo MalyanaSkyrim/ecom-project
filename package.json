@@ -35,6 +35,7 @@
     "@manypkg/cli": "^0.23.0",
     "@t3-oss/env-core": "^0.6.0",
     "@t3-oss/env-nextjs": "^0.6.0",
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.9.0",
     "cspell": "^8.17.1",
     "dotenv": "^16.4.7",
@@ -45,6 +46,7 @@
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
     "turbo": "^2.3.3",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vitest": "^3.0.9"
   }
 }

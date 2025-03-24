@@ -1,0 +1,26 @@
+{
+  "name": "@ecom/api",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "E-commerce api",
+  "main": "./src/server.ts",
+  "author": "MALYANA Mohamed",
+  "license": "MIT",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fastify/autoload": "^6.2.0",
+    "@fastify/rate-limit": "^10.2.2",
+    "@fastify/sensible": "^6.0.3",
+    "@fastify/swagger": "^9.4.2",
+    "date-fns": "^4.1.0",
+    "fastify": "^5.2.1",
+    "fastify-zod": "^1.4.0",
+    "ioredis": "^5.6.0",
+    "tiny-glob": "^0.2.9"
+  },
+  "devDependencies": {
+    "@ecom/config": "*"
+  }
+}
