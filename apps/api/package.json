@@ -7,7 +7,12 @@
   "author": "MALYANA Mohamed",
   "license": "MIT",
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "dev": "tsx watch --clear-screen=false src/app.ts",
+    "build": "NODE_ENV=production tsup",
+    "start": "node build/app.js",
+    "docs": "mkdir -p generated && yarn tsx scripts/generate-docs.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@fastify/autoload": "^6.2.0",

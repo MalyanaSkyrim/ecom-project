@@ -23,7 +23,7 @@ RUN apk add --no-cache libc6-compat openssl && apk update
 WORKDIR /app
 RUN yarn global add turbo
 COPY . .
-RUN turbo prune --scope=@pragma/api-sync --docker
+RUN turbo prune --scope=@ecom/api --docker
 
 
 #######################
@@ -59,7 +59,7 @@ ARG TURBO_TEAM
 ENV TURBO_TEAM $TURBO_TOKEN
 
 # Build the project and its dependencies
-RUN yarn turbo run build --filter=@pragma/api-sync...
+RUN yarn turbo run build --filter=@ecom/api...
 
 #######################
 # Runner stage
@@ -76,8 +76,8 @@ WORKDIR /app
 COPY --from=installer /app .
 
 # Don't run production as root
-RUN addgroup --system --gid 1001 pragma && \
-  adduser --system --uid 1001 pragma
-USER pragma
+RUN addgroup --system --gid 1001 ecom && \
+  adduser --system --uid 1001 ecom
+USER ecom
 
-CMD ["node", "apps/api-sync/build/app.js"]
+CMD ["node", "apps/api/build/app.js"]

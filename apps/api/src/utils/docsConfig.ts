@@ -22,9 +22,9 @@ export const getDocsConfig = (
         'eCommerce provides a REST API exposing to manage the e-commerce data.',
       version: '1',
       contact: {
-        name: 'Pragma Project',
+        name: 'Ecom Project',
         email: 'florion@popina.com',
-        url: 'https://www.pragma-project.dev',
+        url: 'https://www.ecom-project.dev',
       },
     },
     servers: [
@@ -50,8 +50,8 @@ export const getDocsConfig = (
       },
     },
     externalDocs: {
-      url: 'https://www.pragma-project.dev/docs/getting-started',
-      description: 'Pragma Sync API specifications',
+      url: 'https://www.ecom-project.dev/docs/getting-started',
+      description: 'Ecom API specifications',
     },
     tags: isPrivate ? [...publicTags] : publicTags,
   },

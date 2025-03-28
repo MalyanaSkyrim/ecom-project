@@ -12,7 +12,9 @@ export const env = createEnv({
   skipValidation: process.env.SKIP_ENV_VALIDATION === 'true',
 
   server: {
-    NODE_ENV: z.string().default('development'),
+    NODE_ENV: z
+      .enum(['development', 'test', 'production'])
+      .default('development'),
     RATE_LIMIT_MAX: z.coerce.number().default(500),
     RATE_LIMIT_TIME_WINDOW: z.coerce.number().default(60000),
     API_PORT: z.coerce.number().default(4000),
@@ -23,7 +25,7 @@ export const env = createEnv({
     API_URL: z.string().default('http://localhost:4000'),
     API_KEY: z.string(),
     REDIS_PORT: z.coerce.number(),
-    REDIS_URL: z.string(),
+    REDIS_HOST: z.string(),
   },
   /**
    * What object holds the environment variables at runtime.

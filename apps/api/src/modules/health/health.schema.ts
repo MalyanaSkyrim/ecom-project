@@ -23,7 +23,7 @@ const healthReplySchemaExample: HealthOutputType = {
   status: 'OK',
   uptime: '1 hour 2 minutes 3 seconds',
   apiVersions: '1',
-  docURL: 'https://www.pragma-project.dev/',
+  docURL: 'https://www.ecom-project.dev/',
 }
 
 const schemaExamples = {

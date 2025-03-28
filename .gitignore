@@ -37,3 +37,5 @@ npm-debug.log*
 *.pem
 
 messages/*.d.json.ts
+
+cache

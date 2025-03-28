@@ -11,7 +11,7 @@ const RATE_LIMIT_TIME_WINDOW = env.RATE_LIMIT_TIME_WINDOW
 const RATE_LIMIT_BAN = -1
 const RATE_LIMIT_ALLOW_LIST: string[] = []
 const RATE_LIMIT_CACHE = 5000
-const DEFAULT_NAME_SPACE = 'pragma-api-sync'
+const DEFAULT_NAME_SPACE = 'ecom-api-sync'
 
 export const rateLimitPlugin = (): FastifyPluginAsync =>
   fp(async (fastify: FastifyInstance) => {

@@ -9,3 +9,13 @@ services:
     command: start-single-node --insecure
     volumes:
       - '${PWD}/cockroach-data/crdb:/cockroach/cockroach-data'
+
+  redis-dev:
+    container_name: ecom-project-redis-dev
+    # use redis 6.x because GCP Memorystore for Redis is based on 6.x
+    image: redis:6
+    restart: always
+    ports:
+      - '6380:6379'
+    volumes:
+      - '${PWD}/cache:/data'

@@ -1,7 +1,6 @@
 /// <reference types="vitest" />
+import baseConfig from '@ecom/config/vitest/vitest-server.config'
 import { defineConfig } from 'vitest/config'
-
-import baseConfig from '@pragma/config/vitest/vitest-server.config'
 
 // https://vitejs.dev/config/
 export default defineConfig({
