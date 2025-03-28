@@ -23,7 +23,7 @@ export const getDocsConfig = (
       version: '1',
       contact: {
         name: 'Ecom Project',
-        email: 'florion@popina.com',
+        email: 'malyanamohamed1@gmail.com',
         url: 'https://www.ecom-project.dev',
       },
     },
