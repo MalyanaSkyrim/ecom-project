@@ -1,0 +1,56 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - '-c'
+      - >-
+        docker pull ${_DEPLOY_REGION}-${_REPO_URL}/${_APP_NAME}:${_DOCKER_PULL_TAG}
+        || exit 0
+    id: Pull latest
+    entrypoint: bash
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - '-f'
+      - 'apps/${_APP_NAME}/Dockerfile'
+      - '--cache-from'
+      - '${_DEPLOY_REGION}-${_REPO_URL}/${_APP_NAME}:${_DOCKER_PULL_TAG}'
+      - '-t'
+      - '${_DEPLOY_REGION}-${_REPO_URL}/${_APP_NAME}:${_ENVIRONMENT}'
+      - '-t'
+      - '${_DEPLOY_REGION}-${_REPO_URL}/${_APP_NAME}:latest'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_AUTH_PROXY_APP_URL=${_AUTH_PROXY_APP_URL}'
+      - '--build-arg'
+      - 'TURBO_TOKEN=${_TURBO_TOKEN}'
+      - '--build-arg'
+      - 'TURBO_TEAM=${_TURBO_TEAM}'
+      - '--build-arg'
+      - PORT=8080
+      - .
+    id: Build
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - '${_DEPLOY_REGION}-${_REPO_URL}/${_APP_NAME}:${_ENVIRONMENT}'
+    id: Push
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    args:
+      - run
+      - deploy
+      - 'ecom-${_APP_NAME}-${_ENVIRONMENT}'
+      - '--platform=managed'
+      - '--image=${_DEPLOY_REGION}-${_REPO_URL}/${_APP_NAME}:${_ENVIRONMENT}'
+      - '--region=${_DEPLOY_REGION}'
+      - '--quiet'
+    id: Deploy
+    entrypoint: gcloud
+timeout: 2000s
+images:
+  - '${_DEPLOY_REGION}-${_REPO_URL}/${_APP_NAME}:${_ENVIRONMENT}'
+  - '${_DEPLOY_REGION}-${_REPO_URL}/${_APP_NAME}:latest'
+options:
+  logging: CLOUD_LOGGING_ONLY
+tags:
+  - gcp-cloud-build-deploy-cloud-run
+  - gcp-cloud-build-deploy-cloud-run-managed
+  - ecom-${_APP_NAME}-${_ENVIRONMENT}

@@ -1,6 +1,19 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "globalDependencies": [".env", "yarn.lock"],
+  "globalEnv": [
+    "NODE_ENV",
+    "DATABASE_URL",
+    "REDIS_HOST",
+    "REDIS_PORT",
+    "SKIP_ENV_VALIDATION",
+    "API_KEY",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET",
+    "NEXTAUTH_URL",
+    "NEXTAUTH_SECRET"
+  ],
   "tasks": {
     "db:generate": {
       "inputs": ["prisma/schema.prisma"],
