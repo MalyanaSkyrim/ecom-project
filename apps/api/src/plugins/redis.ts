@@ -20,7 +20,7 @@ const fastifyRedis = async (fastify: FastifyInstance) => {
   try {
     const redisClient = new Redis({
       port: env.REDIS_PORT,
-      host: env.REDIS_URL,
+      host: env.REDIS_HOST,
       maxRetriesPerRequest: REDIS_MAX_RETRIES,
     })
 

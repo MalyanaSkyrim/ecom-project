@@ -1,5 +1,6 @@
-import { Button, GoogleLogo } from '@ecom/ui'
 import { signIn } from 'next-auth/react'
+
+import { Button, GoogleLogo } from '@ecom/ui'
 
 const GoogleSignInButton = () => {
   return (

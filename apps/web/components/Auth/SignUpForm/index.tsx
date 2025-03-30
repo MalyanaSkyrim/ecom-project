@@ -1,8 +1,9 @@
 'use client'
 
 import { signInSchema, SignUpData } from '@/lib/validation/auth'
-import { Button, Form, FormInput } from '@ecom/ui'
 import { UseFormReturn } from 'react-hook-form'
+
+import { Button, Form, FormInput } from '@ecom/ui'
 
 import GoogleSignInButton from '../GoogleSignInButton'
 

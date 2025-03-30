@@ -1,5 +1,7 @@
 import useIntlLocale from '@/hooks/useIntlLocale'
 import { locales } from '@/lib/utils/locale.enum'
+import { useTranslations } from 'next-intl'
+
 import {
   Select,
   SelectContent,
@@ -7,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@ecom/ui'
-import { useTranslations } from 'next-intl'
 
 const LanguageSelect = () => {
   const t = useTranslations()

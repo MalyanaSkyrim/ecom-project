@@ -1,6 +1,10 @@
 'use client'
 
 import { navItems } from '@/lib/navigation'
+import { Menu, X } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import Link from 'next/link'
+
 import {
   Button,
   Drawer,
@@ -12,9 +16,6 @@ import {
 } from '@ecom/ui'
 import { useWindowSize } from '@ecom/ui/hooks'
 import { classMerge } from '@ecom/ui/lib/utils'
-import { Menu, X } from 'lucide-react'
-import { useTranslations } from 'next-intl'
-import Link from 'next/link'
 
 const MobileNavBar = () => {
   const { width } = useWindowSize()

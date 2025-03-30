@@ -38,7 +38,7 @@ jobs:
         run: yarn spell
 
       - name: Check code formatting
-        run: yarn check:prettier
+        run: yarn prettier:check
 
       - name: Lint and typecheck the code
         run: yarn typecheck && yarn lint
