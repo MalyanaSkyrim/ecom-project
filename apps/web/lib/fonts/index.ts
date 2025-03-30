@@ -4,62 +4,62 @@ import localFont from 'next/font/local'
 export const fontIntegralCF = localFont({
   src: [
     {
-      path: '../fonts/integralCF/integralcf-regular.otf',
+      path: './IntegralCF/integralcf-regular.otf',
       weight: '400',
       style: 'normal',
     },
     {
-      path: '../fonts/integralCF/integralcf-regularoblique.otf',
+      path: './IntegralCF/integralcf-regularoblique.otf',
       weight: '400',
       style: 'italic',
     },
     {
-      path: '../fonts/integralCF/integralcf-medium.otf',
+      path: './IntegralCF/integralcf-medium.otf',
       weight: '500',
       style: 'normal',
     },
     {
-      path: '../fonts/integralCF/integralcf-mediumoblique.otf',
+      path: './IntegralCF/integralcf-mediumoblique.otf',
       weight: '500',
       style: 'italic',
     },
     {
-      path: '../fonts/integralCF/integralcf-demibold.otf',
+      path: './IntegralCF/integralcf-demibold.otf',
       weight: '600',
       style: 'normal',
     },
     {
-      path: '../fonts/integralCF/integralcf-demiboldoblique.otf',
+      path: './IntegralCF/integralcf-demiboldoblique.otf',
       weight: '600',
       style: 'italic',
     },
     {
-      path: '../fonts/integralCF/integralcf-bold.otf',
+      path: './IntegralCF/integralcf-bold.otf',
       weight: '700',
       style: 'normal',
     },
     {
-      path: '../fonts/integralCF/integralcf-boldoblique.otf',
+      path: './IntegralCF/integralcf-boldoblique.otf',
       weight: '700',
       style: 'italic',
     },
     {
-      path: '../fonts/integralCF/integralcf-extrabold.otf',
+      path: './IntegralCF/integralcf-extrabold.otf',
       weight: '800',
       style: 'normal',
     },
     {
-      path: '../fonts/integralCF/integralcf-extraboldoblique.otf',
+      path: './IntegralCF/integralcf-extraboldoblique.otf',
       weight: '800',
       style: 'italic',
     },
     {
-      path: '../fonts/integralCF/integralcf-heavy.otf',
+      path: './IntegralCF/integralcf-heavy.otf',
       weight: '900',
       style: 'normal',
     },
     {
-      path: '../fonts/integralCF/integralcf-heavyoblique.otf',
+      path: './IntegralCF/integralcf-heavyoblique.otf',
       weight: '900',
       style: 'italic',
     },

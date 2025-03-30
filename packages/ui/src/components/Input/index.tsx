@@ -1,5 +1,6 @@
-import { classMerge } from '@ecom/ui/lib/utils'
 import * as React from 'react'
+
+import { classMerge } from '@ecom/ui/lib/utils'
 
 export type InputProps = React.ComponentProps<'input'>
 

@@ -1,6 +1,5 @@
 'use client'
 
-import { classMerge } from '@ecom/ui/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as LabelPrimitive from '@radix-ui/react-label'
 import { Slot } from '@radix-ui/react-slot'
@@ -16,6 +15,8 @@ import {
   type FieldValues,
 } from 'react-hook-form'
 import { z } from 'zod'
+
+import { classMerge } from '@ecom/ui/lib/utils'
 
 import { Label } from '../../Label'
 

@@ -1,10 +1,11 @@
 import { Providers } from '@/components/providers'
 import SessionWrapper from '@/lib/auth/SessionWrapper'
 import { fontIntegralCF, fontMono, fontSans } from '@/lib/fonts'
-import '@ecom/ui/globals.css'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import React from 'react'
+
+import '@ecom/ui/globals.css'
 
 const Layout = async ({
   children,

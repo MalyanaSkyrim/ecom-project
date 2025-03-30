@@ -1,8 +1,9 @@
 import { env } from '@/env'
-import { db } from '@ecom/database'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { NextAuthOptions } from 'next-auth'
 import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google'
+
+import { db } from '@ecom/database'
 
 export const authOptions = {
   // Configure one or more authentication providers

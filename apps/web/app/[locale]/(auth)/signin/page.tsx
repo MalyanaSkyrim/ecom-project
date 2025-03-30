@@ -1,10 +1,11 @@
 import SignInForm from '@/components/Auth/SignInForm'
 import { authOptions } from '@/lib/auth/authOptions'
-import { classMerge } from '@ecom/ui/lib/utils'
 import { getServerSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+
+import { classMerge } from '@ecom/ui/lib/utils'
 
 const SignInPage = async () => {
   const session = await getServerSession(authOptions)

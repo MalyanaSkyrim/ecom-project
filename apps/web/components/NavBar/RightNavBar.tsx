@@ -1,9 +1,10 @@
 'use client'
 
-import { Button } from '@ecom/ui/components/Button'
 import { Search, ShoppingCart, User } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
+
+import { Button } from '@ecom/ui/components/Button'
 
 import AccountDropDownMenu from '../AccountDropDownMenu'
 import SearchInput from '../SearchInput'

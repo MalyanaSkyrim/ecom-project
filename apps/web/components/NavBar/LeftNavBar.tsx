@@ -1,9 +1,10 @@
 'use client'
 
 import { navItems } from '@/lib/navigation'
-import { classMerge } from '@ecom/ui/lib/utils'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+
+import { classMerge } from '@ecom/ui/lib/utils'
 
 import MobileNavBar from './MobileNavBar'
 

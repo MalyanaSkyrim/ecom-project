@@ -14,7 +14,7 @@ module.exports = {
   printWidth: 80,
   arrowParens: 'always',
   importOrder: [
-    '^@(pragma)/(.*)$',
+    '^@(ecom)/(.*)$',
     '^@lib/(.*)$',
     '^@components/(.*)$',
     '^@(server|trpc)/(.*)$',

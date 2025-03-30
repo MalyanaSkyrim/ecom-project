@@ -1,5 +1,10 @@
 'use client'
 
+import { LogOut, User as UserIcon } from 'lucide-react'
+import { User } from 'next-auth'
+import { useTranslations } from 'next-intl'
+import Link from 'next/link'
+
 import {
   Button,
   DropdownMenu,
@@ -9,10 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@ecom/ui'
-import { LogOut, User as UserIcon } from 'lucide-react'
-import { User } from 'next-auth'
-import { useTranslations } from 'next-intl'
-import Link from 'next/link'
 
 import LanguageSelect from '../LanguageSelect'
 

@@ -4,7 +4,7 @@ import { env } from '../env'
 
 const REDIS_MAX_RETRIES = 10
 export const redisConnection = {
-  host: env.REDIS_URL || 'localhost',
+  host: env.REDIS_HOST || 'localhost',
   port: Number(env.REDIS_PORT) || 6379,
   maxRetriesPerRequest: REDIS_MAX_RETRIES,
 }

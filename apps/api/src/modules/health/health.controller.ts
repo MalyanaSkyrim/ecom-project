@@ -21,7 +21,7 @@ export const healthHandler: RouteHandler<{
   reply.code(200).send({
     status: 'OK',
     uptime: getReadableUptime(),
-    docURL: 'https://internal-docs.pragma-project.dev/',
+    docURL: 'https://internal-docs.ecom-project.dev/',
     apiVersions: '1',
   })
 }

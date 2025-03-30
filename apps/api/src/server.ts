@@ -1,10 +1,11 @@
-import { db } from '@ecom/database'
 import autoload from '@fastify/autoload'
 import * as dotenv from 'dotenv'
 import Fastify, { FastifyInstance, FastifyServerOptions } from 'fastify'
 import * as fs from 'fs'
 import * as path from 'path'
 import { fileURLToPath } from 'url'
+
+import { db } from '@ecom/database'
 
 import { registerSchemas } from './schemas'
 
