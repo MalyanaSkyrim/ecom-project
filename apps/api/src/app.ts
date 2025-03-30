@@ -1,19 +1,18 @@
 import * as dotenv from 'dotenv'
 import fs from 'fs'
 
-import { version } from '../package.json'
 import { env } from './env'
 import { createServer, generateSwaggerDocs, type ServerOptions } from './server'
 
 dotenv.config({ path: '../../.env' })
 
-const loggerLabels = {
-  service: 'api-sync',
-  serviceType: 'api' as const,
-  environment: env.APP_ENV,
-  version,
-  hostname: env.API_URL,
-}
+// const loggerLabels = {
+//   service: 'api-sync',
+//   serviceType: 'api' as const,
+//   environment: env.APP_ENV,
+//   version,
+//   hostname: env.API_URL,
+// }
 
 const prodConfig: ServerOptions = {
   disableRequestLogging: true,
