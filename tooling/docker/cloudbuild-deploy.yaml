@@ -19,8 +19,6 @@ steps:
       - '-t'
       - '${_DEPLOY_REGION}-${_REPO_URL}/${_APP_NAME}:latest'
       - '--build-arg'
-      - 'NEXT_PUBLIC_AUTH_PROXY_APP_URL=${_AUTH_PROXY_APP_URL}'
-      - '--build-arg'
       - 'TURBO_TOKEN=${_TURBO_TOKEN}'
       - '--build-arg'
       - 'TURBO_TEAM=${_TURBO_TEAM}'

@@ -15,6 +15,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@ecom/database": "*",
     "@fastify/autoload": "^6.2.0",
     "@fastify/rate-limit": "^10.2.2",
     "@fastify/sensible": "^6.0.3",
