@@ -65,5 +65,5 @@
     }
   ],
   "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
-  "ignorePaths": ["node_modules", "**/CHANGELOG.md"]
+  "ignorePaths": ["node_modules", "**/CHANGELOG.md", "**/lib/fonts"]
 }
