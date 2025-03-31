@@ -40,6 +40,7 @@ steps:
       - '--image=${_DEPLOY_REGION}-${_REPO_URL}/${_APP_NAME}:${_ENVIRONMENT}'
       - '--region=${_DEPLOY_REGION}'
       - '--quiet'
+      - '--set-secrets=API_KEY=PROD_API_KEY:latest,REDIS_PORT=PROD_REDIS_PORT:latest,REDIS_HOST=PROD_REDIS_HOST:latest'
     id: Deploy
     entrypoint: gcloud
 timeout: 2000s
