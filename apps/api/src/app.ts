@@ -1,38 +1,44 @@
 import * as dotenv from 'dotenv'
 import fs from 'fs'
+import pino from 'pino'
+import pretty from 'pino-pretty'
 
+import { version } from '../package.json'
 import { env } from './env'
 import { createServer, generateSwaggerDocs, type ServerOptions } from './server'
 
 dotenv.config({ path: '../../.env' })
 
-// const loggerLabels = {
-//   service: 'api-sync',
-//   serviceType: 'api' as const,
-//   environment: env.APP_ENV,
-//   version,
-//   hostname: env.API_URL,
-// }
+const loggerLabels = {
+  service: 'api-sync',
+  serviceType: 'api' as const,
+  environment: env.APP_ENV,
+  version,
+  hostname: env.API_URL,
+}
 
 const prodConfig: ServerOptions = {
   disableRequestLogging: true,
   bodyLimit: 20000000,
-  //Todo: create logger
-  // loggerInstance: getLogger({
-  //   labels: loggerLabels,
-  //   loggerOptions: { name: 'Ecom_API' },
-  //   usePretty: false,
-  // }),
+  loggerInstance: pino({
+    name: 'ecom-api',
+  }),
   isDocPrivate: false,
 }
 
 export const devConfig: ServerOptions = {
   disableRequestLogging: true,
   bodyLimit: 20000000,
-  // loggerInstance: getLogger({
-  //   labels: loggerLabels,
-  //   usePretty: true,
-  // }),
+  loggerInstance: pino(
+    {},
+    pretty({
+      levelFirst: true,
+      colorize: true,
+      colorizeObjects: true,
+      translateTime: 'HH:MM:ss.l',
+      ignore: 'hostname,pid,labels',
+    }),
+  ),
   isDocPrivate: true,
 }
 
