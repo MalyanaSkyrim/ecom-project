@@ -13,11 +13,11 @@ export const env = createEnv({
 
   server: {
     NODE_ENV: z
-      .enum(['development', 'test', 'production'])
+      .enum(['development', 'test', 'production', 'staging'])
       .default('development'),
     RATE_LIMIT_MAX: z.coerce.number().default(500),
     RATE_LIMIT_TIME_WINDOW: z.coerce.number().default(60000),
-    API_PORT: z.coerce.number().default(4000),
+    API_PORT: z.coerce.number(),
     APP_ENV: z
       .enum(['development', 'production', 'staging'])
       .default('development'),
@@ -26,6 +26,7 @@ export const env = createEnv({
     API_KEY: z.string(),
     REDIS_PORT: z.coerce.number(),
     REDIS_HOST: z.string(),
+    REDIS_PASSWORD: z.string().optional(),
   },
   /**
    * What object holds the environment variables at runtime.
