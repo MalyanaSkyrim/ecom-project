@@ -27,6 +27,7 @@ export const env = createEnv({
     REDIS_PORT: z.coerce.number(),
     REDIS_HOST: z.string(),
     REDIS_PASSWORD: z.string().optional(),
+    NEXTAUTH_SECRET: z.string(),
   },
   /**
    * What object holds the environment variables at runtime.
