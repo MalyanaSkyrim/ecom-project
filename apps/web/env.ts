@@ -17,6 +17,7 @@ export const env = createEnv({
 
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
+    API_URL: z.string().url(),
   },
   experimental__runtimeEnv: process.env,
 })

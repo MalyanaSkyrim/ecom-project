@@ -1,6 +1,7 @@
 'use client'
 
 import { signInSchema, SignUpData } from '@/lib/validation/auth'
+import { useRouter } from 'next/navigation'
 import { UseFormReturn } from 'react-hook-form'
 
 import { Button, Form, FormInput } from '@ecom/ui'
@@ -8,8 +9,10 @@ import { Button, Form, FormInput } from '@ecom/ui'
 import GoogleSignInButton from '../GoogleSignInButton'
 
 const SignUpForm = () => {
+  const router = useRouter()
+
   const onSubmit = (data: SignUpData) => {
-    console.log('sky', { data })
+    router.push('/auth/signin')
   }
 
   return (

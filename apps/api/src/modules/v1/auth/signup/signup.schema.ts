@@ -22,7 +22,6 @@ const signupSuccessReplySchema = z.object({
   user: userSchema.omit({
     password: true,
   }),
-  accessToken: z.string(),
 })
 
 const signupErrorReplySchema = z.object(

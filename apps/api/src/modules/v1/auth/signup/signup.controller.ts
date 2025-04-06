@@ -1,7 +1,7 @@
 import { formatDuration, intervalToDuration } from 'date-fns'
 import { RouteHandler } from 'fastify'
 
-import { generateTokens, getUserByEmail } from '../signin/signin.services'
+import { getUserByEmail } from '../signin/signin.services'
 import {
   SignupErrorOutput,
   SignupInput,
@@ -41,8 +41,6 @@ export const signupHandler: RouteHandler<{
 
   const newUser = await createUser(req.body)
 
-  const { accessToken } = generateTokens(newUser.id, newUser.email)
-
   reply.code(200).send({
     user: {
       id: newUser.id,
@@ -51,6 +49,5 @@ export const signupHandler: RouteHandler<{
       lastName: newUser.lastName,
       avatar: newUser.avatar,
     },
-    accessToken,
   })
 }

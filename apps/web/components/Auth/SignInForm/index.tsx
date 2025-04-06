@@ -1,6 +1,7 @@
 'use client'
 
 import { signInSchema, type SignInData } from '@/lib/validation/auth'
+import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { UseFormReturn } from 'react-hook-form'
 
@@ -9,8 +10,18 @@ import { Button, Form, FormInput } from '@ecom/ui'
 import GoogleSignInButton from '../GoogleSignInButton'
 
 const SignInForm = () => {
-  const onSubmit = (data: SignInData) => {
-    console.log('sky', { data })
+  const onSubmit = async (data: SignInData) => {
+    try {
+      const res = await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        callbackUrl: '/',
+        redirect: false,
+      })
+      console.log('sky onSubmit success', { res })
+    } catch (error) {
+      console.log('sky onSubmit fails', { error })
+    }
   }
 
   return (
