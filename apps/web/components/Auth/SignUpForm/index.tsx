@@ -1,6 +1,7 @@
 'use client'
 
-import { signInSchema, SignUpData } from '@/lib/validation/auth'
+import { trpc } from '@/lib/trpc/client'
+import { SignUpData, signUpSchema } from '@/lib/validation/auth'
 import { useRouter } from 'next/navigation'
 import { UseFormReturn } from 'react-hook-form'
 
@@ -10,13 +11,15 @@ import GoogleSignInButton from '../GoogleSignInButton'
 
 const SignUpForm = () => {
   const router = useRouter()
+  const { mutateAsync } = trpc.auth.signUp.useMutation()
 
-  const onSubmit = (data: SignUpData) => {
-    router.push('/auth/signin')
+  const onSubmit = async (data: SignUpData) => {
+    await mutateAsync(data)
+    router.push('/signin')
   }
 
   return (
-    <Form schema={signInSchema} onSubmit={onSubmit}>
+    <Form schema={signUpSchema} onSubmit={onSubmit}>
       {(form: UseFormReturn<SignUpData>) => (
         <div className="space-y-5">
           <div className="space-y-2">

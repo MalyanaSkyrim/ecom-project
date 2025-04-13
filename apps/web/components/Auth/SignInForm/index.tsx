@@ -3,6 +3,7 @@
 import { signInSchema, type SignInData } from '@/lib/validation/auth'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { UseFormReturn } from 'react-hook-form'
 
 import { Button, Form, FormInput } from '@ecom/ui'
@@ -10,6 +11,7 @@ import { Button, Form, FormInput } from '@ecom/ui'
 import GoogleSignInButton from '../GoogleSignInButton'
 
 const SignInForm = () => {
+  const router = useRouter()
   const onSubmit = async (data: SignInData) => {
     try {
       const res = await signIn('credentials', {
@@ -18,9 +20,9 @@ const SignInForm = () => {
         callbackUrl: '/',
         redirect: false,
       })
-      console.log('sky onSubmit success', { res })
+      router.push('/')
     } catch (error) {
-      console.log('sky onSubmit fails', { error })
+      // Handle error
     }
   }
 

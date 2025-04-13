@@ -2302,6 +2302,18 @@
   dependencies:
     "@t3-oss/env-core" "0.6.1"
 
+"@tanstack/query-core@5.73.3":
+  version "5.73.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.73.3.tgz#27d2396df92ab4079b8182378e316ee1407f8fa5"
+  integrity sha512-LUpsgVT3IkvOECdkQ3QD6esczSH71mAzH/LDZ2cu8j6w430v5W0JB1ulzsG8FFwFBd5fm/ePM2DFpg9TucRMgQ==
+
+"@tanstack/react-query@^5.73.3":
+  version "5.73.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.73.3.tgz#91665c3ef5df57649690291a5a0143275181ed24"
+  integrity sha512-umsAEsVsSSnrOZrstX/OlctdqkRZm6vPsetmbl241tdNo0jT3s+0bUoof9kCaTsPr/GopPlbJ1OYlrZj4toKzg==
+  dependencies:
+    "@tanstack/query-core" "5.73.3"
+
 "@testing-library/dom@10.4.0":
   version "10.4.0"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-10.4.0.tgz#82a9d9462f11d240ecadbf406607c6ceeeff43a8"
@@ -2350,6 +2362,26 @@
     "@babel/types" "^7.26.7"
     javascript-natural-sort "^0.7.1"
     lodash "^4.17.21"
+
+"@trpc/client@^11.1.0":
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/@trpc/client/-/client-11.1.0.tgz#102ec1f14aa39c4caf5106c51f38a3d4bee293b0"
+  integrity sha512-Q3pL4p7AddxI/ZJTEFo1utKSdasDFjZPECIPsKDkthEt52k530JkYVltTdLkYFKrNWXKKBo8MN7NwchelczoRw==
+
+"@trpc/next@^11.1.0":
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/@trpc/next/-/next-11.1.0.tgz#e4c75800288f05f024f9866dcaca069c7c85684b"
+  integrity sha512-P8/qpfvRs7IIDdFBrcyMfxXumgf5p7K+dig6NpxpNYs4bqVJfBnAbATYEplmLhw/Dcksqo5ZoI0+0A19wLm8Ug==
+
+"@trpc/react-query@^11.1.0":
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/@trpc/react-query/-/react-query-11.1.0.tgz#75a023d4b58ca12160e76a800127519f0680263c"
+  integrity sha512-qdqKdFM8hVy/YSBCg1/3VO+IgB6Nbul3Fk1SA3lefGf0bkYZdWVVyKab8HBAfOWlMsuRufhVLPdKYmnjzBrK9g==
+
+"@trpc/server@^11.1.0":
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/@trpc/server/-/server-11.1.0.tgz#8169fa8b944beddf65a95f376d4afea5732be254"
+  integrity sha512-uAJ7ikejeujVkf53XFJ/0W8nr7bDjul+Szk5Rsepq97Hb/WS1RkRXdyX4KqAyCE9b1vDFCJVJwSxiIZdRtbTZQ==
 
 "@tsconfig/node10@^1.0.7":
   version "1.0.11"
@@ -3740,6 +3772,13 @@ cookies@^0.9.1:
   dependencies:
     depd "~2.0.0"
     keygrip "~1.1.0"
+
+copy-anything@^3.0.2:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/copy-anything/-/copy-anything-3.0.5.tgz#2d92dce8c498f790fa7ad16b01a1ae5a45b020a0"
+  integrity sha512-yCEafptTtb4bk7GLEQoM8KVJpxAfdBJYaXyzQEgQQQgYrZiDp8SJmGKlYza6CYjEDNstAdNdKA3UuoULlEbS6w==
+  dependencies:
+    is-what "^4.1.8"
 
 core-js-pure@^3.30.2:
   version "3.41.0"
@@ -5729,6 +5768,11 @@ is-weakset@^2.0.3:
   dependencies:
     call-bound "^1.0.3"
     get-intrinsic "^1.2.6"
+
+is-what@^4.1.8:
+  version "4.1.16"
+  resolved "https://registry.yarnpkg.com/is-what/-/is-what-4.1.16.tgz#1ad860a19da8b4895ad5495da3182ce2acdd7a6f"
+  integrity sha512-ZhMwEosbFJkA0YhFnNDgTM4ZxDRsS6HqTo7qsZM08fehyRYIYa0yHu5R6mgo1n/8MgaPBXiPimPD77baVFYg+A==
 
 is-wsl@^2.2.0:
   version "2.2.0"
@@ -8114,6 +8158,13 @@ sucrase@^3.35.0:
     mz "^2.7.0"
     pirates "^4.0.1"
     ts-interface-checker "^0.1.9"
+
+superjson@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/superjson/-/superjson-2.2.2.tgz#9d52bf0bf6b5751a3c3472f1292e714782ba3173"
+  integrity sha512-5JRxVqC8I8NuOUjzBbvVJAKNM8qoVuH0O77h4WInc/qC2q5IreqKxYwgkga3PfA22OayK2ikceb/B26dztPl+Q==
+  dependencies:
+    copy-anything "^3.0.2"
 
 supports-color@^5.3.0:
   version "5.5.0"
