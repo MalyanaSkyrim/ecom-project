@@ -6,6 +6,7 @@
   "main": "build/index.js",
   "types": "src/index.ts",
   "scripts": {
+    "db:studio": "prisma studio",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seeds/initialSeed.ts",

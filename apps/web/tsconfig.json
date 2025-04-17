@@ -1,13 +1,16 @@
 {
   "extends": "@ecom/config/typescript/nextjs.json",
   "compilerOptions": {
+    "strict": true,
+    "strictNullChecks": true,
     "allowArbitraryExtensions": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
       "@ecom/ui/*": ["../../packages/ui/src/*"],
       "@ecom/ui": ["../../packages/ui/src/index.ts"],
-      "@ecom/ui/hooks": ["../../packages/ui/src/hooks/index.ts"]
+      "@ecom/ui/hooks": ["../../packages/ui/src/hooks/index.ts"],
+      "@/server/*": ["./server/*"]
     },
     "plugins": [
       {

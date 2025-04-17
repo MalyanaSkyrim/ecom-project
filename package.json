@@ -13,6 +13,7 @@
     "with-env": "dotenv -e .env --",
     "prettier:fix": "prettier --write \"**/*.{ts,tsx,md,js,json}\"",
     "prettier:check": "yarn prettier -c .",
+    "db:studio": "yarn with-env yarn workspace @ecom/database db:studio",
     "db:start": "docker compose -f docker-compose.yml up -d",
     "db:generate": "yarn with-env turbo db:generate",
     "db:stop": "docker compose -f docker-compose.yml down",
@@ -50,6 +51,7 @@
     "tsx": "^4.19.2",
     "turbo": "^2.3.3",
     "typescript": "^5.7.2",
-    "vitest": "^3.0.9"
+    "vitest": "^3.0.9",
+    "zod": "^3.24.2"
   }
 }

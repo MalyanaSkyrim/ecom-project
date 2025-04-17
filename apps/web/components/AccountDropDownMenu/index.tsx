@@ -2,6 +2,7 @@
 
 import { LogOut, User as UserIcon } from 'lucide-react'
 import { User } from 'next-auth'
+import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 
@@ -41,7 +42,7 @@ const AccountDropDownMenu = ({ user }: { user: User }) => {
         <DropdownMenuItem asChild>
           <Button
             variant="outline"
-            // onClick={() => signOut()}
+            onClick={() => signOut()}
             className="w-full">
             <LogOut className="!h-4 !w-4 outline-none" />
             <span>{t('logout')}</span>

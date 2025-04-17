@@ -1,6 +1,8 @@
 'use client'
 
-import { signInSchema, SignUpData } from '@/lib/validation/auth'
+import { trpc } from '@/lib/trpc/client'
+import { SignUpData, signUpSchema } from '@/lib/validation/auth'
+import { useRouter } from 'next/navigation'
 import { UseFormReturn } from 'react-hook-form'
 
 import { Button, Form, FormInput } from '@ecom/ui'
@@ -8,12 +10,16 @@ import { Button, Form, FormInput } from '@ecom/ui'
 import GoogleSignInButton from '../GoogleSignInButton'
 
 const SignUpForm = () => {
-  const onSubmit = (data: SignUpData) => {
-    console.log('sky', { data })
+  const router = useRouter()
+  const { mutateAsync } = trpc.auth.signUp.useMutation()
+
+  const onSubmit = async (data: SignUpData) => {
+    await mutateAsync(data)
+    router.push('/signin')
   }
 
   return (
-    <Form schema={signInSchema} onSubmit={onSubmit}>
+    <Form schema={signUpSchema} onSubmit={onSubmit}>
       {(form: UseFormReturn<SignUpData>) => (
         <div className="space-y-5">
           <div className="space-y-2">
