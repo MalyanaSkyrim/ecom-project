@@ -15,6 +15,7 @@ env:
   NEXTAUTH_SECRET: abcdef1234,
   GOOGLE_CLIENT_ID: aaaabcdef1234,
   GOOGLE_CLIENT_SECRET: aaaabbbbcdef1234
+  API_PORT: 4000
 
 jobs:
   ci:
@@ -56,4 +57,4 @@ jobs:
         run: yarn typecheck && yarn lint
 
       - name: Build
-        run: yarn run build
+        run: SKIP_ENV_VALIDATION=true CI=true NODE_ENV=production yarn build --color

@@ -7,6 +7,8 @@ dotenv.config({
 })
 
 export const env = createEnv({
+  skipValidation: process.env.SKIP_ENV_VALIDATION === 'true',
+
   server: {
     DATABASE_URL: z.string().url(),
     NODE_ENV: z
