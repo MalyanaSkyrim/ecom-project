@@ -2,9 +2,10 @@ import { signIn } from 'next-auth/react'
 
 import { Button, GoogleLogo } from '@ecom/ui'
 
-const GoogleSignInButton = () => {
+const GoogleSignInButton = ({ disabled }: { disabled?: boolean }) => {
   return (
     <Button
+      disabled={disabled}
       type="button"
       onClick={() => signIn('google')}
       className="w-full"

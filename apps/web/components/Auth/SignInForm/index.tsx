@@ -20,7 +20,9 @@ const SignInForm = () => {
         callbackUrl: '/',
         redirect: false,
       })
-      router.push('/')
+      if (res?.ok) {
+        router.push('/')
+      }
     } catch (error) {
       // Handle error
     }
@@ -41,7 +43,10 @@ const SignInForm = () => {
             </div>
 
             <div className="space-y-1">
-              <Button className="w-full" type="submit">
+              <Button
+                className="w-full"
+                type="submit"
+                isLoading={form.formState.isSubmitting}>
                 Sign In
               </Button>
 
@@ -55,7 +60,7 @@ const SignInForm = () => {
 
           <div className="h-[1px] w-full bg-gray-300"></div>
 
-          <GoogleSignInButton />
+          <GoogleSignInButton disabled={form.formState.isSubmitting} />
         </div>
       )}
     </Form>

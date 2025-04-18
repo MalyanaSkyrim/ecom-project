@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "turbo start",
+    "start": "yarn with-env turbo start",
     "build": "turbo build",
-    "dev": "turbo dev",
+    "dev": "yarn with-env turbo dev",
     "lint": "turbo lint",
     "spell": "cspell lint --no-progress --relative",
     "typecheck": "turbo typecheck",
