@@ -1,11 +1,12 @@
 import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
+import { LoaderCircle } from 'lucide-react'
 import * as React from 'react'
 
 import { classMerge } from '@ecom/ui/lib/utils'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 outline-none whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  'inline-flex items-center justify-center gap-2 outline-none whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none',
   {
     variants: {
       variant: {
@@ -34,21 +35,71 @@ const buttonVariants = cva(
   },
 )
 
+const loadingIconVariants = cva('animate-spin', {
+  variants: {
+    variant: {
+      default: 'text-white',
+      destructive: 'text-white',
+      outline: 'text-primary',
+      secondary: 'text-primary',
+      ghost: 'text-primary',
+      link: 'text-primary',
+    },
+    size: {
+      default: 'h-4 w-4',
+      icon: 'hidden',
+      sm: 'h-3 w-3',
+      lg: 'h-5 w-5',
+    },
+  },
+  defaultVariants: {
+    variant: 'default',
+    size: 'default',
+  },
+})
+
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
+  isLoading?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      isLoading = false,
+      children,
+      disabled,
+      ...props
+    },
+    ref,
+  ) => {
     const Comp = asChild ? Slot : 'button'
     return (
       <Comp
         className={classMerge(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
-      />
+        disabled={disabled || isLoading}>
+        <div className="flex items-center gap-2">
+          {isLoading && (
+            <LoaderCircle
+              className={classMerge(
+                loadingIconVariants({
+                  variant,
+                  size,
+                }),
+              )}
+            />
+          )}
+          {children}
+        </div>
+      </Comp>
     )
   },
 )

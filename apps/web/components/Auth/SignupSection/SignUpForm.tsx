@@ -2,20 +2,18 @@
 
 import { trpc } from '@/lib/trpc/client'
 import { SignUpData, signUpSchema } from '@/lib/validation/auth'
-import { useRouter } from 'next/navigation'
 import { UseFormReturn } from 'react-hook-form'
 
 import { Button, Form, FormInput } from '@ecom/ui'
 
 import GoogleSignInButton from '../GoogleSignInButton'
 
-const SignUpForm = () => {
-  const router = useRouter()
-  const { mutateAsync } = trpc.auth.signUp.useMutation()
+const SignUpForm = ({ onSignupSuccess }: { onSignupSuccess: () => void }) => {
+  const { mutateAsync, isPending } = trpc.auth.signUp.useMutation()
 
   const onSubmit = async (data: SignUpData) => {
     await mutateAsync(data)
-    router.push('/signin')
+    onSignupSuccess()
   }
 
   return (
@@ -48,12 +46,12 @@ const SignUpForm = () => {
                 type="password"
               />
             </div>
-            <Button className="w-full" type="submit">
+            <Button className="w-full" type="submit" isLoading={isPending}>
               Sign Up
             </Button>
           </div>
           <div className="h-[1px] w-full bg-gray-300"></div>
-          <GoogleSignInButton />
+          <GoogleSignInButton disabled={isPending} />
         </div>
       )}
     </Form>
