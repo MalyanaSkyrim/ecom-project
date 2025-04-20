@@ -75,6 +75,9 @@ const ToastContent: React.FC<ToastContentProps> = (props) => {
           </span>
           <h1 className={classes.title}>{title}</h1>
         </div>
+        <div>
+          <h2 className={classes.description}>{description}</h2>
+        </div>
       </div>
       <div>
         <button
