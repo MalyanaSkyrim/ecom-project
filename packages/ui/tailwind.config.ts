@@ -1,5 +1,6 @@
 import type { Config } from 'tailwindcss'
 import tailwindcssAnimate from 'tailwindcss-animate'
+import tailwindRadix from 'tailwindcss-radix'
 
 const config = {
   darkMode: ['class'],
@@ -55,9 +56,12 @@ const config = {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
+      screens: {
+        xs: '480px',
+      },
     },
   },
-  plugins: [tailwindcssAnimate],
+  plugins: [tailwindcssAnimate, tailwindRadix({})],
 } satisfies Config
 
 export default config

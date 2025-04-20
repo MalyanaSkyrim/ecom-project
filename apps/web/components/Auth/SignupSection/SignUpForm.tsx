@@ -4,7 +4,7 @@ import { trpc } from '@/lib/trpc/client'
 import { SignUpData, signUpSchema } from '@/lib/validation/auth'
 import { UseFormReturn } from 'react-hook-form'
 
-import { Button, Form, FormInput } from '@ecom/ui'
+import { Button, Form, FormInput, showToast } from '@ecom/ui'
 
 import GoogleSignInButton from '../GoogleSignInButton'
 
@@ -12,8 +12,24 @@ const SignUpForm = ({ onSignupSuccess }: { onSignupSuccess: () => void }) => {
   const { mutateAsync, isPending } = trpc.auth.signUp.useMutation()
 
   const onSubmit = async (data: SignUpData) => {
-    await mutateAsync(data)
-    onSignupSuccess()
+    try {
+      await mutateAsync(data)
+      onSignupSuccess()
+      showToast({
+        id: 'signup-success',
+        title: 'Your account has been created successfully.',
+        variant: 'success',
+        duration: 3000,
+      })
+    } catch (error) {
+      const errorMessage = (error as Error).message
+      showToast({
+        id: 'signup-error',
+        title: errorMessage,
+        variant: 'error',
+        duration: 3000,
+      })
+    }
   }
 
   return (
