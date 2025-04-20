@@ -11,11 +11,12 @@ import SignUpSuccess from './SignUpSuccess'
 
 const SignupSection = () => {
   const t = useTranslations()
-  const [accountCreated, setAccountCreated] = useState(true)
+  const [accountCreated, setAccountCreated] = useState(false)
 
   const handleSignupSuccess = () => {
     setAccountCreated(true)
   }
+
   return (
     <div
       className={classMerge(
