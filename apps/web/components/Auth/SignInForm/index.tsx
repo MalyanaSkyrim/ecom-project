@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { UseFormReturn } from 'react-hook-form'
 
-import { Button, Form, FormInput } from '@ecom/ui'
+import { Button, Form, FormInput, showToast } from '@ecom/ui'
 
 import GoogleSignInButton from '../GoogleSignInButton'
 
@@ -22,9 +22,21 @@ const SignInForm = () => {
       })
       if (res?.ok) {
         router.push('/')
+      } else {
+        showToast({
+          id: 'sign-in-error',
+          title: 'Invalid credentials',
+          variant: 'error',
+          duration: 3000,
+        })
       }
     } catch (error) {
-      // Handle error
+      showToast({
+        id: 'sign-in-error',
+        title: 'Something went wrong',
+        variant: 'error',
+        duration: 3000,
+      })
     }
   }
 

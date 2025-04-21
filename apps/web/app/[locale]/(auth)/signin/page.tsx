@@ -1,17 +1,11 @@
 import SignInForm from '@/components/Auth/SignInForm'
-import { authOptions } from '@/lib/auth/authOptions'
-import { getServerSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 
 import { classMerge } from '@ecom/ui/lib/utils'
 
 const SignInPage = async () => {
-  const session = await getServerSession(authOptions)
   const t = await getTranslations()
-
-  if (session) redirect('/')
 
   return (
     <div className="w-[95%] space-y-8 rounded-lg bg-white px-7 pb-12 pt-7 shadow-md sm:w-[460px] sm:px-10">

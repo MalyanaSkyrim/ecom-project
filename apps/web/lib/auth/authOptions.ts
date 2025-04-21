@@ -99,6 +99,30 @@ export const authOptions = {
   ],
   adapter: PrismaAdapter(db),
   callbacks: {
+    async signIn({ user, account, profile }) {
+      // If it's a Google sign-in
+      if (account?.provider === 'google') {
+        // Check if user with this email exists but doesn't have a Google account
+        const existingUser = await db.user.findUnique({
+          where: { email: profile?.email },
+          include: { accounts: true },
+        })
+
+        if (
+          existingUser &&
+          !existingUser.accounts.some((acc) => acc.provider === 'google')
+        ) {
+          await db.account.create({
+            data: {
+              userId: existingUser.id,
+              ...account,
+            },
+          })
+          return true
+        }
+      }
+      return true
+    },
     jwt: async ({ token, user }) => {
       return { ...token, ...user }
     },
