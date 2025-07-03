@@ -3,7 +3,8 @@ import { toast, Toast } from 'react-hot-toast/headless'
 
 import ToastContent, { type ToastContentProps } from './ToastContent'
 
-interface ToastParams extends Omit<ToastContentProps, 'onClick' | 'className'> {
+export interface ToastParams
+  extends Omit<ToastContentProps, 'onClick' | 'className'> {
   id: string
   duration?: Toast['duration']
   ariaProps?: Toast['ariaProps']

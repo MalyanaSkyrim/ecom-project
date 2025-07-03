@@ -5,7 +5,7 @@ import { Button, ButtonProps } from '.'
 type Story = StoryObj<React.FC<ButtonProps>>
 
 export default {
-  title: 'Example/Button',
+  title: 'Components/Button',
   component: Button,
 }
 
@@ -13,7 +13,6 @@ export const Default: Story = {
   args: {
     children: 'Button',
     variant: 'default',
-    isLoading: true,
   },
 }
 
