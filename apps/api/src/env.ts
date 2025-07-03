@@ -17,7 +17,7 @@ export const env = createEnv({
       .default('development'),
     RATE_LIMIT_MAX: z.coerce.number().default(500),
     RATE_LIMIT_TIME_WINDOW: z.coerce.number().default(60000),
-    API_PORT: z.coerce.number(),
+    API_PORT: z.coerce.number().default(4000),
     APP_ENV: z
       .enum(['development', 'production', 'staging'])
       .default('development'),
