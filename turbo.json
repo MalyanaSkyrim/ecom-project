@@ -5,8 +5,7 @@
   "globalEnv": [
     "NODE_ENV",
     "DATABASE_URL",
-    "REDIS_HOST",
-    "REDIS_PORT",
+    "REDIS_URL",
     "SKIP_ENV_VALIDATION",
     "API_KEY",
     "GOOGLE_CLIENT_ID",

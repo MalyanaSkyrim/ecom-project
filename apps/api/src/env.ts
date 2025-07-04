@@ -24,9 +24,7 @@ export const env = createEnv({
 
     API_URL: z.string().default('http://localhost:4000'),
     API_KEY: z.string(),
-    REDIS_PORT: z.coerce.number(),
-    REDIS_HOST: z.string(),
-    REDIS_PASSWORD: z.string().optional(),
+    REDIS_URL: z.string().url(),
     NEXTAUTH_SECRET: z.string(),
   },
   /**

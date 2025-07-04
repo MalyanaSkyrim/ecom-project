@@ -8,8 +8,7 @@ env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
   API_KEY: 'abcdef1234'
-  REDIS_PORT: 6380
-  REDIS_HOST: localhost
+  REDIS_URL: redis://localhost:6379
   DATABASE_URL: postgresql://root@localhost:26258/ecom-dev?sslmode=disable,
   NEXTAUTH_URL: http://localhost:3000
   NEXTAUTH_SECRET: abcdef1234,
