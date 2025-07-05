@@ -4,7 +4,7 @@ import { FastifyInstance } from 'fastify'
 import fp from 'fastify-plugin'
 import Redis from 'ioredis'
 
-import { env } from '../env'
+import { redisClient } from '../lib/redis'
 
 declare module 'fastify' {
   export interface FastifyInstance {
@@ -12,18 +12,10 @@ declare module 'fastify' {
   }
 }
 
-const REDIS_MAX_RETRIES = 10
-
 const fastifyRedis = async (fastify: FastifyInstance) => {
   if (fastify.redis) return
 
   try {
-    const redisClient = new Redis({
-      port: env.REDIS_PORT,
-      host: env.REDIS_HOST,
-      maxRetriesPerRequest: REDIS_MAX_RETRIES,
-    })
-
     /**
      * Close redis connection and remove error listener
      * if host cannot be resolved.

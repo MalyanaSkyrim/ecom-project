@@ -1,17 +1,13 @@
-import Redis, { RedisOptions } from 'ioredis'
+import Redis from 'ioredis'
 
 import { env } from '../env'
 
 const REDIS_MAX_RETRIES = 10
-export const redisConnection = {
-  host: env.REDIS_HOST || 'localhost',
-  port: Number(env.REDIS_PORT) || 6379,
-  password: env.REDIS_PASSWORD,
-  maxRetriesPerRequest: REDIS_MAX_RETRIES,
-} satisfies RedisOptions
 
 const redisClientProvider = (): Redis => {
-  const redisClient = new Redis(redisConnection)
+  const redisClient = new Redis(env.REDIS_URL, {
+    maxRetriesPerRequest: REDIS_MAX_RETRIES,
+  })
 
   // handle redis connection error
   const onError = (err: Error & { code?: string }) => {
