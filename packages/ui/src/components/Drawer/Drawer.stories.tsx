@@ -42,7 +42,7 @@ export default {
 }
 
 export const Default = {
-  render: () => {
+  render: function Default() {
     const { width } = useWindowSize()
     const isMobile = width < 640
 
