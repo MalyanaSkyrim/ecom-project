@@ -20,9 +20,9 @@ import { classMerge } from '@ecom/ui/lib/utils'
 
 import { Label } from '../../Label'
 
-interface FormProps<
+export interface FormProps<
   TSchema extends z.ZodSchema,
-  TFieldValues extends z.infer<TSchema>,
+  TFieldValues extends FieldValues = z.infer<TSchema>,
 > {
   schema: TSchema
   defaultValues?: TFieldValues

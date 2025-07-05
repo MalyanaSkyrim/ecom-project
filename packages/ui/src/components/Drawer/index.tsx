@@ -43,7 +43,7 @@ const DrawerContent = React.forwardRef<
     <DrawerPrimitive.Content
       ref={ref}
       className={classMerge(
-        'bg-background fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-lg border sm:top-0 sm:mt-0 sm:max-w-[400px] sm:rounded-l-none',
+        'bg-background fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t border sm:top-0 sm:mt-0 sm:max-w-[400px] sm:rounded-l-none',
         className,
       )}
       {...props}>

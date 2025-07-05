@@ -1,0 +1,70 @@
+name: 'Deploy Staging'
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  REGION: europe-west1
+  ARTIFACTS_REPO: ecom-docker
+  ENVIRONMENT: staging
+
+jobs:
+  deploy-staging:
+  name: Deploy ${{ matrix.service }}
+  runs-on: ubuntu-latest
+  strategy:
+    matrix:
+      include:
+        - service: 'web'
+          project_id: VERCEL_WEB_PROJECT_ID
+          alias_domain: web-staging.ecom-project.dev
+
+  steps:
+    - name: 🔍 Check out code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: 📦 Add pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 10.10.0
+
+    - name: 🌍 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22.11.0'
+
+    - name: ${{ matrix.service }} changed ?
+      id: turbo-ignore
+      run: |
+        # Enable error handling
+        set +e
+        npx turbo-ignore @ecom/${{ matrix.service }}
+        exit_code=$?
+        # Disable error handling
+        set -e
+        if [ $exit_code -eq 1 ]; then
+          echo "is_changed=true" >> $GITHUB_OUTPUT
+        else
+          echo "is_changed=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: 📥 Install Vercel CLI
+      if: steps.turbo-ignore.outputs.is_changed == 'true'
+      run: npm install -g vercel
+
+    - name: 🚀 Publish to Vercel
+      if: steps.turbo-ignore.outputs.is_changed == 'true'
+      uses: BetaHuhn/deploy-to-vercel-action@v1
+      id: vercel-deploy
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+        VERCEL_PROJECT_ID: ${{ secrets[matrix.project_id] }}
+        VERCEL_SCOPE: ${{ secrets.VERCEL_TEAM_ID }}
+        ALIAS_DOMAINS: ${{ matrix.alias_domain }}
+        PRODUCTION: false

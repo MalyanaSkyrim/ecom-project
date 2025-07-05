@@ -1,5 +1,6 @@
 'use client'
 
+import { cva } from 'class-variance-authority'
 import { Info, X } from 'lucide-react'
 import React from 'react'
 
@@ -30,10 +31,21 @@ export interface ToastContentProps {
 
   onClose?: () => void
 }
+
+const iconStyle = cva('mr-2 h-[14px] w-[14px]', {
+  variants: {
+    variant: {
+      success: 'text-green-500',
+      info: 'text-blue-500',
+      warning: 'text-yellow-500',
+      error: 'text-red-500',
+    },
+  },
+})
+
 // Styles
 const classes = {
   base: 'flex bg-white w-[407px] h-auto justify-between rounded-md border-[0.5px] p-[16px] pb-[12px] [box-shadow:0px_4px_20px_rgba(0,_0,_0,_0.1)] gap-[10px] dark:bg-[#191919] dark:border-[#2F2F2F] max-[460px]:w-[100%]',
-  imageBase: 'mr-[12px] h-[12px] w-[12px]',
   title: 'text-[#3E414B] dark:text-white text-xs not-italic font-semibold',
   description:
     'mt-[8px] text-[#3E414B] dark:text-[#808082] text-sm not-italic font-normal text-sm text-ellipsis line-clamp-2',
@@ -70,9 +82,11 @@ const ToastContent: React.FC<ToastContentProps> = (props) => {
     <div className={baseClassNames}>
       <div className="flex flex-col">
         <div className="flex items-center">
-          <span>
-            <ToastIcon className={classes.imageBase} />
-          </span>
+          <ToastIcon
+            className={iconStyle({
+              variant,
+            })}
+          />
           <h1 className={classes.title}>{title}</h1>
         </div>
         <div>
