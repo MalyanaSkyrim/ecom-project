@@ -17,11 +17,11 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@ecom/config": "*",
-    "prisma": "^6.1.0"
+    "@ecom/config": "*"
   },
   "dependencies": {
     "@prisma/client": "^6.1.0",
-    "exponential-backoff": "^3.1.1"
+    "exponential-backoff": "^3.1.1",
+    "prisma": "^6.1.0"
   }
 }
