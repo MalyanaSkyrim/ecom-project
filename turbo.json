@@ -3,6 +3,7 @@
   "ui": "tui",
   "globalDependencies": [".env", "yarn.lock"],
   "globalEnv": [
+    "API_URL",
     "NODE_ENV",
     "DATABASE_URL",
     "REDIS_URL",
