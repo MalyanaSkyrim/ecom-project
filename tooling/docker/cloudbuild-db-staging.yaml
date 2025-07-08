@@ -5,6 +5,7 @@ steps:
       - prisma
       - migrate
       - deploy
+      - '--schema=packages/database/prisma/schema.prisma'
     id: migrate
     entrypoint: npx
     secretEnv:
@@ -18,5 +19,5 @@ tags:
 availableSecrets:
   secretManager:
     - versionName: >-
-        projects/$PROJECT_ID/secrets/PROD_DATABASE_URL/versions/latest
+        projects/$PROJECT_ID/secrets/STAGING_DATABASE_URL/versions/latest
       env: DATABASE_URL
