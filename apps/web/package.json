@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@ecom/config": "*",
+    "@svgr/webpack": "^8.1.0",
     "@types/cookies": "^0.9.0",
     "@types/node": "^22.9.0",
     "@types/react": "18.3.0",

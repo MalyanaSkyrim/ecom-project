@@ -16,8 +16,6 @@ import {
   DropdownMenuTrigger,
 } from '@ecom/ui'
 
-import LanguageSelect from '../LanguageSelect'
-
 const AccountDropDownMenu = ({ user }: { user: User }) => {
   const fullName = `${user?.firstName} ${user?.lastName}`.trim()
   const t = useTranslations()
@@ -36,8 +34,7 @@ const AccountDropDownMenu = ({ user }: { user: User }) => {
           <Link href="/profile">{t('profile')}</Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="justify-between">
-          <span>{t('languages')}</span>
-          <LanguageSelect />
+          <Link href="/profile">{t('orders')}</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Button

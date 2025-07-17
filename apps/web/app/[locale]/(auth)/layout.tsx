@@ -9,7 +9,7 @@ const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
   if (session) redirect('/')
 
   return (
-    <div className="flex h-screen items-center justify-center bg-neutral-500 bg-[url(/img/welcome-background.jpg)] bg-cover bg-no-repeat bg-blend-overlay">
+    <div className="flex h-screen items-center justify-center bg-neutral-500 bg-[url(/img/welcome_background.jpg)] bg-cover bg-no-repeat bg-blend-overlay">
       {children}
     </div>
   )

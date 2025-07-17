@@ -1,6 +1,6 @@
 import { Providers } from '@/components/providers'
 import SessionWrapper from '@/lib/auth/SessionWrapper'
-import { fontIntegralCF, fontMono, fontSans } from '@/lib/fonts'
+import { fontIntegralCF, fontMono, fontSans, fontSatoshi } from '@/lib/fonts'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import React from 'react'
@@ -24,7 +24,7 @@ const Layout = async ({
   return (
     <html lang={locale} suppressHydrationWarning>
       <body
-        className={`${fontSans.variable} ${fontMono.variable} ${fontIntegralCF.variable} flex min-h-screen flex-col bg-[#F2F0F1] font-sans antialiased`}>
+        className={`${fontSatoshi.variable} ${fontSans.variable} ${fontMono.variable} ${fontIntegralCF.variable} flex min-h-screen flex-col bg-white font-sans antialiased`}>
         <SessionWrapper>
           <NextIntlClientProvider locale={locale} messages={messages}>
             <Providers>{children}</Providers>

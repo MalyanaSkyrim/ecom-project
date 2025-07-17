@@ -12,7 +12,7 @@ const config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-sans)'],
+        sans: ['var(--font-satoshi)', 'var(--font-sans)', 'sans-serif'],
         mono: ['var(--font-mono)'],
         integralCF: ['var(--font-integral-cf)'],
       },

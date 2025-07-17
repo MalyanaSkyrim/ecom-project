@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { Button } from '@ecom/ui/components/Button'
 
 import AccountDropDownMenu from '../AccountDropDownMenu'
+import LanguageSelect from '../LanguageSelect'
 import SearchInput from '../SearchInput'
 
 const RightNavBar = () => {
@@ -23,24 +24,28 @@ const RightNavBar = () => {
           <Search className="!h-5 !w-5 outline-none" />
         </Button>
 
-        {status === 'authenticated' ? (
-          <>
-            <Button
-              variant="ghost"
-              asChild
-              className="h-8 w-8 rounded-full p-2">
-              <Link href="/cart">
-                <ShoppingCart className="!h-5 !w-5 outline-none" />
-              </Link>
+        <div className="flex items-center space-x-2">
+          {status === 'authenticated' ? (
+            <>
+              <Button
+                variant="ghost"
+                asChild
+                className="h-8 w-8 rounded-full p-2">
+                <Link href="/cart">
+                  <ShoppingCart className="!h-5 !w-5 outline-none" />
+                </Link>
+              </Button>
+
+              <AccountDropDownMenu user={session.user} />
+            </>
+          ) : (
+            <Button variant="link">
+              <User className="!h-4 !w-4 outline-none" />
+              <Link href="/signin">Sign In</Link>
             </Button>
-            <AccountDropDownMenu user={session.user} />
-          </>
-        ) : (
-          <Button variant="link">
-            <User className="!h-4 !w-4 outline-none" />
-            <Link href="/signin">Sign In</Link>
-          </Button>
-        )}
+          )}
+          <LanguageSelect />
+        </div>
       </div>
     </div>
   )
