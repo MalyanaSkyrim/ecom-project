@@ -12,12 +12,12 @@ const LeftNavBar = () => {
   const t = useTranslations('navigation')
   return (
     <div className="flex items-center space-x-5 lg:space-x-10">
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center gap-x-2">
         <MobileNavBar />
         <Link
           href="/"
           className={classMerge(
-            'font-integralCF mb-2 px-1 py-[2px] align-middle text-3xl font-extrabold outline-none',
+            'font-integralCF 2xs:text-3xl mb-2 px-1 py-[2px] align-middle text-2xl font-extrabold outline-none',
             'rounded focus:ring-[2px] focus:ring-neutral-700',
           )}>
           SHOP.CO

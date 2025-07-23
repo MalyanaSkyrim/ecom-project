@@ -5,8 +5,8 @@ import RightNavBar from './RightNavBar'
 
 const NavBar = () => {
   return (
-    <div className="bg-white px-4">
-      <div className="container m-auto flex h-20 items-center justify-between space-x-10 shadow-sm">
+    <div className="bg-white px-5 md:px-8 lg:px-10 xl:px-20">
+      <div className="flex h-20 items-center justify-between space-x-10 shadow-sm">
         <LeftNavBar />
         <RightNavBar />
       </div>
