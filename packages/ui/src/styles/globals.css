@@ -68,3 +68,10 @@
     font-family: Geist, 'Geist Mono';
   }
 }
+
+.section_container {
+  @apply w-full px-5 py-16 md:px-8 lg:px-10 xl:px-20;
+}
+.section_title {
+  @apply font-integralCF mx-auto w-fit text-5xl font-bold;
+}
