@@ -1,7 +1,9 @@
 'use client'
 
+import BrowseByCategory from '@/components/BrowseByCategory'
 import LandingSection from '@/components/Home/LandingSection'
 import NewArrivals from '@/components/Home/NewArrivals'
+import TopSelling from '@/components/Home/TopSelling'
 
 export default function HomePage() {
   // const t = useTranslations()
@@ -9,6 +11,11 @@ export default function HomePage() {
     <div className="w-full">
       <LandingSection />
       <NewArrivals />
+
+      <div className="separator"></div>
+
+      <TopSelling />
+      <BrowseByCategory />
     </div>
   )
 }

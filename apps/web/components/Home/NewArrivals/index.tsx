@@ -1,6 +1,4 @@
-import ProductCard from '@/components/ProductCard'
-
-import { Button } from '@ecom/ui'
+import FeaturedProducts from '@/components/FeaturedProducts'
 
 const products = [
   {
@@ -39,21 +37,11 @@ const products = [
 
 const NewArrivals = () => {
   return (
-    <div className="section_container space-y-14">
-      <h1 className="section_title">New Arrivals</h1>
-      <div className="space-y-10">
-        <div className="mx-auto flex w-fit flex-wrap items-center justify-center gap-x-5 gap-y-7">
-          {products.map((product) => (
-            <ProductCard key={product.id} {...product} />
-          ))}
-        </div>
-        <Button
-          variant="outline"
-          className="mx-auto flex h-12 w-44 rounded-full text-base">
-          View all
-        </Button>
-      </div>
-    </div>
+    <FeaturedProducts
+      title="New Arrivals"
+      products={products}
+      viewAllPath="/products/new-arrivals"
+    />
   )
 }
 

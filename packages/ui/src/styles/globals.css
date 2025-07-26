@@ -70,8 +70,13 @@
 }
 
 .section_container {
-  @apply w-full px-5 py-16 md:px-8 lg:px-10 xl:px-20;
+  @apply xs:px-5 xs:py-16 w-screen px-4 py-10 md:px-8 lg:px-10 xl:px-20;
 }
+
 .section_title {
-  @apply font-integralCF mx-auto w-fit text-5xl font-bold;
+  @apply font-integralCF mx-auto w-fit text-[32px] font-bold sm:text-5xl;
+}
+
+.separator {
+  @apply xs:mx-5 mx-4 h-[1px] bg-gray-300 md:mx-8 lg:mx-10 xl:mx-20 dark:bg-gray-600;
 }
