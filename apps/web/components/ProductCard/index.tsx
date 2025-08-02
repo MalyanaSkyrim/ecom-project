@@ -33,9 +33,9 @@ const ProductCard = ({
         />
       </div>
       <div className="space-y-2">
-        <h3 className="text-xl font-bold">{name}s</h3>
+        <h3 className="text-lg font-bold 2xl:text-xl">{name}s</h3>
         <RatingStars rating={rating} showRating size={22} />
-        <p className="text-2xl font-bold">{formattedPrice}</p>
+        <p className="text-xl font-bold 2xl:text-2xl">{formattedPrice}</p>
       </div>
     </div>
   )

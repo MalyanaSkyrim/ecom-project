@@ -70,11 +70,11 @@
 }
 
 .section_container {
-  @apply xs:px-5 xs:py-16 w-screen px-4 py-10 md:px-8 lg:px-10 xl:px-20;
+  @apply xs:px-5 xs:py-16 w-screen overflow-hidden px-4 py-10 md:px-8 lg:mx-auto lg:max-w-7xl lg:px-10 xl:px-20;
 }
 
 .section_title {
-  @apply font-integralCF mx-auto w-fit text-[32px] font-bold sm:text-5xl;
+  @apply font-integralCF mx-auto w-fit text-[32px] font-bold sm:text-4xl 2xl:text-5xl;
 }
 
 .separator {

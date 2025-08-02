@@ -24,6 +24,7 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
   viewAllPath,
 }) => {
   const { width } = useWindowSize()
+  const isDesktop = width >= 1024
   const isMobile = width < 640
   const router = useRouter()
 
@@ -35,22 +36,26 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
     <div className="section_container xs:space-y-14 space-y-10">
       <h1 className="section_title">{title}</h1>
       <div className="xs:space-y-10 space-y-6">
-        {isMobile ? (
-          <div className="xs:w-[calc(100vw-40px)] mx-auto w-[calc(100vw-32px)] overflow-hidden">
+        {!isDesktop ? (
+          <div className="xs:w-[calc(100vw-40px)] mx-auto w-[calc(100vw-32px)] overflow-hidden md:w-auto">
             <Carousel
-              slidesPerView={2}
+              slidesPerView={isMobile ? 2 : 3}
               navigation={false}
               pagination={false}
-              className="mx-auto flex w-[120vw] items-center"
+              className="xs:w-[90vw] mx-auto flex w-[120vw] items-center md:w-[calc(100vw-80px)]"
               components={products.map((product) => (
-                <ProductCard key={product.id} {...product} />
+                <ProductCard
+                  key={product.id}
+                  {...product}
+                  className="max-w-[250px] md:max-w-none"
+                />
               ))}
             />
           </div>
         ) : (
           <div className="mx-auto grid w-full grid-cols-2 gap-x-5 gap-y-7 lg:grid-cols-4">
             {products.map((product) => (
-              <ProductCard key={product.id} {...product} />
+              <ProductCard key={product.id} {...product} className="w-auto" />
             ))}
           </div>
         )}
