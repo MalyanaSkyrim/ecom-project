@@ -3,6 +3,7 @@
 import BrowseByCategory from '@/components/BrowseByCategory'
 import LandingSection from '@/components/Home/LandingSection'
 import NewArrivals from '@/components/Home/NewArrivals'
+import ReviewSection from '@/components/Home/ReviewSection'
 import TopSelling from '@/components/Home/TopSelling'
 
 export default function HomePage() {
@@ -16,6 +17,7 @@ export default function HomePage() {
 
       <TopSelling />
       <BrowseByCategory />
+      <ReviewSection />
     </div>
   )
 }

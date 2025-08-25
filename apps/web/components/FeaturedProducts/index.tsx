@@ -40,8 +40,6 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
           <div className="xs:w-[calc(100vw-40px)] mx-auto w-[calc(100vw-32px)] overflow-hidden md:w-auto">
             <Carousel
               slidesPerView={isMobile ? 2 : 3}
-              navigation={false}
-              pagination={false}
               className="xs:w-[90vw] mx-auto flex w-[120vw] items-center md:w-[calc(100vw-80px)]"
               components={products.map((product) => (
                 <ProductCard

@@ -62,7 +62,11 @@ const config = {
       },
     },
   },
-  plugins: [tailwindcssAnimate, tailwindRadix({})],
+  plugins: [
+    tailwindcssAnimate,
+    tailwindRadix({}),
+    require('@tailwindcss/line-clamp'),
+  ],
 } satisfies Config
 
 export default config

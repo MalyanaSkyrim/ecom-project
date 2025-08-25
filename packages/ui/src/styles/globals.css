@@ -80,3 +80,7 @@
 .separator {
   @apply xs:mx-5 mx-4 h-[1px] bg-gray-300 md:mx-8 lg:mx-10 xl:mx-20 dark:bg-gray-600;
 }
+
+.carousel-slide-active {
+  border: 1px solid red;
+}
