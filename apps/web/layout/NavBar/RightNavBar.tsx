@@ -1,14 +1,13 @@
 'use client'
 
+import AccountDropDownMenu from '@/components/AccountDropDownMenu'
+import LanguageSelect from '@/components/LanguageSelect'
+import SearchInput from '@/components/SearchInput'
 import { Search, ShoppingCart, User } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 
 import { Button } from '@ecom/ui/components/Button'
-
-import AccountDropDownMenu from '../AccountDropDownMenu'
-import LanguageSelect from '../LanguageSelect'
-import SearchInput from '../SearchInput'
 
 const RightNavBar = () => {
   const { data: session, status } = useSession()

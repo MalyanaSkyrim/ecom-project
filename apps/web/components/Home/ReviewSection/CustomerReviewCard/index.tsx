@@ -1,6 +1,5 @@
+import RatingStars from '@/components/RatingStars'
 import { CheckCircle } from 'lucide-react'
-
-import RatingStars from '../RatingStars'
 
 export interface CustomerReview {
   id: string

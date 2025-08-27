@@ -1,9 +1,7 @@
-import CustomerReviewCard, {
-  CustomerReview,
-} from '@/components/CustomerReviewCard'
-
 import { Carousel } from '@ecom/ui'
 import { useWindowSize } from '@ecom/ui/hooks'
+
+import CustomerReviewCard, { CustomerReview } from './CustomerReviewCard'
 
 const customerReviews: CustomerReview[] = [
   {
