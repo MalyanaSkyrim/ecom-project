@@ -1,3 +1,4 @@
+import lineClamp from '@tailwindcss/line-clamp'
 import type { Config } from 'tailwindcss'
 import tailwindcssAnimate from 'tailwindcss-animate'
 import tailwindRadix from 'tailwindcss-radix'
@@ -63,11 +64,7 @@ const config = {
       },
     },
   },
-  plugins: [
-    tailwindcssAnimate,
-    tailwindRadix({}),
-    require('@tailwindcss/line-clamp'),
-  ],
+  plugins: [tailwindcssAnimate, tailwindRadix({}), lineClamp],
 } satisfies Config
 
 export default config
