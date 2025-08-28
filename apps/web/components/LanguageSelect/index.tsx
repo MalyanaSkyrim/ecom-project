@@ -20,8 +20,10 @@ const LanguageSelect = () => {
 
   return (
     <Select defaultValue={locale} onValueChange={changeLocale}>
-      <SelectTrigger className="w-[120px]">
-        <SelectValue placeholder="Theme" />
+      <SelectTrigger>
+        <SelectValue placeholder="Theme">
+          <span className="capitalize">{locale}</span>
+        </SelectValue>
       </SelectTrigger>
       <SelectContent>
         {localeOptions.map((option) => (

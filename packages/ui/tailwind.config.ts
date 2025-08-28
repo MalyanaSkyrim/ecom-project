@@ -1,3 +1,4 @@
+import lineClamp from '@tailwindcss/line-clamp'
 import type { Config } from 'tailwindcss'
 import tailwindcssAnimate from 'tailwindcss-animate'
 import tailwindRadix from 'tailwindcss-radix'
@@ -7,12 +8,13 @@ const config = {
   content: [
     'app/**/*.{ts,tsx}',
     'components/**/*.{ts,tsx}',
+    'layout/**/*.{ts,tsx}',
     '../../packages/ui/src/components/**/*.{ts,tsx}',
   ],
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-sans)'],
+        sans: ['var(--font-satoshi)', 'var(--font-sans)', 'sans-serif'],
         mono: ['var(--font-mono)'],
         integralCF: ['var(--font-integral-cf)'],
       },
@@ -57,11 +59,12 @@ const config = {
         sm: 'calc(var(--radius) - 4px)',
       },
       screens: {
+        '2xs': '380px',
         xs: '480px',
       },
     },
   },
-  plugins: [tailwindcssAnimate, tailwindRadix({})],
+  plugins: [tailwindcssAnimate, tailwindRadix({}), lineClamp],
 } satisfies Config
 
 export default config

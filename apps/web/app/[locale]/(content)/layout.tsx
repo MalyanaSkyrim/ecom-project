@@ -1,4 +1,5 @@
-import NavBar from '@/components/NavBar'
+import Footer from '@/layout/Footer'
+import NavBar from '@/layout/NavBar'
 
 export default async function ContentLayout({
   children,
@@ -9,6 +10,7 @@ export default async function ContentLayout({
     <>
       <NavBar />
       <div className="grid flex-1">{children}</div>
+      <Footer />
     </>
   )
 }

@@ -24,7 +24,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         enableSystem
         disableTransitionOnChange
         enableColorScheme>
-        <div className="relative">
+        <div className="relative overflow-hidden">
           <Toaster />
           {status === 'loading' ? <PageLoader /> : children}
         </div>

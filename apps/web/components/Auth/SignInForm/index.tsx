@@ -30,7 +30,7 @@ const SignInForm = () => {
           duration: 3000,
         })
       }
-    } catch (error) {
+    } catch {
       showToast({
         id: 'sign-in-error',
         title: 'Something went wrong',

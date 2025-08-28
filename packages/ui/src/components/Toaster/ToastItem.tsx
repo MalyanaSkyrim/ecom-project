@@ -1,3 +1,5 @@
+'use client'
+
 import { useAnimate } from 'motion/react'
 import React, { useCallback, useEffect } from 'react'
 import { Toast } from 'react-hot-toast/headless'

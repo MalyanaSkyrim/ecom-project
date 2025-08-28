@@ -6,6 +6,7 @@
     "crdb",
     "dotlottie",
     "ecom",
+    "embla",
     "ianvs",
     "lottiefiles",
     "lotties",
@@ -14,6 +15,7 @@
     "NEXTAUTH",
     "nextjs",
     "preconfigured",
+    "Satoshi",
     "serviceworker",
     "shadcn",
     "signup",
@@ -23,7 +25,8 @@
     "turbopack",
     "Turborepo",
     "typecheck",
-    "vaul"
+    "vaul",
+    "Versace"
   ],
   "enableFiletypes": [
     "javascript",

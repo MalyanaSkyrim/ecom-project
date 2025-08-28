@@ -34,7 +34,7 @@ const updatePackageJsonName = async (
 const removeAuthorFromPackageJson = async (directory: string) => {
   const entries = await fs.readdir(directory, { withFileTypes: true })
 
-  for (let entry of entries) {
+  for (const entry of entries) {
     const entryPath = path.join(directory, entry.name)
 
     if (entry.isDirectory()) {
@@ -63,7 +63,7 @@ const replaceWorkspaceInFiles = async (
   if (validWorkspace === DEFAULT_WORKSPACE) return
   const entries = await fs.readdir(destinationPath, { withFileTypes: true })
 
-  for (let entry of entries) {
+  for (const entry of entries) {
     if (foldersToSkip.includes(entry.name)) continue
     const entryPath = path.join(destinationPath, entry.name)
     if (entry.isDirectory()) {

@@ -22,47 +22,43 @@ export async function downloadRepository(
 
   console.log(`Downloading ZIP from: ${zipUrl}`)
 
-  try {
-    // Download the ZIP file
-    const response = await fetch(zipUrl)
-    if (!response.ok) {
-      throw new Error(
-        `Failed to download ZIP: ${response.status} ${response.statusText}`,
-      )
-    }
-
-    // Save the ZIP file to disk
-    const buffer = await response.buffer()
-    fs.writeFileSync(zipFilePath, buffer)
-
-    console.log(`ZIP downloaded to: ${zipFilePath}`)
-
-    // Extract the ZIP file
-    const zip = new AdmZip(zipFilePath)
-    const tempExtractPath = path.join(destinationPath, 'temp')
-    zip.extractAllTo(tempExtractPath, true)
-
-    // Move files from the inner folder to the destination path
-    const extractedFolder = fs.readdirSync(tempExtractPath)[0]
-    const extractedPath = path.join(tempExtractPath, extractedFolder)
-    const files = fs.readdirSync(extractedPath)
-
-    for (const file of files) {
-      const source = path.join(extractedPath, file)
-      const target = path.join(destinationPath, file)
-      fs.renameSync(source, target)
-    }
-
-    // Remove temporary files and folders
-    fs.rmSync(tempExtractPath, { recursive: true, force: true })
-
-    console.log(`Repository unzipped to: ${destinationPath}`)
-
-    // Clean up the ZIP file
-    fs.unlinkSync(zipFilePath)
-  } catch (error) {
-    throw error
+  // Download the ZIP file
+  const response = await fetch(zipUrl)
+  if (!response.ok) {
+    throw new Error(
+      `Failed to download ZIP: ${response.status} ${response.statusText}`,
+    )
   }
+
+  // Save the ZIP file to disk
+  const buffer = await response.buffer()
+  fs.writeFileSync(zipFilePath, buffer)
+
+  console.log(`ZIP downloaded to: ${zipFilePath}`)
+
+  // Extract the ZIP file
+  const zip = new AdmZip(zipFilePath)
+  const tempExtractPath = path.join(destinationPath, 'temp')
+  zip.extractAllTo(tempExtractPath, true)
+
+  // Move files from the inner folder to the destination path
+  const extractedFolder = fs.readdirSync(tempExtractPath)[0]
+  const extractedPath = path.join(tempExtractPath, extractedFolder)
+  const files = fs.readdirSync(extractedPath)
+
+  for (const file of files) {
+    const source = path.join(extractedPath, file)
+    const target = path.join(destinationPath, file)
+    fs.renameSync(source, target)
+  }
+
+  // Remove temporary files and folders
+  fs.rmSync(tempExtractPath, { recursive: true, force: true })
+
+  console.log(`Repository unzipped to: ${destinationPath}`)
+
+  // Clean up the ZIP file
+  fs.unlinkSync(zipFilePath)
 }
 
 export async function initializeRepository(destinationPath: string) {
