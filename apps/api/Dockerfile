@@ -21,7 +21,7 @@ RUN apk add --no-cache libc6-compat openssl && apk update
 
 # Set working directory
 WORKDIR /app
-RUN yarn global add turbo
+RUN pnpm global add turbo
 COPY . .
 RUN turbo prune --scope=@ecom/api --docker
 
@@ -45,8 +45,8 @@ ENV SKIP_ENV_VALIDATION=true
 # First install dependencies (as they change less often)
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
-COPY --from=builder /app/out/yarn.lock ./yarn.lock
-RUN yarn install --network-timeout 1000000
+COPY --from=builder /app/out/pnpm.lock ./pnpm.lock
+RUN pnpm install --network-timeout 1000000
 
 # Get the output from the builder stage
 COPY --from=builder /app/out/full/ .
@@ -59,7 +59,7 @@ ARG TURBO_TEAM
 ENV TURBO_TEAM $TURBO_TOKEN
 
 # Build the project and its dependencies
-RUN yarn turbo run build --filter=@ecom/api...
+RUN pnpm turbo run build --filter=@ecom/api...
 
 #######################
 # Runner stage

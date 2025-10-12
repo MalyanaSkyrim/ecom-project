@@ -1,19 +1,19 @@
 import { FastifySchema } from 'fastify'
-import { buildJsonSchemas } from 'fastify-zod'
 import { z } from 'zod'
 
+import { buildJsonSchemas } from '../../../../lib/buildJsonSchema'
 import { bindExamples } from '../../../../utils/swagger'
 
 // Zod schema definitions.
 const signinBodySchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
   password: z.string().min(8),
 })
 
 const signinSuccessReplySchema = z.object({
   user: z.object({
     id: z.string(),
-    email: z.string().email(),
+    email: z.email(),
     firstName: z.string(),
     lastName: z.string().nullish(),
     avatar: z.string().nullish(),
@@ -21,12 +21,11 @@ const signinSuccessReplySchema = z.object({
   accessToken: z.string(),
 })
 
-const signinErrorReplySchema = z.object(
-  {
+const signinErrorReplySchema = z
+  .object({
     message: z.string(),
-  },
-  { description: 'Reply for the signin' },
-)
+  })
+  .meta({ description: 'Reply for the signin' })
 
 // Generated types from zod schemas.
 export type SigninInput = z.infer<typeof signinBodySchema>
@@ -45,9 +44,9 @@ const schemaExamples = {
 // Generate JSON schemas from zod schemas.
 export const { schemas: signinSchemas, $ref: signinRef } = buildJsonSchemas(
   {
-    '2xx': signinSuccessReplySchema,
-    '4xx': signinErrorReplySchema,
-    '5xx': signinErrorReplySchema,
+    signinBodySchema,
+    signinSuccessReplySchema,
+    signinErrorReplySchema,
   },
   { $id: 'signinSchemas', target: 'openApi3' },
 )
@@ -62,9 +61,10 @@ export const schema: FastifySchema = {
   security: [{ apiKey: [] }],
   summary: 'Signin user and get an access token',
   operationId: 'signin',
+  body: signinRef('signinBodySchema'),
   response: {
-    '2xx': signinRef('2xx'),
-    '4xx': signinRef('4xx'),
-    '5xx': signinRef('5xx'),
+    '2xx': signinRef('signinSuccessReplySchema'),
+    '4xx': signinRef('signinErrorReplySchema'),
+    '5xx': signinRef('signinErrorReplySchema'),
   },
 }

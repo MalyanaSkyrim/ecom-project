@@ -167,10 +167,10 @@ Managing services is simple with the provided scripts:
 
 ```bash
 # Start the database and other services
-yarn db:start
+pnpm db:start
 
 # Stop all services
-yarn db:stop
+pnpm db:stop
 ```
 
 Service access points:
@@ -233,7 +233,7 @@ export const env = createEnv({
 3. Install dependencies:
 
    ```bash
-   yarn install
+   pnpm install
    ```
 
 4. Set up environment variables:
@@ -244,7 +244,7 @@ export const env = createEnv({
 
 5. Start development servers:
    ```bash
-   yarn dev
+   pnpm dev
    ```
 
 ## Development Workflow
@@ -261,18 +261,18 @@ export const env = createEnv({
 1. Start the database:
 
    ```bash
-   yarn db:start
+   pnpm db:start
    ```
 
 2. Start the development servers:
 
    ```bash
    # Start all apps
-   yarn dev
+   pnpm dev
 
    # Or start a specific app
-   yarn dev --filter=web
-   yarn dev --filter=workshop
+   pnpm dev --filter=web
+   pnpm dev --filter=workshop
    ```
 
 3. Access services:
@@ -284,7 +284,7 @@ export const env = createEnv({
 Build all packages and applications:
 
 ```bash
-yarn build
+pnpm build
 ```
 
 This command:
@@ -299,7 +299,7 @@ This command:
 Run type checking across the entire monorepo:
 
 ```bash
-yarn typecheck
+pnpm typecheck
 ```
 
 ### Linting
@@ -307,7 +307,7 @@ yarn typecheck
 Lint all files in the monorepo:
 
 ```bash
-yarn lint
+pnpm lint
 ```
 
 ## Contributing

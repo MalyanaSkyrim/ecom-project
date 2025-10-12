@@ -1,11 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
 
-import { Input, InputProps } from '.'
+import { Input } from '.'
 
-type Story = StoryObj<React.FC<InputProps>>
-
-export default {
+const meta: Meta<typeof Input> = {
   title: 'Components/Input',
   component: Input,
   decorators: [
@@ -15,7 +13,11 @@ export default {
       </div>
     ),
   ],
-} satisfies Meta<typeof Input>
+}
+
+export default meta
+
+type Story = StoryObj<typeof Input>
 
 export const Default: Story = {
   args: {
@@ -25,7 +27,7 @@ export const Default: Story = {
 
 export const Disabled: Story = {
   args: {
-    ...Default.args,
+    placeholder: 'Enter your name',
     disabled: true,
   },
 }

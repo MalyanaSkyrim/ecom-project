@@ -27,11 +27,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 📦 Add yarn
+      - name: 📦 Add pnpm
         run: |
-          curl -fsSL --create-dirs -o $HOME/bin/yarn \
-          https://github.com/yarnpkg/yarn/releases/download/v1.22.19/yarn-1.22.19.js
-          chmod +x $HOME/bin/yarn
+          curl -fsSL --create-dirs -o $HOME/bin/pnpm \
+          https://github.com/pnpmpkg/pnpm/releases/download/v1.22.19/pnpm-1.22.19.js
+          chmod +x $HOME/bin/pnpm
           echo "$HOME/bin" >> $GITHUB_PATH
 
       - name: 🌍 Setup Node.js

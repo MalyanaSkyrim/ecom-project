@@ -6,6 +6,7 @@ import { Slot } from '@radix-ui/react-slot'
 import * as React from 'react'
 import {
   Controller,
+  DefaultValues,
   FormProvider,
   useForm,
   useFormContext,
@@ -20,26 +21,20 @@ import { classMerge } from '@ecom/ui/lib/utils'
 
 import { Label } from '../../Label'
 
-export interface FormProps<
-  TSchema extends z.ZodSchema,
-  TFieldValues extends FieldValues = z.infer<TSchema>,
-> {
-  schema: TSchema
-  defaultValues?: TFieldValues
+export interface FormProps<TFieldValues extends FieldValues> {
+  schema: z.Schema<TFieldValues, TFieldValues>
+  defaultValues?: DefaultValues<TFieldValues>
   onSubmit?: (data: TFieldValues) => void
   children: (form: UseFormReturn<TFieldValues>) => React.ReactNode
 }
 
-const Form = <
-  TSchema extends z.ZodSchema,
-  TFieldValues extends z.infer<TSchema>,
->({
+const Form = <TFieldValues extends FieldValues>({
   schema,
   children,
   defaultValues,
   onSubmit,
   ...rest
-}: FormProps<TSchema, TFieldValues>) => {
+}: FormProps<TFieldValues>) => {
   const form = useForm<TFieldValues>({
     resolver: zodResolver(schema),
     defaultValues,
