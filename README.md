@@ -18,7 +18,6 @@
 - **[TurboRepo](https://turbo.build/repo) Integration**: A high-performance build system that leverages intelligent caching and parallel execution to significantly reduce build times. It automatically tracks dependencies between packages and apps to ensure efficient rebuilds.
 
 - **Apps**
-
   - **[Next.js](https://nextjs.org/) Web Application**: A feature-rich React framework application preconfigured with:
     - Server-side rendering
     - API routes
@@ -31,7 +30,6 @@
     - Share components across teams
 
 - **Reusable Packages**:
-
   - **UI Package**: A collection of reusable UI components optionally based on [ShadCN UI](https://shadcn.dev/), providing:
     - Consistent design language
     - Accessibility-first components
@@ -48,7 +46,6 @@
     - [TypeScript](https://www.typescriptlang.org/) - Type safety and developer tooling
 
 - **Continuous Integration**: Predefined [GitHub Actions](https://github.com/features/actions) workflow that:
-
   - Validates code quality
   - Ensures type safety
   - Verifies build integrity
