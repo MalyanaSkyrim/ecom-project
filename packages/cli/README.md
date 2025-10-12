@@ -18,7 +18,6 @@
 - **[TurboRepo](https://turbo.build/repo) Integration**: A high-performance build system that leverages intelligent caching and parallel execution to significantly reduce build times. It automatically tracks dependencies between packages and apps to ensure efficient rebuilds.
 
 - **Apps**
-
   - **[Next.js](https://nextjs.org/) Web Application**: A feature-rich React framework application preconfigured with:
     - Server-side rendering
     - API routes
@@ -31,7 +30,6 @@
     - Share components across teams
 
 - **Reusable Packages**:
-
   - **UI Package**: A collection of reusable UI components optionally based on [ShadCN UI](https://shadcn.dev/), providing:
     - Consistent design language
     - Accessibility-first components
@@ -48,7 +46,6 @@
     - [TypeScript](https://www.typescriptlang.org/) - Type safety and developer tooling
 
 - **Continuous Integration**: Predefined [GitHub Actions](https://github.com/features/actions) workflow that:
-
   - Validates code quality
   - Ensures type safety
   - Verifies build integrity
@@ -167,10 +164,10 @@ Managing services is simple with the provided scripts:
 
 ```bash
 # Start the database and other services
-yarn db:start
+pnpm db:start
 
 # Stop all services
-yarn db:stop
+pnpm db:stop
 ```
 
 Service access points:
@@ -233,7 +230,7 @@ export const env = createEnv({
 3. Install dependencies:
 
    ```bash
-   yarn install
+   pnpm install
    ```
 
 4. Set up environment variables:
@@ -244,7 +241,7 @@ export const env = createEnv({
 
 5. Start development servers:
    ```bash
-   yarn dev
+   pnpm dev
    ```
 
 ## Development Workflow
@@ -261,18 +258,18 @@ export const env = createEnv({
 1. Start the database:
 
    ```bash
-   yarn db:start
+   pnpm db:start
    ```
 
 2. Start the development servers:
 
    ```bash
    # Start all apps
-   yarn dev
+   pnpm dev
 
    # Or start a specific app
-   yarn dev --filter=web
-   yarn dev --filter=workshop
+   pnpm dev --filter=web
+   pnpm dev --filter=workshop
    ```
 
 3. Access services:
@@ -284,7 +281,7 @@ export const env = createEnv({
 Build all packages and applications:
 
 ```bash
-yarn build
+pnpm build
 ```
 
 This command:
@@ -299,7 +296,7 @@ This command:
 Run type checking across the entire monorepo:
 
 ```bash
-yarn typecheck
+pnpm typecheck
 ```
 
 ### Linting
@@ -307,7 +304,7 @@ yarn typecheck
 Lint all files in the monorepo:
 
 ```bash
-yarn lint
+pnpm lint
 ```
 
 ## Contributing

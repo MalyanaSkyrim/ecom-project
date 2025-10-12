@@ -6,9 +6,19 @@ ARG NODE_VERSION="22.11.0"
 # Pin Alpine version
 ARG ALPINE_VERSION="3.20"
 
+# Pin pnpm version
+ARG PNPM_VERSION="10.10.0"
+
 
 # Base image
 FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS base
+
+# Install pnpm globally using npm and configure it
+ARG PNPM_VERSION
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN npm install -g pnpm@${PNPM_VERSION} && \
+  pnpm config set store-dir /pnpm/store
 
 #######################
 # Builder stage
@@ -21,7 +31,7 @@ RUN apk add --no-cache libc6-compat openssl && apk update
 
 # Set working directory
 WORKDIR /app
-RUN yarn global add turbo
+RUN pnpm add -g turbo
 COPY . .
 RUN turbo prune --scope=@ecom/api --docker
 
@@ -45,8 +55,8 @@ ENV SKIP_ENV_VALIDATION=true
 # First install dependencies (as they change less often)
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
-COPY --from=builder /app/out/yarn.lock ./yarn.lock
-RUN yarn install --network-timeout 1000000
+COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+RUN pnpm config set network-timeout 1000000 && pnpm install --frozen-lockfile
 
 # Get the output from the builder stage
 COPY --from=builder /app/out/full/ .
@@ -54,12 +64,12 @@ COPY turbo.json turbo.json
 
 # Remote caching
 ARG TURBO_TOKEN
-ENV TURBO_TOKEN $TURBO_TOKEN
+ENV TURBO_TOKEN=$TURBO_TOKEN
 ARG TURBO_TEAM
-ENV TURBO_TEAM $TURBO_TOKEN
+ENV TURBO_TEAM=$TURBO_TEAM
 
 # Build the project and its dependencies
-RUN yarn turbo run build --filter=@ecom/api...
+RUN pnpm turbo run build --filter=@ecom/api...
 
 #######################
 # Runner stage

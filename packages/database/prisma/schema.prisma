@@ -13,6 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// EXISTING USER AUTHENTICATION (Your current models)
 model User {
   id            String          @id @default(cuid())
   firstName     String
@@ -23,8 +24,14 @@ model User {
   avatar        String?
   accounts      Account[]
   sessions      Session[]
-  // Optional for WebAuthn support
-  Authenticator Authenticator[]
+  authenticator Authenticator[]
+
+  // Multi-store relationship
+  storeUsers StoreUser[]
+  // Link to customer records across stores
+  customers  Customer[]
+  // User carts across stores
+  carts      Cart[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -83,4 +90,192 @@ model Authenticator {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, credentialID])
+}
+
+// CORE MULTI-TENANT MODELS
+
+model Store {
+  id       String  @id @default(cuid())
+  name     String
+  slug     String  @unique
+  domain   String? @unique
+  isActive Boolean @default(true)
+
+  // Relationships
+  storeUsers StoreUser[]
+  apiKeys    ApiKey[]
+  products   Product[]
+  customers  Customer[]
+  orders     Order[]
+  carts      Cart[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model StoreUser {
+  id      String    @id @default(cuid())
+  userId  String
+  storeId String
+  role    StoreRole @default(STAFF)
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, storeId])
+}
+
+model ApiKey {
+  id        String  @id @default(cuid())
+  storeId   String
+  name      String // Human-readable name
+  keyPrefix String // e.g., "sk_live_abc123" - indexed but not unique
+  hashedKey String  @unique // Hashed version
+  isActive  Boolean @default(true)
+
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([keyPrefix]) // Index for fast lookups, but allow duplicates
+}
+
+// CORE E-COMMERCE MODELS
+
+model Cart {
+  id        String  @id @default(cuid())
+  storeId   String
+  userId    String? // Authenticated user cart (null for guest)
+  sessionId String? // Guest cart identifier (browser session/cookie)
+
+  store Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  user  User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items CartItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([storeId, userId]) // One cart per user per store
+  @@unique([storeId, sessionId]) // One cart per session per store
+  @@index([sessionId]) // Fast lookup for guest carts
+}
+
+model CartItem {
+  id        String @id @default(cuid())
+  cartId    String
+  productId String
+  quantity  Int    @default(1)
+
+  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([cartId, productId]) // One item per product per cart
+}
+
+// OrderItem keeps historical data and pricing snapshots
+
+model Product {
+  id          String  @id @default(cuid())
+  storeId     String
+  name        String
+  slug        String
+  description String?
+  price       Decimal
+  isActive    Boolean @default(true)
+  isFeatured  Boolean @default(false) // For featured products
+  rating      Float?  @default(0) // Rating 0-5, nullable for new products
+  totalSales  Int     @default(0) // Track total quantity sold for top selling
+
+  store      Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
+  cartItems  CartItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([storeId, slug])
+  @@index([storeId, isFeatured]) // Fast lookup for featured products
+  @@index([storeId, totalSales]) // Fast lookup for top selling products
+  @@index([storeId, rating]) // Fast lookup for highest rated products
+}
+
+model Customer {
+  id        String  @id @default(cuid())
+  storeId   String
+  userId    String? // Link to authenticated user (null for guest customers)
+  email     String
+  firstName String?
+  lastName  String?
+
+  // Store-specific customer data
+  totalSpent    Decimal   @default(0)
+  orderCount    Int       @default(0)
+  lastOrderDate DateTime?
+  isVip         Boolean   @default(false)
+
+  store  Store   @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  orders Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([storeId, email])
+  @@unique([storeId, userId]) // One customer record per user per store (when userId is not null)
+  @@index([storeId, totalSpent]) // For VIP/high-value customer queries
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  storeId     String
+  customerId  String
+  orderNumber String      @unique
+  status      OrderStatus @default(PENDING)
+  total       Decimal
+
+  store    Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  customer Customer    @relation(fields: [customerId], references: [id])
+  items    OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([storeId, orderNumber])
+}
+
+model OrderItem {
+  id          String  @id @default(cuid())
+  orderId     String
+  productId   String?
+  productName String // Snapshot for historical accuracy
+  quantity    Int
+  unitPrice   Decimal
+  totalPrice  Decimal
+
+  order   Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product? @relation(fields: [productId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+// ENUMS
+enum StoreRole {
+  OWNER
+  ADMIN
+  STAFF
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
 }

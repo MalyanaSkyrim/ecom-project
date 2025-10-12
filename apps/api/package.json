@@ -10,12 +10,12 @@
     "dev": "tsx watch --clear-screen=false src/app.ts",
     "build": "NODE_ENV=production tsup",
     "start": "node build/app.js",
-    "docs": "mkdir -p generated && yarn tsx scripts/generate-docs.ts",
+    "docs": "mkdir -p generated &&  tsx scripts/generate-docs.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint ."
   },
   "dependencies": {
-    "@ecom/database": "*",
+    "@ecom/database": "workspace:*",
     "@fastify/autoload": "^6.2.0",
     "@fastify/cookie": "^11.0.2",
     "@fastify/rate-limit": "^10.2.2",
@@ -33,7 +33,7 @@
     "tiny-glob": "^0.2.9"
   },
   "devDependencies": {
-    "@ecom/config": "*",
+    "@ecom/config": "workspace:*",
     "@types/fast-redact": "^3.0.4",
     "@types/jsonwebtoken": "^9.0.9"
   }

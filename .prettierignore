@@ -11,7 +11,7 @@ coverage
 generated
 .docusaurus
 node_modules
-
+*-lock.yaml
 *.lock
 *.log
 *.hbs

@@ -1,7 +1,7 @@
 import { FastifySchema } from 'fastify'
-import { buildJsonSchemas } from 'fastify-zod'
 import { z } from 'zod'
 
+import { buildJsonSchemas } from '../../../../lib/buildJsonSchema'
 import { bindExamples } from '../../../../utils/swagger'
 
 export const userSchema = z.object({
@@ -24,12 +24,11 @@ const signupSuccessReplySchema = z.object({
   }),
 })
 
-const signupErrorReplySchema = z.object(
-  {
+const signupErrorReplySchema = z
+  .object({
     message: z.string(),
-  },
-  { description: 'Reply for the signup' },
-)
+  })
+  .meta({ description: 'Reply for the signup' })
 
 // Generated types from zod schemas.
 export type SignupInput = z.infer<typeof signupBodySchema>
@@ -48,9 +47,9 @@ const schemaExamples = {
 // Generate JSON schemas from zod schemas.
 export const { schemas: signupSchemas, $ref: signupRef } = buildJsonSchemas(
   {
-    '2xx': signupSuccessReplySchema,
-    '4xx': signupErrorReplySchema,
-    '5xx': signupErrorReplySchema,
+    signupBodySchema,
+    signupSuccessReplySchema,
+    signupErrorReplySchema,
   },
   { $id: 'signupSchemas', target: 'openApi3' },
 )
@@ -66,8 +65,8 @@ export const schema: FastifySchema = {
   summary: 'Signup user and get an access token',
   operationId: 'signup',
   response: {
-    '2xx': signupRef('2xx'),
-    '4xx': signupRef('4xx'),
-    '5xx': signupRef('5xx'),
+    '2xx': signupRef('signupSuccessReplySchema'),
+    '4xx': signupRef('signupErrorReplySchema'),
+    '5xx': signupRef('signupErrorReplySchema'),
   },
 }

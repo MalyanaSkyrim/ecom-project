@@ -9,10 +9,10 @@ env:
   TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
   API_KEY: 'abcdef1234'
   REDIS_URL: redis://localhost:6379
-  DATABASE_URL: postgresql://root@localhost:26258/ecom-dev?sslmode=disable,
+  DATABASE_URL: postgresql://root@localhost:26258/ecom-dev?sslmode=disable
   NEXTAUTH_URL: http://localhost:3000
-  NEXTAUTH_SECRET: abcdef1234,
-  GOOGLE_CLIENT_ID: aaaabcdef1234,
+  NEXTAUTH_SECRET: abcdef1234
+  GOOGLE_CLIENT_ID: aaaabcdef1234
   GOOGLE_CLIENT_SECRET: aaaabbbbcdef1234
   API_PORT: 4000
 
@@ -20,40 +20,37 @@ jobs:
   ci:
     name: 'Continuous Integration'
     runs-on: ubuntu-latest
-    container:
-      image: node:22
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: 📦 Add yarn
-        run: |
-          curl -fsSL --create-dirs -o $HOME/bin/yarn \
-          https://github.com/yarnpkg/yarn/releases/download/v1.22.22/yarn-1.22.22.js
-          chmod +x $HOME/bin/yarn
-          echo "$HOME/bin" >> $GITHUB_PATH
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.10.0
 
       - name: 🌍 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22.11.0'
+          cache: 'pnpm'
 
       - name: 🚚 Install dependencies
-        run: yarn install
+        run: pnpm install
 
       - name: Prisma generate
-        run: yarn db:generate
+        run: pnpm db:generate
 
       - name: Run Spellcheck
-        run: yarn spell
+        run: pnpm spell
 
       - name: Check code formatting
-        run: yarn prettier:check
+        run: pnpm prettier:check
 
       - name: Lint and typecheck the code
-        run: yarn typecheck && yarn lint
+        run: pnpm typecheck && pnpm lint
 
       - name: Build
-        run: SKIP_ENV_VALIDATION=true CI=true NODE_ENV=production yarn build --color
+        run: SKIP_ENV_VALIDATION=true CI=true NODE_ENV=production pnpm build --color

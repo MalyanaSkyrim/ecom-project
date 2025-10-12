@@ -2,6 +2,8 @@
   "extends": "@ecom/config/typescript/nextjs.json",
   "compilerOptions": {
     "strict": true,
+    "declaration": false,
+    "declarationMap": false,
     "strictNullChecks": true,
     "allowArbitraryExtensions": true,
     "baseUrl": ".",

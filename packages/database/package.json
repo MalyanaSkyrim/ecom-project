@@ -17,7 +17,7 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@ecom/config": "*"
+    "@ecom/config": "workspace:*"
   },
   "dependencies": {
     "@prisma/client": "^6.1.0",
