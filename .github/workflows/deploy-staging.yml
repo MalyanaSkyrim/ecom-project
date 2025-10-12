@@ -27,12 +27,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 📦 Add pnpm
-        run: |
-          curl -fsSL --create-dirs -o $HOME/bin/pnpm \
-          https://github.com/pnpmpkg/pnpm/releases/download/v1.22.19/pnpm-1.22.19.js
-          chmod +x $HOME/bin/pnpm
-          echo "$HOME/bin" >> $GITHUB_PATH
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.10.0
 
       - name: 🌍 Setup Node.js
         uses: actions/setup-node@v4
