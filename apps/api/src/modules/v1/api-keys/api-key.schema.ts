@@ -51,6 +51,15 @@ const getApiKeysSuccessReplySchema = z.object({
 const apiKeyErrorReplySchema = z
   .object({
     message: z.string(),
+    code: z.string(),
+    data: z
+      .array(
+        z.object({
+          field: z.string(),
+          message: z.string(),
+        }),
+      )
+      .optional(),
   })
   .meta({ description: 'Reply for API key operations' })
 
@@ -94,6 +103,7 @@ const apiKeyListExample: ApiKeyListResponse = {
 
 const apiKeyErrorExample: ApiKeyErrorOutput = {
   message: 'API key not found',
+  code: 'API_KEY_NOT_FOUND',
 }
 
 const schemaExamples = {

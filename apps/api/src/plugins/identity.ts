@@ -2,6 +2,11 @@ import { FastifyPluginAsync, FastifyRequest } from 'fastify'
 import fp from 'fastify-plugin'
 
 import { extractApiKeyFromHeader, validateApiKey } from '../lib/auth'
+import {
+  ApiKeyRequiredError,
+  InvalidApiKeyFormatError,
+  ApiKeyInactiveError,
+} from '../lib/error'
 
 /**
  * Extend FastifyRequest to include user information
@@ -47,32 +52,20 @@ const identityPlugin: FastifyPluginAsync = async (fastify) => {
       const apiKey = extractApiKeyFromHeader(authHeader)
 
       if (!apiKey) {
-        return reply.code(401).send({
-          error: 'Unauthorized',
-          message:
-            'API key is required. Please provide a valid API key in the Authorization header.',
-          code: 'MISSING_API_KEY',
-        })
+        throw new ApiKeyRequiredError()
       }
 
       // Validate the API key
       const validationResult = await validateApiKey(apiKey)
 
       if (!validationResult.isValid) {
-        const errorCode =
-          validationResult.error === 'Invalid API key format'
-            ? 'INVALID_API_KEY_FORMAT'
-            : validationResult.error === 'API key is inactive'
-              ? 'INACTIVE_API_KEY'
-              : validationResult.error === 'Store is inactive'
-                ? 'INACTIVE_STORE'
-                : 'INVALID_API_KEY'
-
-        return reply.code(401).send({
-          error: 'Unauthorized',
-          message: validationResult.error || 'Invalid API key',
-          code: errorCode,
-        })
+        if (validationResult.error === 'Invalid API key format') {
+          throw new InvalidApiKeyFormatError()
+        } else if (validationResult.error === 'API key is inactive') {
+          throw new ApiKeyInactiveError()
+        } else {
+          throw new InvalidApiKeyFormatError()
+        }
       }
 
       // Attach user information to the request
@@ -97,12 +90,18 @@ const identityPlugin: FastifyPluginAsync = async (fastify) => {
         )
       }
     } catch (error) {
+      // Re-throw custom errors to be handled by the global error handler
+      if (
+        error instanceof ApiKeyRequiredError ||
+        error instanceof InvalidApiKeyFormatError ||
+        error instanceof ApiKeyInactiveError
+      ) {
+        throw error
+      }
+
+      // Log unexpected errors and re-throw
       fastify.log.error(error, 'Error during API key validation')
-      return reply.code(500).send({
-        error: 'Internal Server Error',
-        message: 'An error occurred while validating your API key',
-        code: 'VALIDATION_ERROR',
-      })
+      throw error
     }
   })
 
