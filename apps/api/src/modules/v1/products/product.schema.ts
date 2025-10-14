@@ -69,8 +69,8 @@ export type ProductErrorOutput = z.infer<typeof errorReplySchema>
 
 // Examples for documentation
 const productExample: ProductResponse = {
-  id: 'clx1234567890abcdef',
-  storeId: 'clx0987654321fedcba',
+  id: '123e4567-e89b-12d3-a456-426614174000',
+  storeId: 'abcd-1234-5678-90ab-cdef-1234-5678-90ab',
   name: 'Premium Wireless Headphones',
   slug: 'premium-wireless-headphones',
   description: 'High-quality wireless headphones with noise cancellation',
