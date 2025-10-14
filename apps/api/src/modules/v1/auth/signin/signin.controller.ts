@@ -1,6 +1,7 @@
 import { formatDuration, intervalToDuration } from 'date-fns'
 import { RouteHandler } from 'fastify'
 
+import { InvalidCredentialsError } from '../../../../lib/error'
 import {
   SigninErrorOutput,
   SigninInput,
@@ -37,12 +38,20 @@ export const signinHandler: RouteHandler<{
   const user = await getUserByEmail(email)
 
   if (!user || !user.password) {
-    return reply.code(401).send({ message: 'Invalid credentials' })
+    throw new InvalidCredentialsError({
+      message:
+        'Invalid email or password. Please check your credentials and try again.',
+      meta: { email, hasPassword: !!user?.password },
+    })
   }
 
   const isPasswordValid = await verifyPassword(password, user.password)
   if (!isPasswordValid) {
-    return reply.code(401).send({ message: 'Invalid credentials' })
+    throw new InvalidCredentialsError({
+      message:
+        'Invalid email or password. Please check your credentials and try again.',
+      meta: { email, userId: user.id },
+    })
   }
 
   const { accessToken } = generateTokens(user.id, user.email)

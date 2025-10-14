@@ -1,6 +1,10 @@
 import { formatDuration, intervalToDuration } from 'date-fns'
 import { RouteHandler } from 'fastify'
 
+import {
+  EmailAlreadyExistsError,
+  UserCreationFailedError,
+} from '../../../../lib/error'
 import { getUserByEmail } from '../signin/signin.services'
 import {
   SignupErrorOutput,
@@ -34,20 +38,33 @@ export const signupHandler: RouteHandler<{
   const existingUser = await getUserByEmail(email)
 
   if (existingUser) {
-    return reply
-      .code(409)
-      .send({ message: 'User with this email already exists' })
+    throw new EmailAlreadyExistsError({
+      message: `An account with the email '${email}' already exists. Please use a different email or try signing in.`,
+      meta: { email, existingUserId: existingUser.id },
+    })
   }
 
-  const newUser = await createUser(req.body)
+  try {
+    const newUser = await createUser(req.body)
 
-  reply.code(200).send({
-    user: {
-      id: newUser.id,
-      email: newUser.email,
-      firstName: newUser.firstName,
-      lastName: newUser.lastName,
-      avatar: newUser.avatar,
-    },
-  })
+    reply.code(200).send({
+      user: {
+        id: newUser.id,
+        email: newUser.email,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        avatar: newUser.avatar,
+      },
+    })
+  } catch (error) {
+    throw new UserCreationFailedError({
+      message:
+        'Failed to create user account. Please try again or contact support if the issue persists.',
+      meta: {
+        originalError: error instanceof Error ? error.message : 'Unknown error',
+        email,
+        firstName: req.body.firstName,
+      },
+    })
+  }
 }

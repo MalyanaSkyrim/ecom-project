@@ -6,6 +6,7 @@
     "API_URL",
     "NODE_ENV",
     "DATABASE_URL",
+    "TEST_DATABASE_URL",
     "REDIS_URL",
     "SKIP_ENV_VALIDATION",
     "API_KEY",
@@ -19,6 +20,11 @@
     "db:generate": {
       "inputs": ["prisma/schema.prisma"],
       "cache": false
+    },
+    "db:push:test": {
+      "inputs": ["prisma/schema.prisma"],
+      "cache": false,
+      "env": ["TEST_DATABASE_URL", "DATABASE_URL"]
     },
     "build": {
       "dependsOn": ["^build", "db:generate", "^db:generate"],
@@ -37,6 +43,11 @@
     },
     "typecheck": {
       "dependsOn": ["db:generate", "^typecheck"]
+    },
+    "test": {
+      "dependsOn": ["^db:push:test"],
+      "cache": false,
+      "outputs": ["coverage/**"]
     },
     "dev": {
       "dependsOn": ["^db:generate", "^build"],

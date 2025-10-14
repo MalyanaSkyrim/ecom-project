@@ -2,6 +2,7 @@ import { FastifySchema } from 'fastify'
 import { z } from 'zod'
 
 import { buildJsonSchemas } from '../../../../lib/buildJsonSchema'
+import { errorReplySchema } from '../../../../lib/error'
 import { bindExamples } from '../../../../utils/swagger'
 
 // Zod schema definitions.
@@ -21,24 +22,19 @@ const signinSuccessReplySchema = z.object({
   accessToken: z.string(),
 })
 
-const signinErrorReplySchema = z
-  .object({
-    message: z.string(),
-  })
-  .meta({ description: 'Reply for the signin' })
-
 // Generated types from zod schemas.
 export type SigninInput = z.infer<typeof signinBodySchema>
 export type SigninSuccessOutput = z.infer<typeof signinSuccessReplySchema>
-export type SigninErrorOutput = z.infer<typeof signinErrorReplySchema>
+export type SigninErrorOutput = z.infer<typeof errorReplySchema>
 
 // Examples of schemas from types definitions.
-const signinErrorReplySchemaExample: SigninErrorOutput = {
-  message: 'Login successful',
+const errorReplySchemaExample: SigninErrorOutput = {
+  message: 'User not found',
+  code: 'USER_NOT_FOUND',
 }
 
 const schemaExamples = {
-  signinErrorReplySchemaExample,
+  errorReplySchemaExample,
 }
 
 // Generate JSON schemas from zod schemas.
@@ -46,7 +42,7 @@ export const { schemas: signinSchemas, $ref: signinRef } = buildJsonSchemas(
   {
     signinBodySchema,
     signinSuccessReplySchema,
-    signinErrorReplySchema,
+    errorReplySchema,
   },
   { $id: 'signinSchemas', target: 'openApi3' },
 )
@@ -64,7 +60,7 @@ export const schema: FastifySchema = {
   body: signinRef('signinBodySchema'),
   response: {
     '2xx': signinRef('signinSuccessReplySchema'),
-    '4xx': signinRef('signinErrorReplySchema'),
-    '5xx': signinRef('signinErrorReplySchema'),
+    '4xx': signinRef('errorReplySchema'),
+    '5xx': signinRef('errorReplySchema'),
   },
 }

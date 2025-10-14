@@ -1,0 +1,20 @@
+meta {
+  name: Deactivate API Key
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{API_URL}}/v1/api-keys/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: api-key-id-here
+}
+
+auth:bearer {
+  token: {{API_KEY}}
+}
+

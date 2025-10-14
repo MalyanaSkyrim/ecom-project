@@ -1,0 +1,29 @@
+meta {
+  name: Create Product
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{API_URL}}/v1/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{API_KEY}}
+}
+
+body:json {
+  {
+    "name": "Premium Wireless Headphones",
+    "slug": "premium-wireless-headphones",
+    "description": "High-quality wireless headphones with active noise cancellation",
+    "price": 299.99,
+    "isActive": true,
+    "isFeatured": true,
+    "rating": 4.8,
+    "totalSales": 152
+  }
+}
+

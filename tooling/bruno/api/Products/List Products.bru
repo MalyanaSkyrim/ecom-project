@@ -1,0 +1,23 @@
+meta {
+  name: List Products
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{API_URL}}/v1/products?pageSize=10&pageIndex=0
+  body: none
+  auth: bearer
+}
+
+params:query {
+  pageSize: 10
+  pageIndex: 0
+  ~isFeatured: true
+  ~searchText: wireless
+}
+
+auth:bearer {
+  token: {{API_KEY}}
+}
+

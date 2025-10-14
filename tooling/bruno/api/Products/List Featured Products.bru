@@ -1,0 +1,21 @@
+meta {
+  name: List Featured Products
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{API_URL}}/v1/products?pageSize=500&pageIndex=0
+  body: none
+  auth: bearer
+}
+
+params:query {
+  pageSize: 500
+  pageIndex: 0
+  ~isFeatured: true
+}
+
+auth:bearer {
+  token: {{API_KEY}}
+}

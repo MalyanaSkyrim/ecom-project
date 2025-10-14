@@ -15,7 +15,7 @@ datasource db {
 
 // EXISTING USER AUTHENTICATION (Your current models)
 model User {
-  id            String          @id @default(cuid())
+  id            String          @id @default(uuid())
   firstName     String
   lastName      String?
   email         String          @unique
@@ -95,7 +95,7 @@ model Authenticator {
 // CORE MULTI-TENANT MODELS
 
 model Store {
-  id       String  @id @default(cuid())
+  id       String  @id @default(uuid())
   name     String
   slug     String  @unique
   domain   String? @unique
@@ -114,7 +114,7 @@ model Store {
 }
 
 model StoreUser {
-  id      String    @id @default(cuid())
+  id      String    @id @default(uuid())
   userId  String
   storeId String
   role    StoreRole @default(STAFF)
@@ -129,7 +129,7 @@ model StoreUser {
 }
 
 model ApiKey {
-  id        String  @id @default(cuid())
+  id        String  @id @default(uuid())
   storeId   String
   name      String // Human-readable name
   keyPrefix String // e.g., "sk_live_abc123" - indexed but not unique
@@ -147,7 +147,7 @@ model ApiKey {
 // CORE E-COMMERCE MODELS
 
 model Cart {
-  id        String  @id @default(cuid())
+  id        String  @id @default(uuid())
   storeId   String
   userId    String? // Authenticated user cart (null for guest)
   sessionId String? // Guest cart identifier (browser session/cookie)
@@ -165,7 +165,7 @@ model Cart {
 }
 
 model CartItem {
-  id        String @id @default(cuid())
+  id        String @id @default(uuid())
   cartId    String
   productId String
   quantity  Int    @default(1)
@@ -182,7 +182,7 @@ model CartItem {
 // OrderItem keeps historical data and pricing snapshots
 
 model Product {
-  id          String  @id @default(cuid())
+  id          String  @id @default(uuid())
   storeId     String
   name        String
   slug        String
@@ -207,7 +207,7 @@ model Product {
 }
 
 model Customer {
-  id        String  @id @default(cuid())
+  id        String  @id @default(uuid())
   storeId   String
   userId    String? // Link to authenticated user (null for guest customers)
   email     String
@@ -233,7 +233,7 @@ model Customer {
 }
 
 model Order {
-  id          String      @id @default(cuid())
+  id          String      @id @default(uuid())
   storeId     String
   customerId  String
   orderNumber String      @unique
@@ -251,7 +251,7 @@ model Order {
 }
 
 model OrderItem {
-  id          String  @id @default(cuid())
+  id          String  @id @default(uuid())
   orderId     String
   productId   String?
   productName String // Snapshot for historical accuracy
