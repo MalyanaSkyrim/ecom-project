@@ -51,7 +51,7 @@ async function main() {
 
     // 4. Create products for the store
     console.log('📦 Creating products...')
-    const products = await createManyProducts(store.id, 10)
+    const products = await createManyProducts(store.id, 1000)
     console.log(`   Created ${products.length} products\n`)
 
     // Summary

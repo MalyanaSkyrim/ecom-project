@@ -23,7 +23,6 @@ const prodConfig: ServerOptions = {
     name: 'ecom-api',
   }),
   isDocPrivate: false,
-  generateDoc: true,
 }
 
 export const devConfig: ServerOptions = {
@@ -40,7 +39,6 @@ export const devConfig: ServerOptions = {
     }),
   ),
   isDocPrivate: true,
-  generateDoc: true,
 }
 
 const server = createServer(

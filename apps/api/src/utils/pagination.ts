@@ -8,7 +8,7 @@ export const paginationQuerySchema = z.object({
 
 // Pagination metadata schema for responses
 export const paginationMetaSchema = z.object({
-  total: z.number(),
+  totalCount: z.number(),
   pageSize: z.number(),
   pageIndex: z.number(),
   totalPages: z.number(),

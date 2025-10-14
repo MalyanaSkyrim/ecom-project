@@ -3,9 +3,9 @@ import fp from 'fastify-plugin'
 
 import { extractApiKeyFromHeader, validateApiKey } from '../lib/auth'
 import {
+  ApiKeyInactiveError,
   ApiKeyRequiredError,
   InvalidApiKeyFormatError,
-  ApiKeyInactiveError,
 } from '../lib/error'
 
 /**

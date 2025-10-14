@@ -2,11 +2,12 @@ import { FastifySchema } from 'fastify'
 import { z } from 'zod'
 
 import { buildJsonSchemas } from '../../../../lib/buildJsonSchema'
+import { errorReplySchema } from '../../../../lib/error'
 import { bindExamples } from '../../../../utils/swagger'
 
 export const userSchema = z.object({
   id: z.string(),
-  email: z.string().email(),
+  email: z.email(),
   firstName: z.string(),
   lastName: z.string().nullish(),
   password: z.string(),
@@ -24,24 +25,19 @@ const signupSuccessReplySchema = z.object({
   }),
 })
 
-const signupErrorReplySchema = z
-  .object({
-    message: z.string(),
-  })
-  .meta({ description: 'Reply for the signup' })
-
 // Generated types from zod schemas.
 export type SignupInput = z.infer<typeof signupBodySchema>
 export type SignupSuccessOutput = z.infer<typeof signupSuccessReplySchema>
-export type SignupErrorOutput = z.infer<typeof signupErrorReplySchema>
+export type SignupErrorOutput = z.infer<typeof errorReplySchema>
 
 // Examples of schemas from types definitions.
-const signupErrorReplySchemaExample: SignupErrorOutput = {
-  message: 'Login successful',
+const errorReplySchemaExample: SignupErrorOutput = {
+  message: 'Email already exists',
+  code: 'EMAIL_ALREADY_EXISTS',
 }
 
 const schemaExamples = {
-  signupErrorReplySchemaExample,
+  errorReplySchemaExample,
 }
 
 // Generate JSON schemas from zod schemas.
@@ -49,7 +45,7 @@ export const { schemas: signupSchemas, $ref: signupRef } = buildJsonSchemas(
   {
     signupBodySchema,
     signupSuccessReplySchema,
-    signupErrorReplySchema,
+    errorReplySchema,
   },
   { $id: 'signupSchemas', target: 'openApi3' },
 )
@@ -66,7 +62,7 @@ export const schema: FastifySchema = {
   operationId: 'signup',
   response: {
     '2xx': signupRef('signupSuccessReplySchema'),
-    '4xx': signupRef('signupErrorReplySchema'),
-    '5xx': signupRef('signupErrorReplySchema'),
+    '4xx': signupRef('errorReplySchema'),
+    '5xx': signupRef('errorReplySchema'),
   },
 }

@@ -117,7 +117,7 @@ model ApiKey {
 
 ### **Error Handling**
 
-- **Invalid Format**: Returns 401 with `INVALID_API_KEY_FORMAT`
+- **Invalid Format**: Returns 401 with `INVALID_API_KEY`
 - **Invalid Key**: Returns 401 with `INVALID_API_KEY`
 - **Inactive Key**: Returns 401 with `INACTIVE_API_KEY`
 - **Inactive Store**: Returns 401 with `INACTIVE_STORE`

@@ -5,18 +5,17 @@ meta {
 }
 
 get {
-  url: {{API_URL}}/v1/products?pageSize=20&pageIndex=0&isFeatured=true
+  url: {{API_URL}}/v1/products?pageSize=500&pageIndex=0
   body: none
   auth: bearer
 }
 
 params:query {
-  pageSize: 20
+  pageSize: 500
   pageIndex: 0
-  isFeatured: true
+  ~isFeatured: true
 }
 
 auth:bearer {
   token: {{API_KEY}}
 }
-

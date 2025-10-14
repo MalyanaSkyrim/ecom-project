@@ -9,7 +9,7 @@ export class ApiKeyNotFoundError extends BaseError {
 
 export class InvalidApiKeyFormatError extends BaseError {
   constructor() {
-    super(ERROR_CODES.INVALID_API_KEY_FORMAT)
+    super(ERROR_CODES.INVALID_API_KEY)
   }
 }
 

@@ -6,8 +6,8 @@ export const ERROR_CATALOG: ErrorCatalog = {
     message: 'API key not found',
     statusCode: 404,
   },
-  [ERROR_CODES.INVALID_API_KEY_FORMAT]: {
-    message: 'Invalid API key format',
+  [ERROR_CODES.INVALID_API_KEY]: {
+    message: 'Invalid API key',
     statusCode: 401,
   },
   [ERROR_CODES.API_KEY_REQUIRED]: {

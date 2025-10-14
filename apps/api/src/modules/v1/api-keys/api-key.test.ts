@@ -182,7 +182,7 @@ describe('API Key Module', () => {
 
       expect(res.statusCode).toBe(401)
       const body = res.json()
-      expect(body.code).toBe('INVALID_API_KEY_FORMAT')
+      expect(body.code).toBe('INVALID_API_KEY')
     })
 
     it('should return 401 when API key does not exist in database', async () => {
@@ -201,7 +201,7 @@ describe('API Key Module', () => {
 
       expect(res.statusCode).toBe(401)
       const body = res.json()
-      expect(body.code).toBe('INVALID_API_KEY_FORMAT')
+      expect(body.code).toBe('INVALID_API_KEY')
     })
 
     it('should allow duplicate API key names', async () => {
@@ -301,7 +301,7 @@ describe('API Key Module', () => {
 
       expect(res.statusCode).toBe(401)
       const body = res.json()
-      expect(body.code).toBe('INVALID_API_KEY_FORMAT')
+      expect(body.code).toBe('INVALID_API_KEY')
     })
   })
 
@@ -427,7 +427,7 @@ describe('API Key Module', () => {
 
       expect(res.statusCode).toBe(401)
       const body = res.json()
-      expect(body.code).toBe('INVALID_API_KEY_FORMAT')
+      expect(body.code).toBe('INVALID_API_KEY')
     })
   })
 
@@ -550,7 +550,7 @@ describe('API Key Module', () => {
 
       expect(res.statusCode).toBe(401)
       const body = res.json()
-      expect(body.code).toBe('INVALID_API_KEY_FORMAT')
+      expect(body.code).toBe('INVALID_API_KEY')
     })
 
     it('should reject API keys with wrong length', async () => {
@@ -564,7 +564,7 @@ describe('API Key Module', () => {
 
       expect(res.statusCode).toBe(401)
       const body = res.json()
-      expect(body.code).toBe('INVALID_API_KEY_FORMAT')
+      expect(body.code).toBe('INVALID_API_KEY')
     })
 
     it('should accept Bearer token format', async () => {

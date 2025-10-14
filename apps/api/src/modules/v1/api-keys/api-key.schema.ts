@@ -2,6 +2,7 @@ import { FastifySchema } from 'fastify'
 import { z } from 'zod'
 
 import { buildJsonSchemas } from '../../../lib/buildJsonSchema'
+import { errorReplySchema } from '../../../lib/error'
 import { bindExamples } from '../../../utils/swagger'
 
 // API Key creation schema
@@ -48,21 +49,6 @@ const getApiKeysSuccessReplySchema = z.object({
   apiKeys: z.array(apiKeyResponseSchema),
 })
 
-const apiKeyErrorReplySchema = z
-  .object({
-    message: z.string(),
-    code: z.string(),
-    data: z
-      .array(
-        z.object({
-          field: z.string(),
-          message: z.string(),
-        }),
-      )
-      .optional(),
-  })
-  .meta({ description: 'Reply for API key operations' })
-
 // Generated types
 export type CreateApiKeyInput = z.infer<typeof createApiKeyBodySchema>
 export type ApiKeyParams = z.infer<typeof apiKeyParamsSchema>
@@ -75,7 +61,7 @@ export type CreateApiKeySuccessOutput = z.infer<
 export type GetApiKeysSuccessOutput = z.infer<
   typeof getApiKeysSuccessReplySchema
 >
-export type ApiKeyErrorOutput = z.infer<typeof apiKeyErrorReplySchema>
+export type ApiKeyErrorOutput = z.infer<typeof errorReplySchema>
 
 // Examples for documentation
 const apiKeyExample: ApiKeyResponse = {
@@ -123,7 +109,7 @@ export const { schemas: apiKeySchemas, $ref: apiKeyRef } = buildJsonSchemas(
     apiKeyListResponseSchema,
     createApiKeySuccessReplySchema,
     getApiKeysSuccessReplySchema,
-    apiKeyErrorReplySchema,
+    errorReplySchema,
   },
   { $id: 'apiKeySchemas', target: 'openApi3' },
 )
@@ -141,8 +127,8 @@ export const createApiKeySchema: FastifySchema = {
   body: apiKeyRef('createApiKeyBodySchema'),
   response: {
     '201': apiKeyRef('createApiKeySuccessReplySchema'),
-    '400': apiKeyRef('apiKeyErrorReplySchema'),
-    '500': apiKeyRef('apiKeyErrorReplySchema'),
+    '400': apiKeyRef('errorReplySchema'),
+    '500': apiKeyRef('errorReplySchema'),
   },
 }
 
@@ -154,7 +140,7 @@ export const getApiKeysSchema: FastifySchema = {
   operationId: 'getApiKeys',
   response: {
     '200': apiKeyRef('getApiKeysSuccessReplySchema'),
-    '500': apiKeyRef('apiKeyErrorReplySchema'),
+    '500': apiKeyRef('errorReplySchema'),
   },
 }
 
@@ -172,7 +158,7 @@ export const deactivateApiKeySchema: FastifySchema = {
         message: { type: 'string' },
       },
     },
-    '404': apiKeyRef('apiKeyErrorReplySchema'),
-    '500': apiKeyRef('apiKeyErrorReplySchema'),
+    '404': apiKeyRef('errorReplySchema'),
+    '500': apiKeyRef('errorReplySchema'),
   },
 }

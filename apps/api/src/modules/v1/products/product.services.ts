@@ -9,13 +9,13 @@ import type {
 
 // Helper function to calculate pagination metadata
 export const calculatePaginationMeta = (
-  total: number,
+  totalCount: number,
   pageSize: number,
   pageIndex: number,
 ) => {
-  const totalPages = Math.ceil(total / pageSize)
+  const totalPages = Math.ceil(totalCount / pageSize)
   return {
-    total,
+    totalCount,
     pageSize,
     pageIndex,
     totalPages,
@@ -153,7 +153,7 @@ export const getProducts = async (storeId: string, query: ProductListQuery) => {
   }
 
   // Get total count for pagination
-  const total = await db.product.count({ where })
+  const totalCount = await db.product.count({ where })
 
   // Get products with pagination
   const products = await db.product.findMany({
@@ -175,7 +175,7 @@ export const getProducts = async (storeId: string, query: ProductListQuery) => {
 
   return {
     data: transformedProducts,
-    pagination: calculatePaginationMeta(total, pageSize, pageIndex),
+    pagination: calculatePaginationMeta(totalCount, pageSize, pageIndex),
   }
 }
 

@@ -2,6 +2,7 @@ import { FastifySchema } from 'fastify'
 import { z } from 'zod'
 
 import { buildJsonSchemas } from '../../../lib/buildJsonSchema'
+import { errorReplySchema } from '../../../lib/error'
 import {
   paginationQuerySchema,
   paginationReplySchema,
@@ -55,12 +56,6 @@ const productSuccessReplySchema = z.object({
   product: productResponseSchema,
 })
 
-const productErrorReplySchema = z
-  .object({
-    message: z.string(),
-  })
-  .meta({ description: 'Reply for product operations' })
-
 // Generated types
 export type Product = z.infer<typeof productSchema>
 export type CreateProductInput = z.infer<typeof createProductBodySchema>
@@ -70,7 +65,7 @@ export type ProductParams = z.infer<typeof productParamsSchema>
 export type ProductResponse = z.infer<typeof productResponseSchema>
 export type ProductListResponse = z.infer<typeof productListResponseSchema>
 export type ProductSuccessOutput = z.infer<typeof productSuccessReplySchema>
-export type ProductErrorOutput = z.infer<typeof productErrorReplySchema>
+export type ProductErrorOutput = z.infer<typeof errorReplySchema>
 
 // Examples for documentation
 const productExample: ProductResponse = {
@@ -91,7 +86,7 @@ const productExample: ProductResponse = {
 const productListExample: ProductListResponse = {
   data: [productExample],
   pagination: {
-    total: 1,
+    totalCount: 1,
     pageSize: 10,
     pageIndex: 0,
     totalPages: 1,
@@ -102,6 +97,7 @@ const productListExample: ProductListResponse = {
 
 const productErrorExample: ProductErrorOutput = {
   message: 'Product not found',
+  code: 'PRODUCT_NOT_FOUND',
 }
 
 const schemaExamples = {
@@ -120,7 +116,7 @@ export const { schemas: productSchemas, $ref: productRef } = buildJsonSchemas(
     productResponseSchema,
     productListResponseSchema,
     productSuccessReplySchema,
-    productErrorReplySchema,
+    errorReplySchema,
   },
   { $id: 'productSchemas', target: 'openApi3' },
 )
@@ -138,8 +134,8 @@ export const createProductSchema: FastifySchema = {
   body: productRef('createProductBodySchema'),
   response: {
     '201': productRef('productSuccessReplySchema'),
-    '400': productRef('productErrorReplySchema'),
-    '500': productRef('productErrorReplySchema'),
+    '400': productRef('errorReplySchema'),
+    '500': productRef('errorReplySchema'),
   },
 }
 
@@ -152,8 +148,8 @@ export const getProductSchema: FastifySchema = {
   params: productRef('productParamsSchema'),
   response: {
     '200': productRef('productSuccessReplySchema'),
-    '404': productRef('productErrorReplySchema'),
-    '500': productRef('productErrorReplySchema'),
+    '404': productRef('errorReplySchema'),
+    '500': productRef('errorReplySchema'),
   },
 }
 
@@ -167,8 +163,8 @@ export const updateProductSchema: FastifySchema = {
   body: productRef('updateProductBodySchema'),
   response: {
     '200': productRef('productSuccessReplySchema'),
-    '404': productRef('productErrorReplySchema'),
-    '500': productRef('productErrorReplySchema'),
+    '404': productRef('errorReplySchema'),
+    '500': productRef('errorReplySchema'),
   },
 }
 
@@ -184,8 +180,8 @@ export const deleteProductSchema: FastifySchema = {
       type: 'null',
       description: 'Product deleted successfully',
     },
-    '404': productRef('productErrorReplySchema'),
-    '500': productRef('productErrorReplySchema'),
+    '404': productRef('errorReplySchema'),
+    '500': productRef('errorReplySchema'),
   },
 }
 
@@ -198,7 +194,7 @@ export const getProductsSchema: FastifySchema = {
   querystring: productRef('productListQuerySchema'),
   response: {
     '200': productRef('productListResponseSchema'),
-    '400': productRef('productErrorReplySchema'),
-    '500': productRef('productErrorReplySchema'),
+    '400': productRef('errorReplySchema'),
+    '500': productRef('errorReplySchema'),
   },
 }
