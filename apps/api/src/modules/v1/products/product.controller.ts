@@ -37,14 +37,25 @@ export const createProductHandler: RouteHandler<{
   // Check if slug is unique
   const isSlugUnique = await isProductSlugUnique(data.slug, storeId)
   if (!isSlugUnique) {
-    throw new InvalidProductDataError()
+    throw new InvalidProductDataError({
+      message: `Product slug '${data.slug}' is already taken. Please choose a different slug.`,
+      meta: { slug: data.slug, storeId },
+    })
   }
 
   try {
     const product = await createProduct(storeId, data)
     return reply.code(201).send({ product })
   } catch (error) {
-    throw new ProductCreationFailedError()
+    throw new ProductCreationFailedError({
+      message:
+        'Failed to create product. Please try again or contact support if the issue persists.',
+      meta: {
+        originalError: error instanceof Error ? error.message : 'Unknown error',
+        storeId,
+        productData: { name: data.name, slug: data.slug },
+      },
+    })
   }
 }
 
@@ -62,7 +73,10 @@ export const getProductHandler: RouteHandler<{
   const product = await getProductById(id, storeId)
 
   if (!product) {
-    throw new ProductNotFoundError()
+    throw new ProductNotFoundError({
+      message: `Product with ID '${id}' not found in your store.`,
+      meta: { productId: id, storeId },
+    })
   }
 
   return reply.code(200).send({ product })
@@ -85,7 +99,10 @@ export const updateProductHandler: RouteHandler<{
   if (data.slug) {
     const isSlugUnique = await isProductSlugUnique(data.slug, storeId, id)
     if (!isSlugUnique) {
-      throw new InvalidProductDataError()
+      throw new InvalidProductDataError({
+        message: `Product slug '${data.slug}' is already taken. Please choose a different slug.`,
+        meta: { slug: data.slug, storeId, productId: id },
+      })
     }
   }
 
@@ -93,7 +110,10 @@ export const updateProductHandler: RouteHandler<{
     const product = await updateProduct(id, storeId, data)
 
     if (!product) {
-      throw new ProductNotFoundError()
+      throw new ProductNotFoundError({
+        message: `Product with ID '${id}' not found in your store.`,
+        meta: { productId: id, storeId },
+      })
     }
 
     return reply.code(200).send({ product })
@@ -101,7 +121,16 @@ export const updateProductHandler: RouteHandler<{
     if (error instanceof ProductNotFoundError) {
       throw error
     }
-    throw new ProductUpdateFailedError()
+    throw new ProductUpdateFailedError({
+      message:
+        'Failed to update product. Please try again or contact support if the issue persists.',
+      meta: {
+        originalError: error instanceof Error ? error.message : 'Unknown error',
+        productId: id,
+        storeId,
+        updateData: data,
+      },
+    })
   }
 }
 
@@ -120,7 +149,10 @@ export const deleteProductHandler: RouteHandler<{
     const deleted = await deleteProduct(id, storeId)
 
     if (!deleted) {
-      throw new ProductNotFoundError()
+      throw new ProductNotFoundError({
+        message: `Product with ID '${id}' not found in your store.`,
+        meta: { productId: id, storeId },
+      })
     }
 
     return reply.code(204).send(null)
@@ -128,7 +160,15 @@ export const deleteProductHandler: RouteHandler<{
     if (error instanceof ProductNotFoundError) {
       throw error
     }
-    throw new ProductDeletionFailedError()
+    throw new ProductDeletionFailedError({
+      message:
+        'Failed to delete product. Please try again or contact support if the issue persists.',
+      meta: {
+        originalError: error instanceof Error ? error.message : 'Unknown error',
+        productId: id,
+        storeId,
+      },
+    })
   }
 }
 

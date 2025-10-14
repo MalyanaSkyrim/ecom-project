@@ -1,32 +1,31 @@
-import { BaseError } from '../base'
-import { ERROR_CODES } from '../types/types'
+import { BaseError, BaseErrorOptions } from '../base'
 
 export class ProductNotFoundError extends BaseError {
-  constructor() {
-    super(ERROR_CODES.PRODUCT_NOT_FOUND)
+  constructor(options?: BaseErrorOptions) {
+    super('PRODUCT_NOT_FOUND', options)
   }
 }
 
 export class ProductCreationFailedError extends BaseError {
-  constructor() {
-    super(ERROR_CODES.PRODUCT_CREATION_FAILED)
+  constructor(options?: BaseErrorOptions) {
+    super('PRODUCT_CREATION_FAILED', options)
   }
 }
 
 export class ProductUpdateFailedError extends BaseError {
-  constructor() {
-    super(ERROR_CODES.PRODUCT_UPDATE_FAILED)
+  constructor(options?: BaseErrorOptions) {
+    super('PRODUCT_UPDATE_FAILED', options)
   }
 }
 
 export class ProductDeletionFailedError extends BaseError {
-  constructor() {
-    super(ERROR_CODES.PRODUCT_DELETION_FAILED)
+  constructor(options?: BaseErrorOptions) {
+    super('PRODUCT_DELETION_FAILED', options)
   }
 }
 
 export class InvalidProductDataError extends BaseError {
-  constructor() {
-    super(ERROR_CODES.INVALID_PRODUCT_DATA)
+  constructor(options?: BaseErrorOptions) {
+    super('INVALID_PRODUCT_DATA', options)
   }
 }

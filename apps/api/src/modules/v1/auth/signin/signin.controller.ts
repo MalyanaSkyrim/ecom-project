@@ -38,12 +38,20 @@ export const signinHandler: RouteHandler<{
   const user = await getUserByEmail(email)
 
   if (!user || !user.password) {
-    throw new InvalidCredentialsError()
+    throw new InvalidCredentialsError({
+      message:
+        'Invalid email or password. Please check your credentials and try again.',
+      meta: { email, hasPassword: !!user?.password },
+    })
   }
 
   const isPasswordValid = await verifyPassword(password, user.password)
   if (!isPasswordValid) {
-    throw new InvalidCredentialsError()
+    throw new InvalidCredentialsError({
+      message:
+        'Invalid email or password. Please check your credentials and try again.',
+      meta: { email, userId: user.id },
+    })
   }
 
   const { accessToken } = generateTokens(user.id, user.email)

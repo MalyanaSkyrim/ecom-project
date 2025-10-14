@@ -1,7 +1,6 @@
 import { FastifyError, FastifyReply, FastifyRequest } from 'fastify'
 
 import { BaseError } from './base'
-import { ERROR_CODES } from './types/types'
 
 export const errorHandler = (
   error: Error,
@@ -10,25 +9,63 @@ export const errorHandler = (
 ) => {
   // Handle Fastify validation errors
   if ((error as FastifyError).code === 'FST_ERR_VALIDATION') {
+    const validationError = error as FastifyError & {
+      validation?: Array<{
+        instancePath?: string
+        schemaPath?: string
+        keyword?: string
+        params?: Record<string, unknown>
+        message?: string
+      }>
+    }
+
+    const validationErrors =
+      validationError.validation?.map((err) => ({
+        field: err.instancePath || 'unknown',
+        message: err.message || 'Validation error',
+      })) || []
+
     const response = {
       message: (error as FastifyError).message,
-      code: ERROR_CODES.VALIDATION_ERROR,
+      code: 'VALIDATION_ERROR',
+      data: validationErrors,
     }
+
+    console.error('############# Error handler called with', {
+      response,
+    })
 
     return reply.code(400).send(response)
   }
 
   // Handle our custom BaseError instances
   if (error instanceof BaseError) {
-    return reply.code(error.statusCode).send({
+    // Prepare response with optional meta field
+    const response: {
+      message: string
+      code: string
+      meta?: Record<string, unknown>
+    } = {
       message: error.message,
       code: error.code,
+    }
+
+    // Include meta in response if it exists and has content
+    if (error.meta && Object.keys(error.meta).length > 0) {
+      response.meta = error.meta
+    }
+
+    // Log error with metadata for debugging
+    console.error('############# Error handler called with', {
+      response,
     })
+
+    return reply.code(error.statusCode).send(response)
   }
 
   // Handle unexpected errors
   return reply.code(500).send({
     message: 'Internal server error',
-    code: ERROR_CODES.INTERNAL_SERVER_ERROR,
+    code: 'INTERNAL_SERVER_ERROR',
   })
 }

@@ -6,9 +6,9 @@ import {
   getStoreApiKeys,
 } from '../../../lib/auth'
 import {
-  StoreIdRequiredError,
-  ApiKeyNotFoundError,
   ApiKeyDeactivationFailedError,
+  ApiKeyNotFoundError,
+  StoreIdRequiredError,
 } from '../../../lib/error'
 import type { ApiKeyParams, CreateApiKeyInput } from './api-key.schema'
 
@@ -77,13 +77,20 @@ export const deactivateApiKeyHandler: RouteHandler<{
   const apiKeyExists = apiKeys.some((key: ApiKeyRecord) => key.id === id)
 
   if (!apiKeyExists) {
-    throw new ApiKeyNotFoundError()
+    throw new ApiKeyNotFoundError({
+      message: `API key with ID '${id}' not found in your store.`,
+      meta: { apiKeyId: id, storeId },
+    })
   }
 
   const success = await deactivateApiKey(id)
 
   if (!success) {
-    throw new ApiKeyDeactivationFailedError()
+    throw new ApiKeyDeactivationFailedError({
+      message:
+        'Failed to deactivate API key. Please try again or contact support if the issue persists.',
+      meta: { apiKeyId: id, storeId },
+    })
   }
 
   return reply.code(200).send({ message: 'API key deactivated successfully' })

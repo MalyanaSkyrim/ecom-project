@@ -38,7 +38,10 @@ export const signupHandler: RouteHandler<{
   const existingUser = await getUserByEmail(email)
 
   if (existingUser) {
-    throw new EmailAlreadyExistsError()
+    throw new EmailAlreadyExistsError({
+      message: `An account with the email '${email}' already exists. Please use a different email or try signing in.`,
+      meta: { email, existingUserId: existingUser.id },
+    })
   }
 
   try {
@@ -54,6 +57,14 @@ export const signupHandler: RouteHandler<{
       },
     })
   } catch (error) {
-    throw new UserCreationFailedError()
+    throw new UserCreationFailedError({
+      message:
+        'Failed to create user account. Please try again or contact support if the issue persists.',
+      meta: {
+        originalError: error instanceof Error ? error.message : 'Unknown error',
+        email,
+        firstName: req.body.firstName,
+      },
+    })
   }
 }

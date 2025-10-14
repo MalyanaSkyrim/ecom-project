@@ -9,7 +9,7 @@ import { ERROR_CODES } from './types/types'
 export const errorReplySchema = z
   .object({
     message: z.string(),
-    code: z.enum(Object.keys(ERROR_CODES) as [keyof typeof ERROR_CODES]),
+    code: z.enum(ERROR_CODES),
     data: z
       .array(
         z.object({
@@ -18,6 +18,7 @@ export const errorReplySchema = z
         }),
       )
       .optional(),
+    meta: z.record(z.string(), z.unknown()).optional(),
   })
   .meta({ description: 'Standard error response format' })
 
