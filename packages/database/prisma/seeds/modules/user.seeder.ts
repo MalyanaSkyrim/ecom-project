@@ -19,7 +19,7 @@ async function hashPassword(password: string): Promise<string> {
 }
 
 /**
- * Create a single user
+ * Create a single user (idempotent)
  */
 export async function createSingleUser(
   data: CreateUserData,
@@ -28,8 +28,16 @@ export async function createSingleUser(
     ? await hashPassword(data.password)
     : undefined
 
-  const user = await prisma.user.create({
-    data: {
+  const user = await prisma.user.upsert({
+    where: { email: data.email },
+    update: {
+      // Update password if provided (useful for resetting passwords)
+      ...(hashedPassword && { password: hashedPassword }),
+      // Update other fields if they changed
+      firstName: data.firstName,
+      lastName: data.lastName,
+    },
+    create: {
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
@@ -38,7 +46,7 @@ export async function createSingleUser(
     },
   })
 
-  console.log(`✓ Created user: ${user.email}`)
+  console.log(`✓ User ready: ${user.email}`)
   return user
 }
 

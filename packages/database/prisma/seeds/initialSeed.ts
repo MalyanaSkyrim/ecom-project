@@ -47,10 +47,7 @@ async function main() {
     })
     console.log(`   API Key ID: ${apiKey.id}`)
     console.log(`   Key Prefix: ${apiKey.keyPrefix}`)
-    console.log(`   Full API Key: ${apiKey.apiKey}`)
-    console.log(
-      `   ⚠️  IMPORTANT: Save this API key! It won't be shown again.\n`,
-    )
+    console.log(`   Full API Key: ${apiKey.apiKey}\n`)
 
     // 4. Create products for the store
     console.log('📦 Creating products...')

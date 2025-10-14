@@ -11,13 +11,19 @@ export interface CreateStoreData {
 }
 
 /**
- * Create a single store
+ * Create a single store (idempotent)
  */
 export async function createSingleStore(
   data: CreateStoreData,
 ): Promise<{ id: string; name: string; slug: string }> {
-  const store = await prisma.store.create({
-    data: {
+  const store = await prisma.store.upsert({
+    where: { slug: data.slug },
+    update: {
+      name: data.name,
+      domain: data.domain,
+      isActive: true,
+    },
+    create: {
       name: data.name,
       slug: data.slug,
       domain: data.domain,
@@ -34,7 +40,27 @@ export async function createSingleStore(
     },
   })
 
-  console.log(`✓ Created store: ${store.name} (${store.slug})`)
+  // Handle store-user relationship separately for existing stores
+  if (data.userId) {
+    await prisma.storeUser.upsert({
+      where: {
+        userId_storeId: {
+          userId: data.userId,
+          storeId: store.id,
+        },
+      },
+      update: {
+        role: data.userRole || StoreRole.OWNER,
+      },
+      create: {
+        userId: data.userId,
+        storeId: store.id,
+        role: data.userRole || StoreRole.OWNER,
+      },
+    })
+  }
+
+  console.log(`✓ Store ready: ${store.name} (${store.slug})`)
   return store
 }
 

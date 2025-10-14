@@ -118,13 +118,28 @@ const SAMPLE_PRODUCTS = [
 ]
 
 /**
- * Create a single product
+ * Create a single product (idempotent)
  */
 export async function createSingleProduct(
   data: CreateProductData,
 ): Promise<{ id: string; name: string; slug: string; price: Prisma.Decimal }> {
-  const product = await prisma.product.create({
-    data: {
+  const product = await prisma.product.upsert({
+    where: {
+      storeId_slug: {
+        storeId: data.storeId,
+        slug: data.slug,
+      },
+    },
+    update: {
+      name: data.name,
+      description: data.description,
+      price: new Prisma.Decimal(data.price),
+      isActive: data.isActive ?? true,
+      isFeatured: data.isFeatured ?? false,
+      rating: data.rating ?? 0,
+      totalSales: data.totalSales ?? 0,
+    },
+    create: {
       storeId: data.storeId,
       name: data.name,
       slug: data.slug,
@@ -137,7 +152,7 @@ export async function createSingleProduct(
     },
   })
 
-  console.log(`✓ Created product: ${product.name} ($${product.price})`)
+  console.log(`✓ Product ready: ${product.name} ($${product.price})`)
   return product
 }
 

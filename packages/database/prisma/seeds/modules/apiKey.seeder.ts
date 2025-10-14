@@ -31,7 +31,8 @@ function extractKeyPrefix(apiKey: string): string {
 }
 
 /**
- * Create a single API key
+ * Create a single API key (idempotent)
+ * Note: This will regenerate the API key each time for seed consistency
  */
 export async function createSingleApiKey(
   data: CreateApiKeyData,
@@ -40,6 +41,15 @@ export async function createSingleApiKey(
   const hashedKey = hashApiKey(apiKey)
   const keyPrefix = extractKeyPrefix(apiKey)
 
+  // First, delete any existing API key with this name for this store
+  await prisma.apiKey.deleteMany({
+    where: {
+      storeId: data.storeId,
+      name: data.name,
+    },
+  })
+
+  // Then create the new one
   const createdKey = await prisma.apiKey.create({
     data: {
       storeId: data.storeId,
@@ -50,14 +60,13 @@ export async function createSingleApiKey(
     },
   })
 
-  console.log(`✓ Created API key: ${createdKey.name} (${keyPrefix}...)`)
+  console.log(`✓ API key ready: ${createdKey.name} (${keyPrefix}...)`)
   console.log(`  🔑 API Key: ${apiKey}`)
-  console.log(`  ⚠️  Save this key - it won't be shown again!`)
 
   return {
     id: createdKey.id,
     name: createdKey.name,
-    apiKey, // Return the plain text key (only shown once!)
+    apiKey, // Always return the plain text key for seed scripts
     keyPrefix: createdKey.keyPrefix,
   }
 }
