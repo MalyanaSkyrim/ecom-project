@@ -1,0 +1,20 @@
+meta {
+  name: Get Product by ID
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{API_URL}}/v1/products/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: product-id-here
+}
+
+auth:bearer {
+  token: {{API_KEY}}
+}
+

@@ -9,6 +9,7 @@
     "db:studio": "prisma studio",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
+    "db:push:test": "dotenv -e ../../.env -- sh -c 'DATABASE_URL=$TEST_DATABASE_URL prisma db push'",
     "db:seed": "tsx prisma/seeds/initialSeed.ts",
     "dev": "prisma studio --browser none",
     "build": "NODE_ENV=production tsup",

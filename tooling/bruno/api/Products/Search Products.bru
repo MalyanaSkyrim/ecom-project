@@ -1,0 +1,22 @@
+meta {
+  name: Search Products
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{API_URL}}/v1/products?searchText=headphones&pageSize=10&pageIndex=0
+  body: none
+  auth: bearer
+}
+
+params:query {
+  searchText: headphones
+  pageSize: 10
+  pageIndex: 0
+}
+
+auth:bearer {
+  token: {{API_KEY}}
+}
+

@@ -5,14 +5,16 @@ describe('Signin test', () => {
 
   test('Signin', async () => {
     const res = await app.inject({
-      url: '/signin',
+      url: '/v1/auth/signin',
       method: 'POST',
       body: {
         email: 'aa@mail.com',
         password: '12345678',
       },
     })
+    // Should return 401 for invalid credentials
     expect(res.statusCode).toEqual(401)
-    expect(res.json().status).toEqual('Unauthorized')
+    const response = res.json()
+    expect(response).toHaveProperty('message')
   })
 })

@@ -5,14 +5,18 @@ describe('Signup test', () => {
 
   test('Signup', async () => {
     const res = await app.inject({
-      url: '/signup',
+      url: '/v1/auth/signup',
       method: 'POST',
       body: {
-        email: 'aa@mail.com',
+        email: `test-${Date.now()}@mail.com`, // Unique email
         password: '12345678',
+        firstName: 'Test',
+        lastName: 'User',
       },
     })
-    expect(res.statusCode).toEqual(401)
-    expect(res.json().status).toEqual('Unauthorized')
+    // Should return 200 for successful signup
+    expect(res.statusCode).toEqual(200)
+    const response = res.json()
+    expect(response).toHaveProperty('user')
   })
 })

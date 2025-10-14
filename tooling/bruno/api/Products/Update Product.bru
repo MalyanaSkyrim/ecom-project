@@ -1,0 +1,28 @@
+meta {
+  name: Update Product
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{API_URL}}/v1/products/:id
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: product-id-here
+}
+
+auth:bearer {
+  token: {{API_KEY}}
+}
+
+body:json {
+  {
+    "name": "Premium Wireless Headphones - Updated",
+    "price": 249.99,
+    "isFeatured": false
+  }
+}
+

@@ -3,19 +3,18 @@ import fs from 'fs'
 import pino from 'pino'
 import pretty from 'pino-pretty'
 
-import { version } from '../package.json'
 import { env } from './env'
 import { createServer, generateSwaggerDocs, type ServerOptions } from './server'
 
 dotenv.config({ path: '../../.env' })
 
-const loggerLabels = {
-  service: 'api-sync',
-  serviceType: 'api' as const,
-  environment: env.APP_ENV,
-  version,
-  hostname: env.API_URL,
-}
+// const loggerLabels = {
+//   service: 'api',
+//   serviceType: 'api' as const,
+//   environment: env.APP_ENV,
+//   version,
+//   hostname: env.API_URL,
+// }
 
 const prodConfig: ServerOptions = {
   disableRequestLogging: true,
@@ -24,6 +23,7 @@ const prodConfig: ServerOptions = {
     name: 'ecom-api',
   }),
   isDocPrivate: false,
+  generateDoc: true,
 }
 
 export const devConfig: ServerOptions = {
@@ -40,6 +40,7 @@ export const devConfig: ServerOptions = {
     }),
   ),
   isDocPrivate: true,
+  generateDoc: true,
 }
 
 const server = createServer(

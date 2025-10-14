@@ -25,6 +25,9 @@ export interface ServerOptions extends FastifyServerOptions {
  * @see https://www.fastify.io/docs/latest/Reference/Server/
  */
 export const createServer = (opts: ServerOptions = {}) => {
+  // Default generateDoc to false (load all plugins)
+  const options = { generateDoc: false, ...opts }
+
   const fastify = Fastify({
     // The example attribute for OpenAPI is disturbed by Ajv validation, so it
     // should be log output only.
@@ -34,7 +37,7 @@ export const createServer = (opts: ServerOptions = {}) => {
         keywords: ['example'],
       },
     },
-    ...opts,
+    ...options,
   })
 
   // Register schemas
@@ -43,8 +46,8 @@ export const createServer = (opts: ServerOptions = {}) => {
   // Register all plugins in the `src/plugins` directory.
   fastify.register(autoload, {
     dir: path.join(__dirname, 'plugins'),
-    options: opts,
-    ignoreFilter: opts.generateDoc ? /(rate-limit|identity)/ : undefined,
+    options: options,
+    ignoreFilter: options.generateDoc ? /(rate-limit|identity)/ : undefined,
     maxDepth: 0,
   })
 
