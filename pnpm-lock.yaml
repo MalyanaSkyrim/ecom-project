@@ -53,6 +53,9 @@ importers:
       dotenv-cli:
         specifier: ^8.0.0
         version: 8.0.0
+      eslint:
+        specifier: ^9.17.0
+        version: 9.37.0(jiti@2.6.1)
       fastify-plugin:
         specifier: ^5.1.0
         version: 5.1.0
@@ -98,6 +101,9 @@ importers:
 
   apps/api:
     dependencies:
+      '@ecom/common':
+        specifier: workspace:*
+        version: link:../../packages/common
       '@ecom/database':
         specifier: workspace:*
         version: link:../../packages/database
@@ -159,9 +165,15 @@ importers:
 
   apps/web:
     dependencies:
+      '@ecom/common':
+        specifier: workspace:*
+        version: link:../../packages/common
       '@ecom/database':
         specifier: workspace:*
         version: link:../../packages/database
+      '@ecom/http-client':
+        specifier: workspace:*
+        version: link:../../packages/http-client
       '@ecom/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -342,6 +354,12 @@ importers:
         specifier: ^8.3.0
         version: 8.8.4
 
+  packages/common:
+    devDependencies:
+      '@ecom/config':
+        specifier: workspace:*
+        version: link:../config
+
   packages/config:
     devDependencies:
       '@eslint/js':
@@ -401,6 +419,19 @@ importers:
       tsup:
         specifier: ^8.5.0
         version: 8.5.0(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.1)
+    devDependencies:
+      '@ecom/config':
+        specifier: workspace:*
+        version: link:../config
+
+  packages/http-client:
+    dependencies:
+      '@better-fetch/fetch':
+        specifier: ^1.1.18
+        version: 1.1.18
+      '@ecom/common':
+        specifier: workspace:*
+        version: link:../common
     devDependencies:
       '@ecom/config':
         specifier: workspace:*
@@ -1076,6 +1107,9 @@ packages:
   '@babel/types@7.28.4':
     resolution: {integrity: sha512-bkFqkLhh3pMBUQQkpVgWDWq/lqzc2678eUyDlTBhRqhCHFguYYGM0Efga7tYk4TogG/3x0EEl66/OQ+WGbWB/Q==}
     engines: {node: '>=6.9.0'}
+
+  '@better-fetch/fetch@1.1.18':
+    resolution: {integrity: sha512-rEFOE1MYIsBmoMJtQbl32PGHHXuG2hDxvEd7rUHE0vCBoFQVSDqaVs9hkZEtHCxRoY+CljXKFCOuJ8uxqw1LcA==}
 
   '@chromatic-com/storybook@3.2.7':
     resolution: {integrity: sha512-fCGhk4cd3VA8RNg55MZL5CScdHqljsQcL9g6Ss7YuobHpSo9yytEWNdgMd5QxAHSPBlLGFHjnSmliM3G/BeBqw==}
@@ -8001,6 +8035,8 @@ snapshots:
     dependencies:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
+
+  '@better-fetch/fetch@1.1.18': {}
 
   '@chromatic-com/storybook@3.2.7(react@19.2.0)(storybook@8.6.14(prettier@3.6.2))':
     dependencies:

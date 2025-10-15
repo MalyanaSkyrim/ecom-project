@@ -3,7 +3,7 @@
  * @see https://prettier.io/docs/en/configuration.html
  * @type {import("@trivago/prettier-plugin-sort-imports").PrettierConfig}
  */
-export default {
+module.exports = {
   bracketSpacing: true,
   bracketSameLine: true,
   singleQuote: true,

@@ -1,12 +1,15 @@
 import { env } from '@/env'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import got from 'got'
-import { NextAuthOptions, User } from 'next-auth'
+import { NextAuthOptions } from 'next-auth'
 import { encode as defaultEncode } from 'next-auth/jwt'
 import Credentials from 'next-auth/providers/credentials'
 import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google'
 
 import { db } from '@ecom/database'
+import { ApiClient } from '@ecom/http-client'
+
+// Create API client instance
+const apiClient = new ApiClient(env.API_URL)
 
 export const authOptions = {
   // Configure one or more authentication providers
@@ -18,67 +21,84 @@ export const authOptions = {
       },
 
       async authorize(credentials) {
-        const { body } = await got.post<{
-          user: User
-          accessToken: string
-          sessionToken: string
-        }>(`${env.API_URL}/v1/auth/signin`, {
-          json: {
-            email: credentials?.email,
-            password: credentials?.password,
-          },
-          responseType: 'json',
-        })
+        try {
+          // Use our ApiClient instead of got
+          const result = await apiClient.signin({
+            email: credentials?.email || '',
+            password: credentials?.password || '',
+          })
 
-        const { user, accessToken } = body
+          const { user, accessToken } = result as {
+            user: {
+              id: string
+              email: string
+              firstName: string
+              lastName: string
+              avatar?: string
+            }
+            accessToken: string
+          }
 
-        const session = await db.session.findFirst({
-          where: {
-            userId: user.id,
-            expires: {
-              gte: new Date(),
-            },
-          },
-        })
-
-        const { sessionToken } =
-          session ||
-          (await db.session.create({
-            data: {
+          const session = await db.session.findFirst({
+            where: {
               userId: user.id,
-              expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
-              sessionToken: crypto.randomUUID(),
-            },
-          }))
-
-        const account = await db.account.findUnique({
-          where: {
-            provider_providerAccountId: {
-              provider: 'credentials',
-              providerAccountId: user.id,
-            },
-          },
-        })
-
-        if (!account) {
-          await db.account.create({
-            data: {
-              userId: user.id,
-              provider: 'credentials',
-              type: 'credentials',
-              providerAccountId: user.id,
-              access_token: accessToken,
+              expires: {
+                gte: new Date(),
+              },
             },
           })
-        }
-        if (user) {
-          // Any object returned will be saved in `user` property of the JWT
-          return { ...user, accessToken, sessionToken }
-        } else {
-          // If you return null then an error will be displayed advising the user to check their details.
-          return null
 
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+          const { sessionToken } =
+            session ||
+            (await db.session.create({
+              data: {
+                userId: user.id,
+                expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
+                sessionToken: crypto.randomUUID(),
+              },
+            }))
+
+          const account = await db.account.findUnique({
+            where: {
+              provider_providerAccountId: {
+                provider: 'credentials',
+                providerAccountId: user.id,
+              },
+            },
+          })
+
+          if (!account) {
+            await db.account.create({
+              data: {
+                userId: user.id,
+                provider: 'credentials',
+                type: 'credentials',
+                providerAccountId: user.id,
+                access_token: accessToken,
+              },
+            })
+          }
+          if (user) {
+            // Any object returned will be saved in `user` property of the JWT
+            return {
+              id: user.id,
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              avatar: user.avatar || '',
+              accessToken,
+              sessionToken,
+            }
+          } else {
+            // If you return null then an error will be displayed advising the user to check their details.
+            return null
+
+            // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+          }
+        } catch (error) {
+          // Handle authentication errors
+          console.error('Authentication error:', error)
+          return null
         }
       },
     }),

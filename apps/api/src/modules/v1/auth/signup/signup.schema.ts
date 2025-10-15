@@ -1,33 +1,30 @@
 import { FastifySchema } from 'fastify'
 import { z } from 'zod'
 
+import {
+  errorReplySchema,
+  signupBodySchema,
+  signupSuccessReplySchema,
+} from '@ecom/common'
+
 import { buildJsonSchemas } from '../../../../lib/buildJsonSchema'
-import { errorReplySchema } from '../../../../lib/error'
 import { bindExamples } from '../../../../utils/swagger'
 
+// API-specific user schema (for documentation)
 export const userSchema = z.object({
   id: z.string(),
-  email: z.email(),
+  email: z.string().email(),
   firstName: z.string(),
   lastName: z.string().nullish(),
   password: z.string(),
   avatar: z.string().nullish(),
 })
 
-// Zod schema definitions.
-const signupBodySchema = userSchema.omit({
-  id: true,
-})
+// Re-export schemas from common package for buildJsonSchema
+export { signupBodySchema, signupSuccessReplySchema }
 
-const signupSuccessReplySchema = z.object({
-  user: userSchema.omit({
-    password: true,
-  }),
-})
-
-// Generated types from zod schemas.
-export type SignupInput = z.infer<typeof signupBodySchema>
-export type SignupSuccessOutput = z.infer<typeof signupSuccessReplySchema>
+// Re-export types from common
+export type { SignupInput, SignupSuccessOutput } from '@ecom/common'
 export type SignupErrorOutput = z.infer<typeof errorReplySchema>
 
 // Examples of schemas from types definitions.

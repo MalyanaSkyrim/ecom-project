@@ -131,7 +131,7 @@ describe('Product API tests', () => {
       expect(Array.isArray(response.data)).toBe(true)
       expect(response.pagination).toHaveProperty('pageSize')
       expect(response.pagination).toHaveProperty('pageIndex')
-      expect(response.pagination).toHaveProperty('total')
+      expect(response.pagination).toHaveProperty('totalCount')
     })
 
     test('should get products with pagination parameters', async () => {
@@ -209,7 +209,8 @@ describe('Product API tests', () => {
 
       expect(res.statusCode).toEqual(404)
       const response = res.json()
-      expect(response.message).toEqual('Product not found')
+      expect(response.message).toContain('Product with ID')
+      expect(response.message).toContain('not found in your store')
     })
   })
 
@@ -268,7 +269,8 @@ describe('Product API tests', () => {
 
       expect(res.statusCode).toEqual(404)
       const response = res.json()
-      expect(response.message).toEqual('Product not found')
+      expect(response.message).toContain('Product with ID')
+      expect(response.message).toContain('not found in your store')
     })
   })
 
@@ -297,7 +299,8 @@ describe('Product API tests', () => {
 
       expect(res.statusCode).toEqual(404)
       const response = res.json()
-      expect(response.message).toEqual('Product not found')
+      expect(response.message).toContain('Product with ID')
+      expect(response.message).toContain('not found in your store')
     })
   })
 

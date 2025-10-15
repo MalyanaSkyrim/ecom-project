@@ -1,43 +1,28 @@
 import { FastifySchema } from 'fastify'
 import { z } from 'zod'
 
+import {
+  apiKeyParamsSchema,
+  apiKeyResponseSchema,
+  apiKeyWithSecretSchema,
+  createApiKeyBodySchema,
+  errorReplySchema,
+} from '@ecom/common'
+
 import { buildJsonSchemas } from '../../../lib/buildJsonSchema'
-import { errorReplySchema } from '../../../lib/error'
 import { bindExamples } from '../../../utils/swagger'
 
-// API Key creation schema
-const createApiKeyBodySchema = z.object({
-  name: z.string().min(1).max(255),
-})
-
-// API Key response schema
-const apiKeyResponseSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  keyPrefix: z.string(),
-  isActive: z.boolean(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-})
-
-const apiKeyWithSecretSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  keyPrefix: z.string(),
-  apiKey: z.string(), // Only returned when creating a new key
-  isActive: z.boolean(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-})
+// Re-export schemas from common package for buildJsonSchema
+export {
+  apiKeyParamsSchema,
+  apiKeyResponseSchema,
+  apiKeyWithSecretSchema,
+  createApiKeyBodySchema,
+}
 
 // API Key list response schema
 const apiKeyListResponseSchema = z.object({
   apiKeys: z.array(apiKeyResponseSchema),
-})
-
-// API Key params schema
-const apiKeyParamsSchema = z.object({
-  id: z.string().uuid(),
 })
 
 // Response schemas
@@ -50,10 +35,6 @@ const getApiKeysSuccessReplySchema = z.object({
 })
 
 // Generated types
-export type CreateApiKeyInput = z.infer<typeof createApiKeyBodySchema>
-export type ApiKeyParams = z.infer<typeof apiKeyParamsSchema>
-export type ApiKeyResponse = z.infer<typeof apiKeyResponseSchema>
-export type ApiKeyWithSecret = z.infer<typeof apiKeyWithSecretSchema>
 export type ApiKeyListResponse = z.infer<typeof apiKeyListResponseSchema>
 export type CreateApiKeySuccessOutput = z.infer<
   typeof createApiKeySuccessReplySchema
@@ -63,8 +44,16 @@ export type GetApiKeysSuccessOutput = z.infer<
 >
 export type ApiKeyErrorOutput = z.infer<typeof errorReplySchema>
 
+// Re-export types from common
+export type {
+  ApiKeyParams,
+  ApiKeyResponse,
+  ApiKeyWithSecret,
+  CreateApiKeyInput,
+} from '@ecom/common'
+
 // Examples for documentation
-const apiKeyExample: ApiKeyResponse = {
+const apiKeyExample = {
   id: 'clx1234567890abcdef',
   name: 'Production API Key',
   keyPrefix: 'sk_live_',
@@ -73,7 +62,7 @@ const apiKeyExample: ApiKeyResponse = {
   updatedAt: new Date('2024-01-15T10:30:00Z'),
 }
 
-const apiKeyWithSecretExample: ApiKeyWithSecret = {
+const apiKeyWithSecretExample = {
   id: 'clx1234567890abcdef',
   name: 'Production API Key',
   keyPrefix: 'sk_live_',

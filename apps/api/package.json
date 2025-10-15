@@ -16,6 +16,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@ecom/common": "workspace:*",
     "@ecom/database": "workspace:*",
     "@fastify/autoload": "^6.2.0",
     "@fastify/cookie": "^11.0.2",
