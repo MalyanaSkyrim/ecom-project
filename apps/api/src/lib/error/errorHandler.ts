@@ -31,10 +31,6 @@ export const errorHandler = (
       data: validationErrors,
     }
 
-    console.error('############# Error handler called with', {
-      response,
-    })
-
     return reply.code(400).send(response)
   }
 
@@ -54,11 +50,6 @@ export const errorHandler = (
     if (error.meta && Object.keys(error.meta).length > 0) {
       response.meta = error.meta
     }
-
-    // Log error with metadata for debugging
-    console.error('############# Error handler called with', {
-      response,
-    })
 
     return reply.code(error.statusCode).send(response)
   }

@@ -21,7 +21,9 @@ export type FetchInstance<TSchema extends Schema = Schema> = BetterFetch<{
 export { BetterFetchError as FetchError }
 
 export type FetchRequestOptions<
-  TAdditionalOptions extends { [key: string]: unknown } = {},
+  TAdditionalOptions extends { [key: string]: unknown } = {
+    [key: string]: unknown
+  },
 > = Omit<BetterFetchOption, 'body' | 'method' | 'baseURL' | 'throw'> & {
   includeBaseURL?: boolean
   includeHeaders?: boolean

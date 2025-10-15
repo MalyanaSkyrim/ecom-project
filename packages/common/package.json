@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Shared schemas, types, and utilities for the ecom project",
   "license": "MIT",
+  "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "exports": {

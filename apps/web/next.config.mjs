@@ -4,22 +4,17 @@ const withNextIntl = createNextIntlPlugin()
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: [
-    '@ecom/ui',
-    '@ecom/database',
-    '@ecom/http-client',
-    '@ecom/common',
-  ],
-  experimental: {
-    optimizePackageImports: ['@pragma/database'],
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
+  transpilePackages: ['@ecom/ui', '@ecom/http-client', '@ecom/common'],
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
       },
     },
+  },
+  experimental: {
+    optimizePackageImports: ['@pragma/database'],
   },
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
@@ -43,6 +38,8 @@ const nextConfig = {
       const fileLoaderRule = config.module.rules.find((rule) =>
         rule.test?.test?.('.svg'),
       )
+
+      config.externals = [...(config.externals ?? []), '@ecom/database']
 
       config.module.rules.push(
         {

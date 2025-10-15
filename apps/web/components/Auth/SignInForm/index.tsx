@@ -51,6 +51,7 @@ const SignInForm = () => {
                 control={form.control}
                 name="password"
                 label="Password"
+                type="password"
               />
             </div>
 
