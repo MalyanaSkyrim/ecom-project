@@ -4,7 +4,12 @@ const withNextIntl = createNextIntlPlugin()
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['@ecom/ui', '@ecom/database'],
+  transpilePackages: [
+    '@ecom/ui',
+    '@ecom/database',
+    '@ecom/http-client',
+    '@ecom/common',
+  ],
   experimental: {
     optimizePackageImports: ['@pragma/database'],
     turbo: {

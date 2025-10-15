@@ -1,7 +1,11 @@
 import { env } from '@/env'
 import { SignUpData } from '@/lib/validation/auth'
-import got from 'got'
-import type { User } from 'next-auth'
+
+import type { SigninInput, SignupInput } from '@ecom/common'
+import { ApiClient } from '@ecom/http-client'
+
+// Create API client instance
+const apiClient = new ApiClient(env.API_URL)
 
 export const signUp = async ({
   input,
@@ -9,18 +13,50 @@ export const signUp = async ({
   input: Omit<SignUpData, 'confirmPassword'>
 }) => {
   try {
-    const res = await got.post<{ user: User }>(
-      `${env.API_URL}/v1/auth/signup`,
-      {
-        json: input,
-        responseType: 'json',
-      },
-    )
+    // Convert to SignupInput type
+    const signupData: SignupInput = {
+      email: input.email,
+      password: input.password,
+      firstName: input.firstName,
+      lastName: input.lastName,
+    }
 
-    return res.body
-  } catch (error: any) {
-    if (error?.response?.body?.message) {
-      throw new Error(error?.response?.body?.message)
+    const result = await apiClient.signup(signupData)
+    return result
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && 'response' in error) {
+      const responseError = error as {
+        response?: { body?: { message?: string } }
+      }
+      if (responseError?.response?.body?.message) {
+        throw new Error(responseError.response.body.message)
+      }
+    }
+    throw error
+  }
+}
+
+export const signIn = async ({
+  input,
+}: {
+  input: { email: string; password: string }
+}) => {
+  try {
+    const signinData: SigninInput = {
+      email: input.email,
+      password: input.password,
+    }
+
+    const result = await apiClient.signin(signinData)
+    return result
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && 'response' in error) {
+      const responseError = error as {
+        response?: { body?: { message?: string } }
+      }
+      if (responseError?.response?.body?.message) {
+        throw new Error(responseError.response.body.message)
+      }
     }
     throw error
   }

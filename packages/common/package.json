@@ -14,8 +14,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "lint": "eslint .",
-    "build": "tsc"
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@ecom/config": "workspace:*"

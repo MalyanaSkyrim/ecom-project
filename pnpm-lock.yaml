@@ -162,9 +162,15 @@ importers:
 
   apps/web:
     dependencies:
+      '@ecom/common':
+        specifier: workspace:*
+        version: link:../../packages/common
       '@ecom/database':
         specifier: workspace:*
         version: link:../../packages/database
+      '@ecom/http-client':
+        specifier: workspace:*
+        version: link:../../packages/http-client
       '@ecom/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -420,6 +426,9 @@ importers:
       '@better-fetch/fetch':
         specifier: ^1.1.18
         version: 1.1.18
+      '@ecom/common':
+        specifier: workspace:*
+        version: link:../common
     devDependencies:
       '@ecom/config':
         specifier: workspace:*

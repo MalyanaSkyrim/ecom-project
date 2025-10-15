@@ -17,5 +17,6 @@ export default defineConfig(async function () {
     skipNodeModulesBundle: true,
     target: 'node22',
     format: ['esm'],
+    noExternal: ['@ecom/common', '@ecom/http-client'],
   }
 })
