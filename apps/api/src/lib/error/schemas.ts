@@ -1,26 +1,16 @@
 import { z } from 'zod'
 
+import { errorReplySchema as commonErrorReplySchema } from '@ecom/common'
+
 import { ERROR_CODES } from './types/types'
 
 /**
  * Unified error response schema for all endpoints
  * This ensures consistent error format across the entire API
  */
-export const errorReplySchema = z
-  .object({
-    message: z.string(),
-    code: z.enum(ERROR_CODES),
-    data: z
-      .array(
-        z.object({
-          field: z.string(),
-          message: z.string(),
-        }),
-      )
-      .optional(),
-    meta: z.record(z.string(), z.unknown()).optional(),
-  })
-  .meta({ description: 'Standard error response format' })
+export const errorReplySchema = commonErrorReplySchema.extend({
+  code: z.enum(ERROR_CODES),
+})
 
 /**
  * Example error response for documentation

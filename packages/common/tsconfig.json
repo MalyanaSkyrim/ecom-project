@@ -1,0 +1,12 @@
+{
+  "extends": "@ecom/config/typescript/base.json",
+  "compilerOptions": {
+    "outDir": "build",
+    "rootDir": "src",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "build"]
+}

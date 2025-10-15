@@ -1,30 +1,20 @@
 import { FastifySchema } from 'fastify'
 import { z } from 'zod'
 
+import {
+  errorReplySchema,
+  signinBodySchema,
+  signinSuccessReplySchema,
+} from '@ecom/common'
+
 import { buildJsonSchemas } from '../../../../lib/buildJsonSchema'
-import { errorReplySchema } from '../../../../lib/error'
 import { bindExamples } from '../../../../utils/swagger'
 
-// Zod schema definitions.
-const signinBodySchema = z.object({
-  email: z.email(),
-  password: z.string().min(8),
-})
+// Re-export schemas from common package for buildJsonSchema
+export { signinBodySchema, signinSuccessReplySchema }
 
-const signinSuccessReplySchema = z.object({
-  user: z.object({
-    id: z.string(),
-    email: z.email(),
-    firstName: z.string(),
-    lastName: z.string().nullish(),
-    avatar: z.string().nullish(),
-  }),
-  accessToken: z.string(),
-})
-
-// Generated types from zod schemas.
-export type SigninInput = z.infer<typeof signinBodySchema>
-export type SigninSuccessOutput = z.infer<typeof signinSuccessReplySchema>
+// Re-export types from common
+export type { SigninInput, SigninSuccessOutput } from '@ecom/common'
 export type SigninErrorOutput = z.infer<typeof errorReplySchema>
 
 // Examples of schemas from types definitions.

@@ -1,12 +1,17 @@
 import { FastifySchema } from 'fastify'
-import { z } from 'zod'
+import z from 'zod'
+
+import {
+  createProductBodySchema,
+  errorReplySchema,
+  paginationReplySchema,
+  productListQuerySchema,
+  productParamsSchema,
+  productResponseSchema,
+  updateProductBodySchema,
+} from '@ecom/common'
 
 import { buildJsonSchemas } from '../../../lib/buildJsonSchema'
-import { errorReplySchema } from '../../../lib/error'
-import {
-  paginationQuerySchema,
-  paginationReplySchema,
-} from '../../../utils/pagination'
 import { bindExamples } from '../../../utils/swagger'
 
 // Base product schema
@@ -25,50 +30,38 @@ export const productSchema = z.object({
   updatedAt: z.date(),
 })
 
-// Product creation schema
-const createProductBodySchema = z.object({
-  name: z.string().min(1).max(255),
-  slug: z.string().min(1).max(255),
-  description: z.string().max(1000).nullish(),
-  price: z.number().positive(),
-  isActive: z.boolean().default(true),
-  isFeatured: z.boolean().default(false),
-})
-
-// Product update schema
-const updateProductBodySchema = createProductBodySchema.partial()
-
-// Product list query schema
-const productListQuerySchema = paginationQuerySchema.extend({
-  isFeatured: z.coerce.boolean().optional(),
-  searchText: z.string().min(1).max(255).optional(),
-})
-
-// Product params schema (for /:id routes)
-const productParamsSchema = z.object({
-  id: z.string().uuid(),
-})
-
 // Response schemas
-const productResponseSchema = productSchema
 const productListResponseSchema = paginationReplySchema(productResponseSchema)
 const productSuccessReplySchema = z.object({
   product: productResponseSchema,
 })
 
+// Re-export schemas from common package
+export {
+  createProductBodySchema,
+  productListQuerySchema,
+  productParamsSchema,
+  productResponseSchema,
+  updateProductBodySchema,
+}
+
 // Generated types
 export type Product = z.infer<typeof productSchema>
-export type CreateProductInput = z.infer<typeof createProductBodySchema>
-export type UpdateProductInput = z.infer<typeof updateProductBodySchema>
-export type ProductListQuery = z.infer<typeof productListQuerySchema>
-export type ProductParams = z.infer<typeof productParamsSchema>
-export type ProductResponse = z.infer<typeof productResponseSchema>
 export type ProductListResponse = z.infer<typeof productListResponseSchema>
 export type ProductSuccessOutput = z.infer<typeof productSuccessReplySchema>
 export type ProductErrorOutput = z.infer<typeof errorReplySchema>
 
+// Re-export types from common
+export type {
+  CreateProductInput,
+  ProductListQuery,
+  ProductParams,
+  ProductResponse,
+  UpdateProductInput,
+} from '@ecom/common'
+
 // Examples for documentation
-const productExample: ProductResponse = {
+const productExample = {
   id: '123e4567-e89b-12d3-a456-426614174000',
   storeId: 'abcd-1234-5678-90ab-cdef-1234-5678-90ab',
   name: 'Premium Wireless Headphones',

@@ -1,0 +1,8 @@
+{
+  "extends": "@ecom/config/typescript/base.json",
+  "compilerOptions": {
+    "paths": { "@ecom/config/*": ["../config/*"] }
+  },
+  "include": ["src/"],
+  "exclude": ["**/node_modules", "**/.*/"]
+}
