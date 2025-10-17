@@ -14,12 +14,13 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(['development', 'test', 'production'])
       .default('development'),
-    NEXTAUTH_URL: z.string().url(),
+    NEXTAUTH_URL: z.url(),
     NEXTAUTH_SECRET: z.string(),
 
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
-    API_URL: z.string().url(),
+    API_URL: z.url(),
+    API_KEY: z.string(),
   },
   experimental__runtimeEnv: process.env,
 })

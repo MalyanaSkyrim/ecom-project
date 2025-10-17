@@ -1,4 +1,6 @@
-import currency from 'currency.js'
+import { formatPrice } from '@/lib/utils/currency'
+import type { Locale } from '@/lib/utils/locale.enum'
+import { useLocale } from 'next-intl'
 import Image from 'next/image'
 
 import { classMerge } from '@ecom/ui/lib/utils'
@@ -20,9 +22,10 @@ const ProductCard = ({
   imageUrl,
   className,
 }: ProductCardProps) => {
-  const formattedPrice = currency(price, { fromCents: true }).format()
+  const locale = useLocale() as Locale
+  const formattedPrice = formatPrice(price, locale)
   return (
-    <div className={classMerge('w-[295px] space-y-4', className)}>
+    <div className={classMerge('space-y-4', className)}>
       <div className="aspect-[0.98] w-full overflow-hidden rounded-[20px] bg-[#F0EEED]">
         <Image
           src={imageUrl}

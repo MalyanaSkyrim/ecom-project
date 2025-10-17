@@ -16,6 +16,7 @@ const prisma = new PrismaClient()
  * - 10 Products for the store
  */
 async function main() {
+  await prisma.product.deleteMany()
   console.log('🌱 Starting initial seed...\n')
 
   try {

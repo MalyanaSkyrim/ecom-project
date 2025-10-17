@@ -18,7 +18,8 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@ecom/config": "workspace:*"
+    "@ecom/config": "workspace:*",
+    "@faker-js/faker": "^10.1.0"
   },
   "dependencies": {
     "@prisma/client": "^6.1.0",

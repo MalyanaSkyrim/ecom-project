@@ -1,6 +1,10 @@
+import { faker } from '@faker-js/faker'
 import { Prisma, PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
+
+// Initialize faker with a seed for consistent results
+faker.seed(42)
 
 export interface CreateProductData {
   storeId: string
@@ -14,108 +18,95 @@ export interface CreateProductData {
   totalSales?: number
 }
 
+interface GeneratedProductData {
+  name: string
+  slug: string
+  description?: string
+  price: number
+  isActive?: boolean
+  isFeatured?: boolean
+  rating?: number
+  totalSales?: number
+}
+
 /**
- * Sample product data for seeding
+ * Generate a realistic product using Faker
  */
-const SAMPLE_PRODUCTS = [
-  {
-    name: 'Premium Wireless Headphones',
-    slug: 'premium-wireless-headphones',
-    description:
-      'High-quality wireless headphones with active noise cancellation and 30-hour battery life.',
-    price: 299.99,
-    isFeatured: true,
-    rating: 4.8,
-    totalSales: 152,
-  },
-  {
-    name: 'Ergonomic Office Chair',
-    slug: 'ergonomic-office-chair',
-    description:
-      'Adjustable office chair with lumbar support and breathable mesh back.',
-    price: 449.99,
-    isFeatured: true,
-    rating: 4.6,
-    totalSales: 89,
-  },
-  {
-    name: 'Mechanical Gaming Keyboard',
-    slug: 'mechanical-gaming-keyboard',
-    description: 'RGB backlit mechanical keyboard with Cherry MX switches.',
-    price: 159.99,
-    isFeatured: false,
-    rating: 4.7,
-    totalSales: 203,
-  },
-  {
-    name: '4K Webcam Pro',
-    slug: '4k-webcam-pro',
-    description:
-      'Professional 4K webcam with auto-focus and built-in microphone.',
-    price: 199.99,
-    isFeatured: false,
-    rating: 4.5,
-    totalSales: 67,
-  },
-  {
-    name: 'Portable SSD 1TB',
-    slug: 'portable-ssd-1tb',
-    description: 'Ultra-fast portable SSD with USB-C 3.2 Gen 2 connectivity.',
-    price: 129.99,
-    isFeatured: true,
-    rating: 4.9,
-    totalSales: 421,
-  },
-  {
-    name: 'Smart LED Desk Lamp',
-    slug: 'smart-led-desk-lamp',
-    description:
-      'Adjustable LED desk lamp with touch controls and wireless charging.',
-    price: 79.99,
-    isFeatured: false,
-    rating: 4.4,
-    totalSales: 134,
-  },
-  {
-    name: 'Wireless Mouse Pro',
-    slug: 'wireless-mouse-pro',
-    description: 'Precision wireless mouse with programmable buttons.',
-    price: 59.99,
-    isFeatured: false,
-    rating: 4.3,
-    totalSales: 289,
-  },
-  {
-    name: 'USB-C Hub 7-in-1',
-    slug: 'usb-c-hub-7-in-1',
-    description:
-      '7-in-1 USB-C hub with HDMI, USB 3.0, and SD card reader ports.',
-    price: 49.99,
-    isFeatured: false,
-    rating: 4.2,
-    totalSales: 178,
-  },
-  {
-    name: 'Laptop Stand Aluminum',
-    slug: 'laptop-stand-aluminum',
-    description:
-      'Adjustable aluminum laptop stand with heat dissipation design.',
-    price: 39.99,
-    isFeatured: false,
-    rating: 4.6,
-    totalSales: 256,
-  },
-  {
-    name: 'Noise Cancelling Earbuds',
-    slug: 'noise-cancelling-earbuds',
-    description:
-      'True wireless earbuds with active noise cancellation and 24-hour battery.',
-    price: 149.99,
-    isFeatured: true,
-    rating: 4.7,
-    totalSales: 312,
-  },
-]
+function generateProduct(): GeneratedProductData {
+  // Define realistic product categories with specific types
+  const productTypes = [
+    {
+      category: 'Electronics',
+      types: ['Smartphone', 'Laptop', 'Tablet', 'Smartwatch', 'Headphones'],
+    },
+    {
+      category: 'Home & Garden',
+      types: ['Coffee Maker', 'Blender', 'Vacuum Cleaner', 'Air Purifier'],
+    },
+    {
+      category: 'Fashion',
+      types: ['T-Shirt', 'Jeans', 'Sneakers', 'Jacket', 'Dress'],
+    },
+    {
+      category: 'Sports',
+      types: ['Running Shoes', 'Yoga Mat', 'Dumbbells', 'Bicycle'],
+    },
+    {
+      category: 'Beauty',
+      types: ['Skincare Set', 'Shampoo', 'Perfume', 'Makeup Kit'],
+    },
+    {
+      category: 'Books',
+      types: ['Novel', 'Textbook', 'Cookbook', 'Biography'],
+    },
+    {
+      category: 'Gaming',
+      types: [
+        'Gaming Mouse',
+        'Mechanical Keyboard',
+        'Gaming Chair',
+        'Controller',
+      ],
+    },
+    {
+      category: 'Office',
+      types: ['Desk Lamp', 'Monitor', 'Office Chair', 'Notebook'],
+    },
+  ]
+
+  const selectedCategory = faker.helpers.arrayElement(productTypes)
+  const productType = faker.helpers.arrayElement(selectedCategory.types)
+  const brand = faker.company.name()
+
+  // Create a more realistic product name
+  const adjectives = [
+    'Professional',
+    'Premium',
+    'Advanced',
+    'Elite',
+    'Smart',
+    'Wireless',
+    'Heavy Duty',
+    'Compact',
+  ]
+  const adjective = faker.helpers.arrayElement(adjectives)
+  const productName = faker.datatype.boolean()
+    ? `${brand} ${adjective} ${productType}`
+    : `${brand} ${productType}`
+
+  // Generate price in cents (minimum $0.99, maximum $1999.99)
+  const price = faker.number.int({ min: 99, max: 199999 })
+
+  return {
+    name: productName,
+    slug: faker.helpers.slugify(productName.toLowerCase()),
+    description: `${faker.commerce.productDescription()} Perfect for ${faker.helpers.arrayElement(['home use', 'professional', 'daily activities', 'gift giving', 'personal use'])}.`,
+    price,
+    isFeatured: faker.datatype.boolean({ probability: 0.25 }),
+    rating: Number(faker.number.float({ min: 2.5, max: 5, fractionDigits: 1 })),
+    totalSales: faker.number.int({ min: 0, max: 2000 }),
+  }
+}
 
 /**
  * Create a single product (idempotent)
@@ -152,7 +143,9 @@ export async function createSingleProduct(
     },
   })
 
-  console.log(`✓ Product ready: ${product.name} ($${product.price})`)
+  console.log(
+    `✓ Product ready: ${product.name} ($${(Number(product.price) / 100).toFixed(2)})`,
+  )
   return product
 }
 
@@ -167,41 +160,24 @@ export async function createManyProducts(
 > {
   const products = []
 
-  // Use sample products if size is small enough
-  if (size <= SAMPLE_PRODUCTS.length) {
-    for (let i = 0; i < size; i++) {
-      const sampleProduct = SAMPLE_PRODUCTS[i]
-      const product = await createSingleProduct({
-        storeId,
-        ...sampleProduct,
-      })
-      products.push(product)
-    }
-  } else {
-    // First, create all sample products
-    for (const sampleProduct of SAMPLE_PRODUCTS) {
-      const product = await createSingleProduct({
-        storeId,
-        ...sampleProduct,
-      })
-      products.push(product)
-    }
+  // Generate all products using Faker
+  for (let i = 0; i < size; i++) {
+    const productData = generateProduct()
 
-    // Then, create additional generic products
-    const remaining = size - SAMPLE_PRODUCTS.length
-    for (let i = 1; i <= remaining; i++) {
-      const product = await createSingleProduct({
-        storeId,
-        name: `Product ${i + SAMPLE_PRODUCTS.length}`,
-        slug: `product-${i + SAMPLE_PRODUCTS.length}`,
-        description: `Description for product ${i + SAMPLE_PRODUCTS.length}`,
-        price: Math.floor(Math.random() * 500) + 20, // Random price between $20-$520
-        isFeatured: Math.random() > 0.7, // 30% chance of being featured
-        rating: Math.random() * 2 + 3, // Random rating between 3-5
-        totalSales: Math.floor(Math.random() * 500),
-      })
-      products.push(product)
-    }
+    // Ensure unique slugs by adding a random suffix
+    const baseSlug = productData.slug
+    const uniqueSuffix = faker.string.alphanumeric({
+      length: 8,
+      casing: 'lower',
+    })
+    const finalSlug = `${baseSlug}-${uniqueSuffix}`
+
+    const product = await createSingleProduct({
+      ...productData,
+      storeId,
+      slug: finalSlug,
+    })
+    products.push(product)
   }
 
   console.log(`✓ Created ${size} products for store ${storeId}`)
