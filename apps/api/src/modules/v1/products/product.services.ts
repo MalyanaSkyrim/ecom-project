@@ -122,10 +122,19 @@ export const deleteProduct = async (
 
 // Get paginated list of products
 export const getProducts = async (storeId: string, query: ProductListQuery) => {
-  const { pageSize, pageIndex, isFeatured, searchText } = query
+  console.log('############# sky query', { query })
+
+  const { pageSize, pageIndex, isFeatured, searchText, sorting } = query
 
   // Build where clause
-  const where: any = {
+  const where: {
+    storeId: string
+    isFeatured?: boolean
+    OR?: Array<{
+      name?: { contains: string; mode: 'insensitive' }
+      description?: { contains: string; mode: 'insensitive' }
+    }>
+  } = {
     storeId,
   }
 
@@ -152,6 +161,19 @@ export const getProducts = async (storeId: string, query: ProductListQuery) => {
     ]
   }
 
+  // Build orderBy clause
+  let orderBy: Array<Record<string, 'asc' | 'desc'>> = []
+
+  if (sorting && sorting.length > 0) {
+    // Convert sorting array to Prisma orderBy format
+    orderBy = sorting.map((sort) => ({
+      [sort.id]: sort.direction,
+    }))
+  } else {
+    // Default sorting: featured first, then by creation date
+    orderBy = [{ isFeatured: 'desc' }, { createdAt: 'desc' }]
+  }
+
   // Get total count for pagination
   const totalCount = await db.product.count({ where })
 
@@ -160,10 +182,7 @@ export const getProducts = async (storeId: string, query: ProductListQuery) => {
     where,
     skip: pageIndex * pageSize,
     take: pageSize,
-    orderBy: [
-      { isFeatured: 'desc' }, // Featured products first
-      { createdAt: 'desc' }, // Then by creation date
-    ],
+    orderBy,
   })
 
   // Transform products to include proper number types
@@ -185,7 +204,11 @@ export const isProductSlugUnique = async (
   storeId: string,
   excludeId?: string,
 ): Promise<boolean> => {
-  const where: any = {
+  const where: {
+    slug: string
+    storeId: string
+    id?: { not: string }
+  } = {
     slug,
     storeId,
   }
