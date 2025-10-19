@@ -32,9 +32,11 @@ export const FormInput = <TFieldValues extends FieldValues>({
       render={({ field }) => (
         <FormItem className="md:flex md:items-center">
           <FormLabel className="md:flex-1">{label}</FormLabel>
-          <FormControl className="md:flex-[3]">
-            <Input {...field} {...props} />
-          </FormControl>
+          <div className="md:flex-[3]">
+            <FormControl>
+              <Input {...field} {...props} />
+            </FormControl>
+          </div>
           <FormDescription>{description}</FormDescription>
           <FormMessage />
         </FormItem>

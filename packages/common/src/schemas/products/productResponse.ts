@@ -11,8 +11,8 @@ export const productResponseSchema = z.object({
   isFeatured: z.boolean(),
   rating: z.number().nullish(),
   totalSales: z.number(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 })
 
 export type ProductResponse = z.infer<typeof productResponseSchema>

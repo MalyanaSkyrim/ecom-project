@@ -5,6 +5,7 @@ import {
   Schema,
 } from '@better-fetch/fetch'
 
+import { querySerializerPlugin } from '../plugins/query-serializer'
 import { isValidHttpURL } from './helpers'
 import { CreateBetterFetchOptions } from './types'
 
@@ -20,6 +21,7 @@ export function createBetterFetch<TSchema extends Schema = Schema>(
     },
     schema,
     throw: true,
+    plugins: [querySerializerPlugin],
     customFetchImpl: (url, options) => {
       const body = options?.body
 
@@ -37,12 +39,14 @@ export function createBetterFetch<TSchema extends Schema = Schema>(
         }
       }
 
+      // Remove all query handling - plugin handles this now
+
       const baseURL =
         options && 'baseURL' in options ? options.baseURL : undefined
       const validURL =
         baseURL && !isValidHttpURL(url.toString())
           ? baseURL + url.toString()
-          : url
+          : url.toString()
 
       return fetch(validURL, options)
     },

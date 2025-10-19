@@ -9,6 +9,7 @@ import StatsBanner from './StatsBanner'
 const LandingSection = () => {
   const { width, height } = useWindowSize()
   const ratio = Math.max(height / width)
+  console.log('sky', { ratio })
 
   return (
     <div className="relative flex h-[calc(100vh-80px)] w-full flex-col justify-between overflow-hidden bg-[#F2F0F1] px-5 py-6 md:px-8 md:py-9 lg:p-10 xl:px-20 xl:py-0 landscape:flex-row">
@@ -26,8 +27,8 @@ const LandingSection = () => {
         </div>
         <StatsBanner />
       </div>
-      <div className="2xs:flex -mt-20 hidden max-w-[600px] flex-1 items-end justify-end self-end object-cover md:min-w-[400px] lg:-mt-[200px] xl:mt-0">
-        {(ratio > 1.5 || width >= 640) && (
+      <div className="2xs:flex hidden min-w-[400px] flex-1 justify-end object-top xl:max-w-[600px]">
+        {(ratio > 2 || width >= 768) && (
           <Image
             className="object-cover object-top portrait:h-[90%] landscape:w-[90%]"
             src={'/img/landing_image.png'}

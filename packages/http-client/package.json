@@ -19,9 +19,11 @@
   },
   "dependencies": {
     "@better-fetch/fetch": "^1.1.18",
-    "@ecom/common": "workspace:*"
+    "@ecom/common": "workspace:*",
+    "qs": "^6.14.0"
   },
   "devDependencies": {
-    "@ecom/config": "workspace:*"
+    "@ecom/config": "workspace:*",
+    "@types/qs": "^6.14.0"
   }
 }

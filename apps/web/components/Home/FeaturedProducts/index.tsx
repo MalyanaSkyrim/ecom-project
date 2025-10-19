@@ -45,7 +45,7 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
                 <ProductCard
                   key={product.id}
                   {...product}
-                  className="max-w-[250px] md:max-w-none"
+                  className="w-full max-w-[250px] md:max-w-none"
                 />
               ))}
             />

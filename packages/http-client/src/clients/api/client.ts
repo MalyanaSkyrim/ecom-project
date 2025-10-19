@@ -7,6 +7,7 @@ import type {
   UpdateProductInput,
 } from '@ecom/common'
 
+import { FetchInstance } from '../../fetch'
 import { FetchHttpClient } from '../../fetch/client'
 import { apiSchema } from './schema'
 
@@ -81,7 +82,7 @@ export class ApiClient {
   private baseURL: string
   private token?: string
   private headers: Record<string, string>
-  private client: ReturnType<typeof FetchHttpClient.createClient>
+  private client: FetchInstance<typeof apiSchema>
 
   constructor(
     baseURL: string,
