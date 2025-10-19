@@ -3,6 +3,8 @@ import { env } from '@/env'
 import type { PaginationReply, ProductResponse } from '@ecom/common'
 import { ApiClient } from '@ecom/http-client'
 
+console.log('##########@ env.API_URL', env.API_URL)
+
 // Create API client instance
 const apiClient = new ApiClient(env.API_URL, env.API_KEY)
 

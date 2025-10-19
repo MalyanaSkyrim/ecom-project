@@ -1,11 +1,8 @@
-import { PrismaClient } from '@prisma/client'
-
+import { db } from '../../src'
 import { createSingleApiKey } from './modules/apiKey.seeder'
 import { createManyProducts } from './modules/product.seeder'
 import { createSingleStore } from './modules/store.seeder'
 import { createSingleUser } from './modules/user.seeder'
-
-const prisma = new PrismaClient()
 
 /**
  * Initial seed script
@@ -16,7 +13,7 @@ const prisma = new PrismaClient()
  * - 10 Products for the store
  */
 async function main() {
-  await prisma.product.deleteMany()
+  await db.product.deleteMany()
   console.log('🌱 Starting initial seed...\n')
 
   try {
@@ -71,16 +68,16 @@ async function main() {
     console.error('❌ Error during seed:', error)
     throw error
   } finally {
-    await prisma.$disconnect()
+    await db.$disconnect()
   }
 }
 
 main()
   .then(async () => {
-    await prisma.$disconnect()
+    await db.$disconnect()
   })
   .catch(async (e) => {
     console.error(e)
-    await prisma.$disconnect()
+    await db.$disconnect()
     process.exit(1)
   })

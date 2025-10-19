@@ -158,9 +158,8 @@ export async function createManyProducts(
 ): Promise<
   Array<{ id: string; name: string; slug: string; price: Prisma.Decimal }>
 > {
-  const products = []
-
-  // Generate all products using Faker
+  // Generate all products data first
+  const productsData = []
   for (let i = 0; i < size; i++) {
     const productData = generateProduct()
 
@@ -172,14 +171,43 @@ export async function createManyProducts(
     })
     const finalSlug = `${baseSlug}-${uniqueSuffix}`
 
-    const product = await createSingleProduct({
-      ...productData,
+    productsData.push({
       storeId,
+      name: productData.name,
       slug: finalSlug,
+      description: productData.description,
+      price: new Prisma.Decimal(productData.price),
+      isActive: true,
+      isFeatured: productData.isFeatured ?? false,
+      rating: productData.rating ?? 0,
+      totalSales: productData.totalSales ?? 0,
     })
-    products.push(product)
   }
 
-  console.log(`✓ Created ${size} products for store ${storeId}`)
-  return products
+  // Bulk insert all products
+  const result = await prisma.product.createMany({
+    data: productsData,
+    skipDuplicates: true, // Skip if slug already exists
+  })
+
+  console.log(`✓ Created ${result.count} products for store ${storeId}`)
+
+  // Optionally retrieve the created products if needed
+  // Note: createMany doesn't return the created records
+  const createdProducts = await prisma.product.findMany({
+    where: {
+      storeId,
+      slug: {
+        in: productsData.map((p) => p.slug),
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      price: true,
+    },
+  })
+
+  return createdProducts
 }
