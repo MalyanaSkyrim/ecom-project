@@ -9,7 +9,6 @@ const meta: Meta<typeof Skeleton> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
 }
 
 export default meta
@@ -30,7 +29,7 @@ export const PostExample: Story = {
           </div>
 
           {/* Post content - responsive layout */}
-          <div className="w-[400px] space-y-4 md:w-[600px]">
+          <div className="w-[80vw] space-y-4 sm:w-[400px] md:w-[600px]">
             {/* Text content - left side */}
             <div className="flex w-full flex-col space-y-4 md:flex-row md:space-x-6 md:space-y-0">
               <div className="flex-1 space-y-5">

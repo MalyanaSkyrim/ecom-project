@@ -122,6 +122,9 @@ importers:
       '@fastify/swagger':
         specifier: ^9.4.2
         version: 9.5.2
+      '@types/qs':
+        specifier: ^6.14.0
+        version: 6.14.0
       bcryptjs:
         specifier: ^3.0.2
         version: 3.0.2
@@ -149,6 +152,9 @@ importers:
       pino-pretty:
         specifier: ^13.0.0
         version: 13.1.2
+      qs:
+        specifier: ^6.14.0
+        version: 6.14.0
       tiny-glob:
         specifier: ^0.2.9
         version: 0.2.9
@@ -435,10 +441,16 @@ importers:
       '@ecom/common':
         specifier: workspace:*
         version: link:../common
+      qs:
+        specifier: ^6.14.0
+        version: 6.14.0
     devDependencies:
       '@ecom/config':
         specifier: workspace:*
         version: link:../config
+      '@types/qs':
+        specifier: ^6.14.0
+        version: 6.14.0
 
   packages/ui:
     dependencies:
@@ -6091,6 +6103,10 @@ packages:
 
   pure-rand@6.1.0:
     resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
+
+  qs@6.14.0:
+    resolution: {integrity: sha512-YWWTjgABSKcvs/nWBi9PycY/JiPJqOD4JA6o9Sej2AtvSGarXxKC3OQSk4pAarbdQlKAh5D4FCQkJNkW+GAn3w==}
+    engines: {node: '>=0.6'}
 
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
@@ -13349,6 +13365,10 @@ snapshots:
   punycode@2.3.1: {}
 
   pure-rand@6.1.0: {}
+
+  qs@6.14.0:
+    dependencies:
+      side-channel: 1.1.0
 
   queue-microtask@1.2.3: {}
 
