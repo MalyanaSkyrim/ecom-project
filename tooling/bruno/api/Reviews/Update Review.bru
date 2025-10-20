@@ -1,0 +1,22 @@
+meta {
+  name: Update Review
+  type: http
+  seq: 8
+}
+
+put {
+  url: {{API_URL}}/v1/reviews/{{REVIEW_ID}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{API_KEY}}
+}
+
+body:json {
+  {
+    "content": "Updated review content. Still a great product!",
+    "rating": 4
+  }
+}

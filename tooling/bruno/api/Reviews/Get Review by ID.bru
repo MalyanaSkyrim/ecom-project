@@ -1,0 +1,14 @@
+meta {
+  name: Get Review by ID
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{API_URL}}/v1/reviews/{{REVIEW_ID}}
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{API_KEY}}
+}

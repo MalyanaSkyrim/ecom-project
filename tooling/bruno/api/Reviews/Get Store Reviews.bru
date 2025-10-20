@@ -1,0 +1,14 @@
+meta {
+  name: Get Store Reviews
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{API_URL}}/v1/reviews/store
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{API_KEY}}
+}

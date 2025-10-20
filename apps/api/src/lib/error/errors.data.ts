@@ -50,6 +50,50 @@ export const ERROR_CATALOG: ErrorCatalog = {
     statusCode: 400,
   },
 
+  // Category errors
+  CATEGORY_NOT_FOUND: {
+    message: 'Category not found',
+    statusCode: 404,
+  },
+  CATEGORY_CREATION_FAILED: {
+    message: 'Failed to create category',
+    statusCode: 500,
+  },
+  CATEGORY_UPDATE_FAILED: {
+    message: 'Failed to update category',
+    statusCode: 500,
+  },
+  CATEGORY_DELETION_FAILED: {
+    message: 'Failed to delete category',
+    statusCode: 500,
+  },
+  INVALID_CATEGORY_DATA: {
+    message: 'Invalid category data',
+    statusCode: 400,
+  },
+
+  // Review errors
+  REVIEW_NOT_FOUND: {
+    message: 'Review not found',
+    statusCode: 404,
+  },
+  REVIEW_CREATION_FAILED: {
+    message: 'Failed to create review',
+    statusCode: 500,
+  },
+  REVIEW_UPDATE_FAILED: {
+    message: 'Failed to update review',
+    statusCode: 500,
+  },
+  REVIEW_DELETION_FAILED: {
+    message: 'Failed to delete review',
+    statusCode: 500,
+  },
+  INVALID_REVIEW_DATA: {
+    message: 'Invalid review data',
+    statusCode: 400,
+  },
+
   // Authentication errors
   USER_NOT_FOUND: {
     message: 'User not found',

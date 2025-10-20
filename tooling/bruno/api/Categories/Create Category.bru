@@ -1,0 +1,26 @@
+meta {
+  name: Create Category
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{API_URL}}/v1/categories
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{API_KEY}}
+}
+
+body:json {
+  {
+    "name": "Electronics",
+    "slug": "electronics",
+    "description": "Electronic devices and accessories",
+    "imageUrl": "https://example.com/electronics.jpg",
+    "tags": ["tech", "devices"],
+    "isActive": true
+  }
+}

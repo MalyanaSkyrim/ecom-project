@@ -21,9 +21,12 @@ async function hashPassword(password: string): Promise<string> {
 /**
  * Create a single user (idempotent)
  */
-export async function createSingleUser(
-  data: CreateUserData,
-): Promise<{ id: string; email: string; firstName: string }> {
+export async function createSingleUser(data: CreateUserData): Promise<{
+  id: string
+  email: string
+  firstName: string
+  lastName?: string
+}> {
   const hashedPassword = data.password
     ? await hashPassword(data.password)
     : undefined
@@ -47,7 +50,12 @@ export async function createSingleUser(
   })
 
   console.log(`✓ User ready: ${user.email}`)
-  return user
+  return {
+    id: user.id,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName || undefined,
+  }
 }
 
 /**

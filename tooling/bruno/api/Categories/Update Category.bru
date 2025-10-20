@@ -1,0 +1,26 @@
+meta {
+  name: Update Category
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{API_URL}}/v1/categories/f99648d0-900f-411e-8c79-3d0418fd1b21
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{API_KEY}}
+}
+
+body:json {
+  {
+    "name": "Updated Electronics",
+    "slug": "updated-electronics",
+    "description": "Updated description for electronics category",
+    "imageUrl": "https://example.com/updated-electronics.jpg",
+    "tags": ["tech", "devices", "updated"],
+    "isActive": true
+  }
+}
