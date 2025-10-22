@@ -1,8 +1,8 @@
 import { db } from '../../src'
-import { createSingleApiKey } from './modules/apiKey.seeder'
+import { createConsistentApiKey } from './modules/apiKey.seeder'
 import { createCategoryHierarchy } from './modules/category.seeder'
 import {
-  createCustomerFromUser,
+  createCustomerWithAuth,
   createManyCustomers,
 } from './modules/customer.seeder'
 import { createManyProducts } from './modules/product.seeder'
@@ -41,7 +41,7 @@ async function main() {
       email: 'john.doe@example.com',
       password: 'password123',
     })
-    console.log(`   User ID: ${user.id}\n`)
+    console.log('✅ User created')
 
     // 2. Create a store with the user as owner
     console.log('🏪 Creating store...')
@@ -51,17 +51,15 @@ async function main() {
       domain: 'demo.example.com',
       userId: user.id,
     })
-    console.log(`   Store ID: ${store.id}\n`)
+    console.log('✅ Store created')
 
     // 3. Create an API key for the store
     console.log('🔑 Creating API key...')
-    const apiKey = await createSingleApiKey({
+    const apiKey = await createConsistentApiKey({
       storeId: store.id,
       name: 'Production API Key',
     })
-    console.log(`   API Key ID: ${apiKey.id}`)
-    console.log(`   Key Prefix: ${apiKey.keyPrefix}`)
-    console.log(`   Full API Key: ${apiKey.apiKey}\n`)
+    console.log('✅ API key created')
 
     // 4. Create categories for the store
     console.log('📂 Creating categories...')
@@ -71,27 +69,25 @@ async function main() {
       3,
     )
     const allCategories = [...parents, ...subcategories]
-    console.log(
-      `   Created ${allCategories.length} categories (${parents.length} parents, ${subcategories.length} subcategories)\n`,
-    )
+    console.log(`✅ ${allCategories.length} categories created`)
 
     // 5. Create customers for the store
     console.log('👥 Creating customers...')
     const customers = await createManyCustomers(store.id, 19) // 19 additional customers
-    const ownerCustomer = await createCustomerFromUser(
+    const ownerCustomer = await createCustomerWithAuth(
       store.id,
-      user.id,
       user.email,
       user.firstName,
       user.lastName || undefined,
+      'password123',
     )
     const allCustomers = [...customers, ownerCustomer]
-    console.log(`   Created ${allCustomers.length} customers\n`)
+    console.log(`✅ ${allCustomers.length} customers created`)
 
     // 6. Create products for the store
     console.log('📦 Creating products...')
     const products = await createManyProducts(store.id, 100)
-    console.log(`   Created ${products.length} products\n`)
+    console.log(`✅ ${products.length} products created`)
 
     // 7. Assign some products to categories
     console.log('🔗 Assigning products to categories...')
@@ -110,7 +106,7 @@ async function main() {
         data: { categoryId },
       })
     }
-    console.log(`   Assigned ${productsToCategorize} products to categories\n`)
+    console.log(`✅ ${productsToCategorize} products categorized`)
 
     // 8. Create reviews
     console.log('⭐ Creating reviews...')
@@ -123,31 +119,12 @@ async function main() {
     ) // 3 reviews per product for first 50 products
     const storeReviews = await createStoreReviews(store.id, customerIds, 20) // 20 store reviews
     const totalReviews = productReviews.length + storeReviews.length
-    console.log(
-      `   Created ${totalReviews} reviews (${productReviews.length} product reviews, ${storeReviews.length} store reviews)\n`,
-    )
+    console.log(`✅ ${totalReviews} reviews created`)
 
     // Summary
-    console.log('✅ Initial seed completed successfully!\n')
-    console.log('📊 Summary:')
-    console.log(`   • User: ${user.email}`)
-    console.log(`   • Store: ${store.name} (${store.slug})`)
-    console.log(`   • API Key: ${apiKey.keyPrefix}...`)
-    console.log(
-      `   • Categories: ${allCategories.length} (${parents.length} parents, ${subcategories.length} subcategories)`,
-    )
-    console.log(`   • Customers: ${allCustomers.length}`)
-    console.log(
-      `   • Products: ${products.length} items (${productsToCategorize} categorized)`,
-    )
-    console.log(
-      `   • Reviews: ${totalReviews} (${productReviews.length} product, ${storeReviews.length} store)`,
-    )
-    console.log('\n🔐 Credentials:')
-    console.log(`   Email: ${user.email}`)
-    console.log(`   Password: password123`)
-    console.log(`   API Key: ${apiKey.apiKey}`)
-    console.log('\n')
+    console.log('\n🎉 Seed completed successfully!')
+    console.log(`📊 Store ID: ${store.id}`)
+    console.log(`🔑 API Key: ${apiKey.apiKey}\n`)
   } catch (error) {
     console.error('❌ Error during seed:', error)
     throw error

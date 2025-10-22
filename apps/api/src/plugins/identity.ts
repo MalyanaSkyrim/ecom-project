@@ -1,7 +1,11 @@
 import { FastifyPluginAsync, FastifyRequest } from 'fastify'
 import fp from 'fastify-plugin'
 
-import { extractApiKeyFromHeader, validateApiKey } from '../lib/auth'
+import {
+  ApiKeyValidationError,
+  extractApiKeyFromHeader,
+  validateApiKey,
+} from '../lib/auth'
 import {
   ApiKeyInactiveError,
   ApiKeyRequiredError,
@@ -40,11 +44,7 @@ const identityPlugin: FastifyPluginAsync = async (fastify) => {
       return
     }
 
-    // Skip authentication for auth routes (signin, signup)
-    const authRoutes = ['/signin', '/signup']
-    if (authRoutes.some((route) => request.url.includes(route))) {
-      return
-    }
+    // Auth routes (signin, signup) now require API key for store-specific authentication
 
     try {
       // Extract API key from Authorization header
@@ -58,10 +58,15 @@ const identityPlugin: FastifyPluginAsync = async (fastify) => {
       // Validate the API key
       const validationResult = await validateApiKey(apiKey)
 
+      console.log('########@ sky validationResult:', {
+        validationResult,
+        apiKey,
+      })
+
       if (!validationResult.isValid) {
-        if (validationResult.error === 'Invalid API key format') {
+        if (validationResult.error === ApiKeyValidationError.INVALID_FORMAT) {
           throw new InvalidApiKeyFormatError()
-        } else if (validationResult.error === 'API key is inactive') {
+        } else if (validationResult.error === ApiKeyValidationError.INACTIVE) {
           throw new ApiKeyInactiveError()
         } else {
           throw new InvalidApiKeyFormatError()

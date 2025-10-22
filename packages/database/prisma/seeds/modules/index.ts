@@ -11,7 +11,7 @@ export {
   createSingleCategory,
 } from './category.seeder'
 export {
-  createCustomerFromUser,
+  createCustomerWithAuth,
   createManyCustomers,
   createSingleCustomer,
 } from './customer.seeder'

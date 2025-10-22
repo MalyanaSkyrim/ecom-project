@@ -1,5 +1,6 @@
 'use client'
 
+import { useSession } from 'next-auth/react'
 import React from 'react'
 
 import {
@@ -28,6 +29,12 @@ interface SocialIcon {
 }
 
 const Footer: React.FC = () => {
+  const { data: session, status } = useSession()
+  const isSubscribed = session?.user?.isNewsletterSubscribed || false
+
+  // Conditional rendering of newsletter form
+  const showNewsletterForm = status !== 'authenticated' || !isSubscribed
+
   const footerSections: FooterSection[] = [
     {
       title: 'COMPANY',
@@ -67,8 +74,16 @@ const Footer: React.FC = () => {
   const paymentMethodsIcons = [Visa, MasterCard, PayPal, ApplePay, GooglePay]
 
   return (
-    <footer className="xs:mt-28 xs:pt-24 relative mt-40 bg-gray-100 pt-32">
-      <NewsLetterForm className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2" />
+    <footer
+      className={classMerge(
+        'relative bg-gray-100',
+        showNewsletterForm
+          ? 'xs:mt-28 xs:pt-24 mt-40 pt-32' // Full padding when form is visible
+          : 'xs:mt-6 xs:pt-6 mt-8 pt-8', // Reduced padding when form is hidden
+      )}>
+      {showNewsletterForm && (
+        <NewsLetterForm className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2" />
+      )}
 
       <div className="section_container xl:px-0">
         {/* Links Grid with Desktop Header */}
@@ -79,8 +94,8 @@ const Footer: React.FC = () => {
               SHOP.CO
             </h1>
             <p className="max-w-md text-sm text-gray-600">
-              We have clothes that suits your style and which you're proud to
-              wear. From women to men.
+              We have clothes that suits your style and which you&apos;re proud
+              to wear. From women to men.
             </p>
 
             {/* Social Icons */}

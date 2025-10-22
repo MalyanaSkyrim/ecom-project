@@ -7,6 +7,17 @@ import { db } from '@ecom/database'
  * Handles generation, validation, and storeId extraction from API keys
  */
 
+/**
+ * API Key validation error types
+ */
+export enum ApiKeyValidationError {
+  INVALID_FORMAT = 'INVALID_FORMAT',
+  NOT_FOUND = 'NOT_FOUND',
+  INACTIVE = 'INACTIVE',
+  STORE_INACTIVE = 'STORE_INACTIVE',
+  DATABASE_ERROR = 'DATABASE_ERROR',
+}
+
 // API Key configuration
 const API_KEY_CONFIG = {
   PREFIX: 'sk_live_',
@@ -108,14 +119,14 @@ export const validateApiKey = async (
   apiKeyId?: string
   apiKeyName?: string
   storeName?: string
-  error?: string
+  error?: ApiKeyValidationError
 }> => {
   try {
     // Validate format first
     if (!isValidApiKeyFormat(apiKey)) {
       return {
         isValid: false,
-        error: 'Invalid API key format',
+        error: ApiKeyValidationError.INVALID_FORMAT,
       }
     }
 
@@ -143,7 +154,7 @@ export const validateApiKey = async (
     if (!apiKeyRecord) {
       return {
         isValid: false,
-        error: 'Invalid API key',
+        error: ApiKeyValidationError.NOT_FOUND,
       }
     }
 
@@ -151,7 +162,7 @@ export const validateApiKey = async (
     if (!apiKeyRecord.isActive) {
       return {
         isValid: false,
-        error: 'API key is inactive',
+        error: ApiKeyValidationError.INACTIVE,
       }
     }
 
@@ -159,7 +170,7 @@ export const validateApiKey = async (
     if (!apiKeyRecord.store.isActive) {
       return {
         isValid: false,
-        error: 'Store is inactive',
+        error: ApiKeyValidationError.STORE_INACTIVE,
       }
     }
 
@@ -174,7 +185,7 @@ export const validateApiKey = async (
   } catch (error) {
     return {
       isValid: false,
-      error: 'Database error during API key validation',
+      error: ApiKeyValidationError.DATABASE_ERROR,
     }
   }
 }
@@ -241,7 +252,7 @@ export interface ApiKeyValidationResult {
   apiKeyId?: string
   apiKeyName?: string
   storeName?: string
-  error?: string
+  error?: ApiKeyValidationError
 }
 
 export interface CreateApiKeyResult {

@@ -5,13 +5,13 @@ import {
   EmailAlreadyExistsError,
   UserCreationFailedError,
 } from '../../../../lib/error'
-import { getUserByEmail } from '../signin/signin.services'
+import { getCustomerByEmail } from '../signin/signin.services'
 import {
   SignupErrorOutput,
   SignupInput,
   SignupSuccessOutput,
 } from './signup.schema'
-import { createUser } from './signup.services'
+import { createCustomer } from './signup.services'
 
 /**
  * get the current uptime in a readable format
@@ -34,32 +34,40 @@ export const signupHandler: RouteHandler<{
   }
 }> = async (req, reply) => {
   const { email } = req.body
+  const storeId = req.user?.storeId
 
-  const existingUser = await getUserByEmail(email)
+  if (!storeId) {
+    throw new EmailAlreadyExistsError({
+      message: 'Store ID is required for account creation.',
+      meta: { email },
+    })
+  }
 
-  if (existingUser) {
+  const existingCustomer = await getCustomerByEmail(email, storeId)
+
+  if (existingCustomer) {
     throw new EmailAlreadyExistsError({
       message: `An account with the email '${email}' already exists. Please use a different email or try signing in.`,
-      meta: { email, existingUserId: existingUser.id },
+      meta: { email, existingCustomerId: existingCustomer.id },
     })
   }
 
   try {
-    const newUser = await createUser(req.body)
+    const newCustomer = await createCustomer(req.body, storeId)
 
     reply.code(200).send({
       user: {
-        id: newUser.id,
-        email: newUser.email,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
-        avatar: newUser.avatar,
+        id: newCustomer.id,
+        email: newCustomer.email,
+        firstName: newCustomer.firstName || '',
+        lastName: newCustomer.lastName || '',
+        avatar: newCustomer.avatar,
       },
     })
   } catch (error) {
     throw new UserCreationFailedError({
       message:
-        'Failed to create user account. Please try again or contact support if the issue persists.',
+        'Failed to create customer account. Please try again or contact support if the issue persists.',
       meta: {
         originalError: error instanceof Error ? error.message : 'Unknown error',
         email,

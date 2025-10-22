@@ -7,10 +7,17 @@ faker.seed(42)
 
 export interface CreateCustomerData {
   storeId: string
-  userId?: string // Optional - link to authenticated user
   email: string
   firstName?: string
   lastName?: string
+  // Auth-related fields (for next-auth)
+  name?: string
+  password?: string
+  emailVerified?: Date
+  avatar?: string
+  // Newsletter subscription
+  isNewsletterSubscribed?: boolean
+  // Store-specific customer data
   totalSpent?: number
   orderCount?: number
 }
@@ -34,15 +41,32 @@ export async function createSingleCustomer(data: CreateCustomerData): Promise<{
     update: {
       firstName: data.firstName,
       lastName: data.lastName,
+      // Auth-related fields
+      ...(data.name && { name: data.name }),
+      ...(data.password && { password: data.password }),
+      ...(data.emailVerified && { emailVerified: data.emailVerified }),
+      ...(data.avatar && { avatar: data.avatar }),
+      // Newsletter subscription
+      ...(data.isNewsletterSubscribed !== undefined && {
+        isNewsletterSubscribed: data.isNewsletterSubscribed,
+      }),
+      // Store-specific customer data
       totalSpent: data.totalSpent ? data.totalSpent : 0,
       orderCount: data.orderCount ? data.orderCount : 0,
     },
     create: {
       storeId: data.storeId,
-      userId: data.userId,
       email: data.email,
       firstName: data.firstName,
       lastName: data.lastName,
+      // Auth-related fields
+      ...(data.name && { name: data.name }),
+      ...(data.password && { password: data.password }),
+      ...(data.emailVerified && { emailVerified: data.emailVerified }),
+      ...(data.avatar && { avatar: data.avatar }),
+      // Newsletter subscription
+      isNewsletterSubscribed: data.isNewsletterSubscribed || false,
+      // Store-specific customer data
       totalSpent: data.totalSpent ? data.totalSpent : 0,
       orderCount: data.orderCount ? data.orderCount : 0,
     },
@@ -90,14 +114,14 @@ export async function createManyCustomers(
 }
 
 /**
- * Create a customer linked to an existing user
+ * Create a customer with auth credentials (for testing login)
  */
-export async function createCustomerFromUser(
+export async function createCustomerWithAuth(
   storeId: string,
-  userId: string,
   userEmail: string,
   userFirstName: string,
   userLastName?: string,
+  password: string = 'password123',
 ): Promise<{
   id: string
   email: string
@@ -106,10 +130,13 @@ export async function createCustomerFromUser(
 }> {
   return createSingleCustomer({
     storeId,
-    userId,
     email: userEmail,
     firstName: userFirstName,
     lastName: userLastName,
+    name: `${userFirstName} ${userLastName || ''}`.trim(),
+    password: password, // This will be hashed by the API
+    emailVerified: new Date(),
+    isNewsletterSubscribed: faker.datatype.boolean(),
     totalSpent: faker.number.int({ min: 0, max: 2000 }),
     orderCount: faker.number.int({ min: 0, max: 10 }),
   })

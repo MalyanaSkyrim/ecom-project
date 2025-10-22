@@ -34,6 +34,9 @@ export const ERROR_CODES = [
   'REVIEW_DELETION_FAILED',
   'INVALID_REVIEW_DATA',
 
+  // Newsletter errors
+  'NEWSLETTER_SUBSCRIPTION_FAILED',
+
   // Authentication errors
   'USER_NOT_FOUND',
   'INVALID_CREDENTIALS',

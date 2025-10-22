@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,32 +11,25 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// EXISTING USER AUTHENTICATION (Your current models)
 model User {
   id            String          @id @default(uuid())
-  firstName     String
-  lastName      String?
   email         String          @unique
   password      String?
-  emailVerified DateTime?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  firstName     String
+  lastName      String?
   avatar        String?
+  emailVerified DateTime?
   accounts      Account[]
-  sessions      Session[]
   authenticator Authenticator[]
-
-  // Multi-store relationship
-  storeUsers StoreUser[]
-  // Link to customer records across stores
-  customers  Customer[]
-  // User carts across stores
-  carts      Cart[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  carts         Cart[]
+  sessions      Session[]
+  storeUsers    StoreUser[]
 }
 
 model Account {
-  userId            String
+  userId            String?
   type              String
   provider          String
   providerAccountId String
@@ -53,23 +40,27 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  customerId        String?
+  customer          Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  user              User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
 }
 
 model Session {
-  sessionToken String   @unique
-  userId       String
+  sessionToken String    @unique
+  userId       String?
+  customerId   String?
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  customer     Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  user         User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  @@index([userId])
+  @@index([customerId])
 }
 
 model VerificationToken {
@@ -80,166 +71,148 @@ model VerificationToken {
   @@id([identifier, token])
 }
 
-// Optional for WebAuthn support
 model Authenticator {
-  credentialID         String  @unique
-  userId               String
+  credentialID         String    @id @unique
+  userId               String?
+  customerId           String?
   providerAccountId    String
   credentialPublicKey  String
   counter              Int
   credentialDeviceType String
   credentialBackedUp   Boolean
   transports           String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@id([userId, credentialID])
+  customer             Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  user                 User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-// CORE MULTI-TENANT MODELS
-
 model Store {
-  id       String  @id @default(uuid())
-  name     String
-  slug     String  @unique
-  domain   String? @unique
-  isActive Boolean @default(true)
-
-  // Relationships
-  storeUsers StoreUser[]
+  id         String      @id @default(uuid())
+  name       String
+  slug       String      @unique
+  domain     String?     @unique
+  isActive   Boolean     @default(true)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
   apiKeys    ApiKey[]
-  products   Product[]
-  customers  Customer[]
-  orders     Order[]
   carts      Cart[]
   categories Category[]
+  customers  Customer[]
+  orders     Order[]
+  products   Product[]
   reviews    Review[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  storeUsers StoreUser[]
 }
 
 model StoreUser {
-  id      String    @id @default(uuid())
-  userId  String
-  storeId String
-  role    StoreRole @default(STAFF)
-
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String    @id @default(uuid())
+  userId    String
+  storeId   String
+  role      StoreRole @default(STAFF)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  store     Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, storeId])
 }
 
 model ApiKey {
-  id        String  @id @default(uuid())
+  id        String   @id @default(uuid())
   storeId   String
-  name      String // Human-readable name
-  keyPrefix String // e.g., "sk_live_abc123" - indexed but not unique
-  hashedKey String  @unique // Hashed version
-  isActive  Boolean @default(true)
-
-  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
-
+  name      String
+  keyPrefix String
+  hashedKey String   @unique
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
 
-  @@index([keyPrefix]) // Index for fast lookups, but allow duplicates
+  @@unique([storeId, name])
+  @@index([keyPrefix])
 }
 
-// CORE E-COMMERCE MODELS
-
 model Cart {
-  id        String  @id @default(uuid())
+  id        String     @id @default(uuid())
   storeId   String
-  userId    String? // Authenticated user cart (null for guest)
-  sessionId String? // Guest cart identifier (browser session/cookie)
+  userId    String?
+  sessionId String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  store     Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  user      User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     CartItem[]
 
-  store Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  user  User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  items CartItem[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([storeId, userId]) // One cart per user per store
-  @@unique([storeId, sessionId]) // One cart per session per store
-  @@index([sessionId]) // Fast lookup for guest carts
+  @@unique([storeId, userId])
+  @@unique([storeId, sessionId])
+  @@index([sessionId])
 }
 
 model CartItem {
-  id        String @id @default(uuid())
+  id        String   @id @default(uuid())
   cartId    String
   productId String
-  quantity  Int    @default(1)
-
-  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-
+  quantity  Int      @default(1)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  @@unique([cartId, productId]) // One item per product per cart
+  @@unique([cartId, productId])
 }
 
-// OrderItem keeps historical data and pricing snapshots
-
 model Product {
-  id          String  @id @default(uuid())
+  id          String      @id @default(uuid())
   storeId     String
   name        String
   slug        String
   description String?
   price       Decimal
-  isActive    Boolean @default(true)
-  isFeatured  Boolean @default(false) // For featured products
-  rating      Float?  @default(0) // Rating 0-5, nullable for new products
-  totalSales  Int     @default(0) // Track total quantity sold for top selling
-  categoryId  String? // Optional category assignment
-
-  store      Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  category   Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  orderItems OrderItem[]
-  cartItems  CartItem[]
-  reviews    Review[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  isActive    Boolean     @default(true)
+  isFeatured  Boolean     @default(false)
+  rating      Float?      @default(0.0)
+  totalSales  Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  categoryId  String?
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+  category    Category?   @relation(fields: [categoryId], references: [id])
+  store       Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  reviews     Review[]
 
   @@unique([storeId, slug])
-  @@index([storeId, isFeatured]) // Fast lookup for featured products
-  @@index([storeId, totalSales]) // Fast lookup for top selling products
-  @@index([storeId, rating]) // Fast lookup for highest rated products
-  @@index([storeId, categoryId]) // Fast lookup for products by category
+  @@index([storeId, isFeatured])
+  @@index([storeId, totalSales])
+  @@index([storeId, rating])
+  @@index([storeId, categoryId])
 }
 
 model Customer {
-  id        String  @id @default(uuid())
-  storeId   String
-  userId    String? // Link to authenticated user (null for guest customers)
-  email     String
-  firstName String?
-  lastName  String?
-
-  // Store-specific customer data
-  totalSpent    Decimal   @default(0)
-  orderCount    Int       @default(0)
-  lastOrderDate DateTime?
-
-  store   Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  orders  Order[]
-  reviews Review[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                     String          @id @default(uuid())
+  storeId                String
+  email                  String
+  firstName              String?
+  lastName               String?
+  name                   String?
+  password               String?
+  emailVerified          DateTime?
+  avatar                 String?
+  totalSpent             Decimal         @default(0)
+  orderCount             Int             @default(0)
+  lastOrderDate          DateTime?
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+  isNewsletterSubscribed Boolean         @default(false)
+  accounts               Account[]
+  authenticator          Authenticator[]
+  store                  Store           @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  orders                 Order[]
+  reviews                Review[]
+  sessions               Session[]
 
   @@unique([storeId, email])
-  @@unique([storeId, userId]) // One customer record per user per store (when userId is not null)
-  @@index([storeId, totalSpent]) // For VIP/high-value customer queries
+  @@index([storeId, totalSpent])
+  @@index([storeId, isNewsletterSubscribed])
 }
 
 model Order {
@@ -249,80 +222,69 @@ model Order {
   orderNumber String      @unique
   status      OrderStatus @default(PENDING)
   total       Decimal
-
-  store    Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  customer Customer    @relation(fields: [customerId], references: [id])
-  items    OrderItem[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  customer    Customer    @relation(fields: [customerId], references: [id])
+  store       Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  items       OrderItem[]
 
   @@unique([storeId, orderNumber])
 }
 
 model OrderItem {
-  id          String  @id @default(uuid())
+  id          String   @id @default(uuid())
   orderId     String
   productId   String?
-  productName String // Snapshot for historical accuracy
+  productName String
   quantity    Int
   unitPrice   Decimal
   totalPrice  Decimal
-
-  order   Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product Product? @relation(fields: [productId], references: [id])
-
-  createdAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product? @relation(fields: [productId], references: [id])
 }
 
-// CATEGORY MODEL - Store-specific product categorization with hierarchy
 model Category {
-  id          String  @id @default(uuid())
-  storeId     String
-  name        String
-  slug        String
-  description String?
-  imageUrl    String?
-  parentId    String? // Self-referencing for category hierarchy
+  id            String     @id @default(uuid())
+  storeId       String
+  name          String
+  slug          String
+  description   String?
+  imageUrl      String?
+  parentId      String?
   /// [CategoryTags]
-  tags        Json    @default("[]") // JSONB array for flexible tagging
-  isActive    Boolean @default(true)
-
-  store         Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  parent        Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  tags          Json       @default("[]")
+  isActive      Boolean    @default(true)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  parent        Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
   subcategories Category[] @relation("CategoryHierarchy")
+  store         Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
   products      Product[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
   @@unique([storeId, slug])
   @@index([storeId, isActive])
   @@index([storeId, parentId])
 }
 
-// REVIEW MODEL - Product and Store reviews with ratings
 model Review {
-  id         String  @id @default(uuid())
+  id         String   @id @default(uuid())
   storeId    String
   customerId String
-  productId  String? // Optional - can review store or product
+  productId  String?
   content    String
-  rating     Float // 1.0 to 5.0
-
-  store    Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  product  Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  rating     Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  product    Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  store      Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
 
   @@index([storeId, productId])
   @@index([storeId, rating])
   @@index([customerId])
 }
 
-// ENUMS
 enum StoreRole {
   OWNER
   ADMIN

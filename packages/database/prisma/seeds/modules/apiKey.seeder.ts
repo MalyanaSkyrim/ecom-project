@@ -12,7 +12,7 @@ export interface CreateApiKeyData {
  * Generate an API key
  */
 function generateApiKey(): string {
-  const secret = randomBytes(32).toString('hex')
+  const secret = randomBytes(32).toString('hex') // 32 bytes = 64 hex characters
   return `sk_live_${secret}`
 }
 
@@ -24,10 +24,54 @@ function hashApiKey(apiKey: string): string {
 }
 
 /**
- * Extract the prefix from the API key (first 16 characters)
+ * Extract the prefix from the API key (first 7 characters: "sk_live_")
  */
 function extractKeyPrefix(apiKey: string): string {
-  return apiKey.substring(0, 16)
+  return apiKey.substring(0, 7)
+}
+
+/**
+ * Create a consistent API key for seeding (always generates the same key)
+ */
+export async function createConsistentApiKey(
+  data: CreateApiKeyData,
+): Promise<{ id: string; name: string; apiKey: string; keyPrefix: string }> {
+  // Use a deterministic seed for consistent API key generation
+  const seed = `seed_${data.storeId}_${data.name}`
+  const hash = createHash('sha256').update(seed).digest('hex')
+  // Ensure we get exactly 64 hex characters without special characters
+  const secret = hash.substring(0, 64)
+  const apiKey = `sk_live_${secret}`
+  const hashedKey = hashApiKey(apiKey)
+  const keyPrefix = extractKeyPrefix(apiKey)
+
+  const createdKey = await prisma.apiKey.upsert({
+    where: {
+      storeId_name: {
+        storeId: data.storeId,
+        name: data.name,
+      },
+    },
+    update: {
+      keyPrefix,
+      hashedKey,
+      isActive: true,
+    },
+    create: {
+      storeId: data.storeId,
+      name: data.name,
+      keyPrefix,
+      hashedKey,
+      isActive: true,
+    },
+  })
+
+  return {
+    id: createdKey.id,
+    name: createdKey.name,
+    apiKey,
+    keyPrefix: createdKey.keyPrefix,
+  }
 }
 
 /**
@@ -59,9 +103,6 @@ export async function createSingleApiKey(
       isActive: true,
     },
   })
-
-  console.log(`✓ API key ready: ${createdKey.name} (${keyPrefix}...)`)
-  console.log(`  🔑 API Key: ${apiKey}`)
 
   return {
     id: createdKey.id,

@@ -4,8 +4,10 @@ import { SignUpData } from '@/lib/validation/auth'
 import type { SigninInput, SignupInput } from '@ecom/common'
 import { ApiClient } from '@ecom/http-client'
 
-// Create API client instance
-const apiClient = new ApiClient(env.API_URL)
+// Create API client instance with API key for store-specific authentication
+const apiClient = new ApiClient(env.API_URL, undefined, {
+  Authorization: `Bearer ${env.API_KEY}`,
+})
 
 export const signUp = async ({
   input,

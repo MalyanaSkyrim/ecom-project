@@ -94,6 +94,12 @@ export const ERROR_CATALOG: ErrorCatalog = {
     statusCode: 400,
   },
 
+  // Newsletter errors
+  NEWSLETTER_SUBSCRIPTION_FAILED: {
+    message: 'Failed to subscribe to newsletter',
+    statusCode: 500,
+  },
+
   // Authentication errors
   USER_NOT_FOUND: {
     message: 'User not found',

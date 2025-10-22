@@ -1,9 +1,13 @@
 import type {
+  CategoryListQuery,
   CreateApiKeyInput,
   CreateProductInput,
+  NewsletterSubscriptionInput,
   ProductListQuery,
+  ReviewListQuery,
   SigninInput,
   SignupInput,
+  StoreReviewsQuery,
   UpdateProductInput,
 } from '@ecom/common'
 
@@ -174,13 +178,19 @@ export class ApiClient {
     })
   }
 
-  // Auth methods
+  // Auth methods - now include headers with API key
   async signin(body: SigninInput) {
-    return this.client('@post/v1/auth/signin', { body })
+    return this.client('@post/v1/auth/signin', {
+      body,
+      headers: this.getRequestHeaders(), // Include API key
+    })
   }
 
   async signup(body: SignupInput) {
-    return this.client('@post/v1/auth/signup', { body })
+    return this.client('@post/v1/auth/signup', {
+      body,
+      headers: this.getRequestHeaders(), // Include API key
+    })
   }
 
   // API Key methods
@@ -200,6 +210,55 @@ export class ApiClient {
   async deactivateApiKey(id: string) {
     return this.client('@put/v1/api-keys/:id/deactivate', {
       params: { id },
+      headers: this.getRequestHeaders(),
+    })
+  }
+
+  // Category methods
+  async getCategories(
+    query: CategoryListQuery = { pageSize: 10, pageIndex: 0 },
+  ) {
+    return this.client('@get/v1/categories', {
+      query,
+      headers: this.getRequestHeaders(),
+    })
+  }
+
+  async getCategoryById(id: string) {
+    return this.client('@get/v1/categories/:id', {
+      params: { id },
+      headers: this.getRequestHeaders(),
+    })
+  }
+
+  // Review methods
+  async getReviews(query: ReviewListQuery = { pageSize: 10, pageIndex: 0 }) {
+    return this.client('@get/v1/reviews', {
+      query,
+      headers: this.getRequestHeaders(),
+    })
+  }
+
+  async getStoreReviews(
+    query: StoreReviewsQuery = { pageSize: 10, pageIndex: 0 },
+  ) {
+    return this.client('@get/v1/reviews/store', {
+      query,
+      headers: this.getRequestHeaders(),
+    })
+  }
+
+  async getReviewById(id: string) {
+    return this.client('@get/v1/reviews/:id', {
+      params: { id },
+      headers: this.getRequestHeaders(),
+    })
+  }
+
+  // Newsletter methods
+  async subscribeToNewsletter(data: NewsletterSubscriptionInput) {
+    return this.client('@post/v1/newsletter/subscribe', {
+      body: data,
       headers: this.getRequestHeaders(),
     })
   }
