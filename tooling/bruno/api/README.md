@@ -44,7 +44,7 @@ Download and install Bruno from: https://www.usebruno.com/
 ### 3. Configure Environment
 
 1. Select the environment (Dev, Staging, or PROD) from the dropdown
-2. Update the `API_KEY` in the environment file with your actual API key
+2. Set up the `API_KEY` environment variable
 
 #### Getting an API Key
 
@@ -60,14 +60,28 @@ To get an API key, you need to:
 
    ```
    🔑 Creating API key...
-   ✓ Created API key: Production API Key (sk_live_abc123...)
-     🔑 API Key: sk_live_abc123def456...
-     ⚠️  Save this key - it won't be shown again!
+   ✅ API key created
+   🎉 Seed completed successfully!
+   📊 Store ID: [store-id]
+   🔑 API Key: sk_live_abc123def456...
    ```
 
-3. **Update the environment**:
-   - Open `environments/Dev.bru`
-   - Replace `your-api-key-here` with the actual API key
+3. **Set the environment variable**:
+
+   **Option A: Set system environment variable (recommended)**:
+
+   ```bash
+   export API_KEY=sk_live_abc123def456...
+   ```
+
+   **Option B: Create a .env file** in the project root:
+
+   ```bash
+   # .env
+   API_KEY=sk_live_abc123def456...
+   ```
+
+   The Dev environment is configured to read `API_KEY` from the system environment variable.
 
 ### 4. Test the API
 
@@ -257,7 +271,11 @@ Bruno automatically adds this header when you select a request that has `auth: b
 
 3. **Copy the API key** from the seed output
 
-4. **Update Dev environment** with the API key
+4. **Set the environment variable**:
+
+   ```bash
+   export API_KEY=sk_live_your-actual-api-key-here
+   ```
 
 5. **Test endpoints** using Bruno
 

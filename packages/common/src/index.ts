@@ -1,4 +1,7 @@
 export * from './schemas/api-keys'
 export * from './schemas/auth'
+export * from './schemas/categories'
 export * from './schemas/common'
+export * from './schemas/newsletter'
 export * from './schemas/products'
+export * from './schemas/reviews'

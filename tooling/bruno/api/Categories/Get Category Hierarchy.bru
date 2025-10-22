@@ -1,0 +1,14 @@
+meta {
+  name: Get Category Hierarchy
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{API_URL}}/v1/categories/hierarchy
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{API_KEY}}
+}

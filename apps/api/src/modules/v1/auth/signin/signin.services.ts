@@ -5,9 +5,14 @@ import { db } from '@ecom/database'
 
 import { env } from '../../../../env'
 
-export const getUserByEmail = (email: string) => {
-  return db.user.findUnique({
-    where: { email },
+export const getCustomerByEmail = (email: string, storeId: string) => {
+  return db.customer.findUnique({
+    where: {
+      storeId_email: {
+        storeId,
+        email,
+      },
+    },
   })
 }
 
@@ -20,11 +25,17 @@ export const verifyPassword = (password: string, userPassword: string) => {
  * @param userId
  * @param email
  */
-export const generateTokens = (userId: string, email: string) => {
+export const generateTokens = (
+  customerId: string,
+  email: string,
+  storeId: string,
+) => {
   const accessToken = jwt.sign(
     {
-      userId,
+      userId: customerId, // Keep as userId for backward compatibility
+      customerId,
       email,
+      storeId,
     },
     env.NEXTAUTH_SECRET,
     { expiresIn: '1d' },

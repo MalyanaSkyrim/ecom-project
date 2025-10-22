@@ -1,0 +1,15 @@
+meta {
+  name: Delete Category
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{API_URL}}/v1/categories/f99648d0-900f-411e-8c79-3d0418fd1b21
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{API_KEY}}
+}

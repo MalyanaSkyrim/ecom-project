@@ -1,0 +1,14 @@
+meta {
+  name: Get Product Review Stats
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{API_URL}}/v1/reviews/product/{{PRODUCT_ID}}/stats
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{API_KEY}}
+}

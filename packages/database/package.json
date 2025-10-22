@@ -19,7 +19,8 @@
   },
   "devDependencies": {
     "@ecom/config": "workspace:*",
-    "@faker-js/faker": "^10.1.0"
+    "@faker-js/faker": "^10.1.0",
+    "prisma-json-types-generator": "^3.6.2"
   },
   "dependencies": {
     "@prisma/client": "^6.1.0",

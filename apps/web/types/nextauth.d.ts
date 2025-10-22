@@ -7,6 +7,7 @@ declare module 'next-auth' {
     lastName: string
     email: string
     avatar: string
+    isNewsletterSubscribed?: boolean
   }
 
   interface Session {

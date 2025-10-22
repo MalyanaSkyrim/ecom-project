@@ -1,9 +1,56 @@
-import { Mail } from 'lucide-react'
+'use client'
 
-import { Button, Input } from '@ecom/ui'
+import { trpc } from '@/lib/trpc/client'
+import { Mail } from 'lucide-react'
+import { useState } from 'react'
+
+import { Button, Input, showToast } from '@ecom/ui'
 import { classMerge } from '@ecom/ui/lib/utils'
 
 const NewsLetterForm = ({ className }: { className?: string }) => {
+  const [email, setEmail] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const subscribeMutation = trpc.newsletter.subscribe.useMutation({
+    onSuccess: (data) => {
+      showToast({
+        id: 'newsletter-success',
+        title: data.message,
+        variant: 'success',
+        duration: 3000,
+      })
+      setEmail('')
+    },
+    onError: (error) => {
+      showToast({
+        id: 'newsletter-error',
+        title: error.message || 'Failed to subscribe to newsletter',
+        variant: 'error',
+        duration: 3000,
+      })
+    },
+    onSettled: () => {
+      setIsSubmitting(false)
+    },
+  })
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!email.trim()) {
+      showToast({
+        id: 'newsletter-validation',
+        title: 'Please enter your email address',
+        variant: 'error',
+        duration: 3000,
+      })
+      return
+    }
+
+    setIsSubmitting(true)
+    subscribeMutation.mutate({ email: email.trim() })
+  }
+
   return (
     <div
       className={classMerge(
@@ -14,18 +61,25 @@ const NewsLetterForm = ({ className }: { className?: string }) => {
         STAY UPTO DATE ABOUT OUR LATEST OFFERS
       </p>
       <div className="flex flex-1 items-center justify-end text-right">
-        <div className="w-full space-y-4 lg:w-[80%]">
+        <form onSubmit={handleSubmit} className="w-full space-y-4 lg:w-[80%]">
           <Input
             icon={Mail}
             className="h-11 rounded-full md:h-12"
             placeholder="Enter your email address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={isSubmitting}
+            type="email"
+            required
           />
           <Button
+            type="submit"
             variant="secondary"
-            className="h-11 w-full rounded-full md:h-12">
-            Subscribe
+            className="h-11 w-full rounded-full md:h-12"
+            disabled={isSubmitting}>
+            {isSubmitting ? 'Subscribing...' : 'Subscribe'}
           </Button>
-        </div>
+        </form>
       </div>
     </div>
   )

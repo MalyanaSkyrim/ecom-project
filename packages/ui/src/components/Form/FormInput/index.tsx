@@ -36,9 +36,9 @@ export const FormInput = <TFieldValues extends FieldValues>({
             <FormControl>
               <Input {...field} {...props} />
             </FormControl>
+            <FormDescription>{description}</FormDescription>
+            <FormMessage />
           </div>
-          <FormDescription>{description}</FormDescription>
-          <FormMessage />
         </FormItem>
       )}
     />

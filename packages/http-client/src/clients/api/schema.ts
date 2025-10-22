@@ -5,21 +5,35 @@ import {
   apiKeyParamsSchema,
   apiKeyResponseSchema,
   apiKeyWithSecretSchema,
+  // Category schemas
+  categoryListQuerySchema,
+  categoryListResponseSchema,
+  categoryParamsSchema,
+  categorySuccessResponseSchema,
   // API Key schemas
   createApiKeyBodySchema,
   // Product schemas
   createProductBodySchema,
   // Common schemas
   errorReplySchema,
+  newsletterSubscriptionResponseSchema,
+  // Newsletter schemas
+  newsletterSubscriptionSchema,
   paginationReplySchema,
   productListQuerySchema,
   productParamsSchema,
   productResponseSchema,
+  // Review schemas
+  reviewListQuerySchema,
+  reviewListResponseSchema,
+  reviewParamsSchema,
+  reviewSuccessResponseSchema,
   // Auth schemas
   signinBodySchema,
   signinSuccessReplySchema,
   signupBodySchema,
   signupSuccessReplySchema,
+  storeReviewsQuerySchema,
   updateProductBodySchema,
 } from '@ecom/common'
 
@@ -69,6 +83,30 @@ export const apiSchema = createSchema(
       output: emptyResponseSchema,
     },
 
+    // Category endpoints
+    '@get/v1/categories': {
+      query: categoryListQuerySchema,
+      output: categoryListResponseSchema,
+    },
+    '@get/v1/categories/:id': {
+      params: categoryParamsSchema,
+      output: categorySuccessResponseSchema,
+    },
+
+    // Review endpoints
+    '@get/v1/reviews': {
+      query: reviewListQuerySchema,
+      output: reviewListResponseSchema,
+    },
+    '@get/v1/reviews/store': {
+      query: storeReviewsQuerySchema,
+      output: reviewListResponseSchema,
+    },
+    '@get/v1/reviews/:id': {
+      params: reviewParamsSchema,
+      output: reviewSuccessResponseSchema,
+    },
+
     // Auth endpoints
     '@post/v1/auth/signin': {
       body: signinBodySchema,
@@ -90,6 +128,12 @@ export const apiSchema = createSchema(
     '@put/v1/api-keys/:id/deactivate': {
       params: apiKeyParamsSchema,
       output: emptyResponseSchema,
+    },
+
+    // Newsletter endpoints
+    '@post/v1/newsletter/subscribe': {
+      body: newsletterSubscriptionSchema,
+      output: newsletterSubscriptionResponseSchema,
     },
 
     // Error responses (for all endpoints)

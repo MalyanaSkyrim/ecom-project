@@ -9,7 +9,7 @@ import {
 } from './signin.schema'
 import {
   generateTokens,
-  getUserByEmail,
+  getCustomerByEmail,
   verifyPassword,
 } from './signin.services'
 
@@ -34,35 +34,47 @@ export const signinHandler: RouteHandler<{
   }
 }> = async (req, reply) => {
   const { email, password } = req.body
+  const storeId = req.user?.storeId
 
-  const user = await getUserByEmail(email)
-
-  if (!user || !user.password) {
+  if (!storeId) {
     throw new InvalidCredentialsError({
-      message:
-        'Invalid email or password. Please check your credentials and try again.',
-      meta: { email, hasPassword: !!user?.password },
+      message: 'Store ID is required for authentication.',
+      meta: { email },
     })
   }
 
-  const isPasswordValid = await verifyPassword(password, user.password)
+  const customer = await getCustomerByEmail(email, storeId)
+
+  if (!customer || !customer.password) {
+    throw new InvalidCredentialsError({
+      message:
+        'Invalid email or password. Please check your credentials and try again.',
+      meta: { email, hasPassword: !!customer?.password },
+    })
+  }
+
+  const isPasswordValid = await verifyPassword(password, customer.password)
   if (!isPasswordValid) {
     throw new InvalidCredentialsError({
       message:
         'Invalid email or password. Please check your credentials and try again.',
-      meta: { email, userId: user.id },
+      meta: { email, customerId: customer.id },
     })
   }
 
-  const { accessToken } = generateTokens(user.id, user.email)
+  const { accessToken } = generateTokens(
+    customer.id,
+    customer.email,
+    customer.storeId,
+  )
 
   reply.code(200).send({
     user: {
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      avatar: user.avatar,
+      id: customer.id,
+      email: customer.email,
+      firstName: customer.firstName || '',
+      lastName: customer.lastName || '',
+      avatar: customer.avatar,
     },
     accessToken,
   })

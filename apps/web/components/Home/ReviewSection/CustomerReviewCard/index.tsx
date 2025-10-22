@@ -13,7 +13,7 @@ const CustomerReviewCard: React.FC<{ review: CustomerReview }> = ({
   review,
 }) => {
   return (
-    <div className="rounded-[20px] border border-gray-200 bg-white px-9 py-6 shadow-sm transition-shadow duration-200 hover:shadow-md">
+    <div className="w-full rounded-[20px] border border-gray-200 bg-white px-9 py-6 shadow-sm transition-shadow duration-200 hover:shadow-md">
       <div className="mb-4">
         <RatingStars rating={review.rating} size={20} />
       </div>

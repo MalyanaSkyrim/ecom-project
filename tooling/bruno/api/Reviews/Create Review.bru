@@ -1,0 +1,24 @@
+meta {
+  name: Create Review
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{API_URL}}/v1/reviews
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{API_KEY}}
+}
+
+body:json {
+  {
+    "customerId": "{{CUSTOMER_ID}}",
+    "productId": "{{PRODUCT_ID}}",
+    "content": "Great product! Highly recommend it to anyone looking for quality.",
+    "rating": 5
+  }
+}
