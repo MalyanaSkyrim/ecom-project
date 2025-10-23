@@ -1,10 +1,18 @@
+export * from './components/Accordion'
 export * from './components/Button'
 export * from './components/Carousel'
 export * from './components/Drawer'
 export * from './components/DropdownMenu'
 export * from './components/Form'
 export * from './components/Input'
+export * from './components/RangeSlider'
 export * from './components/Select'
 export * from './components/Skeleton'
+export * from './components/Slider'
 export * from './components/Toaster'
 export * from './icons'
+
+// Filter components
+export { default as ColorSwatchFilter } from './components/Filters/ColorSwatchFilter'
+export { default as MultiSelectFilter } from './components/Filters/MultiSelectFilter'
+export { default as RangeFilter } from './components/Filters/RangeFilter'

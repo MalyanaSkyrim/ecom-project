@@ -56,3 +56,27 @@ export const getTopSelling = async (): Promise<ProductResponse[]> => {
     throw error
   }
 }
+
+export const getAllProducts = async (): Promise<ProductResponse[]> => {
+  try {
+    // Get all products with maximum allowed page size
+    const result = (await apiClient.getProducts({
+      pageSize: 100, // Maximum allowed page size
+      pageIndex: 0,
+    })) as PaginationReply<ProductResponse>
+
+    // Return the data array which contains ProductResponse[]
+    return result.data
+  } catch (error: unknown) {
+    console.log('##########@ error', error)
+    if (error && typeof error === 'object' && 'response' in error) {
+      const responseError = error as {
+        response?: { body?: { message?: string } }
+      }
+      if (responseError?.response?.body?.message) {
+        throw new Error(responseError.response.body.message)
+      }
+    }
+    throw error
+  }
+}
