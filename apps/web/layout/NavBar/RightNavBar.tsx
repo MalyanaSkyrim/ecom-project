@@ -12,11 +12,6 @@ import { Button } from '@ecom/ui/components/Button'
 const RightNavBar = () => {
   const { data: session, status } = useSession()
 
-  console.log('sky session:', {
-    session,
-    status,
-  })
-
   return (
     <div className="flex items-center sm:space-x-5 lg:space-x-10">
       <div className="hidden sm:block">

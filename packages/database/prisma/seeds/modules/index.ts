@@ -5,17 +5,13 @@
  */
 
 export { createManyApiKeys, createSingleApiKey } from './apiKey.seeder'
-export {
-  createCategoryHierarchy,
-  createManyCategories,
-  createSingleCategory,
-} from './category.seeder'
+export { CATEGORY_TREE, seedCategoryTree } from './category.seeder'
 export {
   createCustomerWithAuth,
   createManyCustomers,
   createSingleCustomer,
 } from './customer.seeder'
-export { createManyProducts, createSingleProduct } from './product.seeder'
+export { PRODUCT_CATALOG, seedProductCatalog } from './product.seeder'
 export {
   createManyReviews,
   createProductReviews,

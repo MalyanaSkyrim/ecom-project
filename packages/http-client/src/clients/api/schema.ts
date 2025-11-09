@@ -7,9 +7,9 @@ import {
   apiKeyWithSecretSchema,
   // Category schemas
   categoryListQuerySchema,
-  categoryListResponseSchema,
+  categoryListReplySchema,
   categoryParamsSchema,
-  categorySuccessResponseSchema,
+  categorySuccessReplySchema,
   // API Key schemas
   createApiKeyBodySchema,
   // Product schemas
@@ -86,11 +86,11 @@ export const apiSchema = createSchema(
     // Category endpoints
     '@get/v1/categories': {
       query: categoryListQuerySchema,
-      output: categoryListResponseSchema,
+      output: categoryListReplySchema,
     },
     '@get/v1/categories/:id': {
       params: categoryParamsSchema,
-      output: categorySuccessResponseSchema,
+      output: categorySuccessReplySchema,
     },
 
     // Review endpoints

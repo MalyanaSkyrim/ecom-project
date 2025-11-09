@@ -2,22 +2,18 @@ import { env } from '@/env'
 
 import { ApiClient } from '@ecom/http-client'
 
-import type {
-  CategoriesListResponse,
-  CategoriesQuery,
-} from './categories.schema'
+import type { CategoriesListReply, CategoriesQuery } from './categories.schema'
 
 // Create API client instance
 const apiClient = new ApiClient(env.API_URL, env.API_KEY)
 
 export const getCategories = async (
   query: CategoriesQuery,
-): Promise<CategoriesListResponse> => {
+): Promise<CategoriesListReply> => {
   try {
     const result = await apiClient.getCategories(query)
     return result
   } catch (error: unknown) {
-    console.log('##########@ error', error)
     if (error && typeof error === 'object' && 'response' in error) {
       const responseError = error as {
         response?: { body?: { message?: string } }

@@ -8,6 +8,10 @@
   "fr": "French",
   "orders": "Orders",
   "app_description": "Discover Quality. Shop with Confidence.",
+  "common": {
+    "home": "Home",
+    "products": "Products"
+  },
   "navigation": {
     "shop": "Shop",
     "new_arrivals": "New Arrivals",

@@ -3,6 +3,7 @@
 import { TrpcProvider } from '@/lib/trpc/client'
 import { useSession } from 'next-auth/react'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import * as React from 'react'
 
 import { Toaster } from '@ecom/ui'
@@ -13,22 +14,22 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const sessionData = useSession()
   const { status } = sessionData
 
-  console.log('sky status:', status)
-
   return (
     <TrpcProvider>
-      <NextThemesProvider
-        forcedTheme="light"
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-        enableColorScheme>
-        <div className="relative overflow-hidden">
-          <Toaster />
-          {status === 'loading' ? <PageLoader /> : children}
-        </div>
-      </NextThemesProvider>
+      <NuqsAdapter>
+        <NextThemesProvider
+          forcedTheme="light"
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+          enableColorScheme>
+          <div className="relative overflow-hidden">
+            <Toaster />
+            {status === 'loading' ? <PageLoader /> : children}
+          </div>
+        </NextThemesProvider>
+      </NuqsAdapter>
     </TrpcProvider>
   )
 }

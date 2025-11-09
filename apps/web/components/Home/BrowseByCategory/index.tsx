@@ -16,10 +16,8 @@ const placeholderImages = [
 ]
 
 const BrowseByCategory = () => {
-  const { data: apiCategories, isLoading } =
+  const { data: categories, isLoading } =
     trpc.categories.getCategories.useQuery({
-      pageSize: 4,
-      pageIndex: 0,
       isActive: true,
     })
 
@@ -49,8 +47,8 @@ const BrowseByCategory = () => {
   }
 
   // Transform API data to match component expectations
-  const categories =
-    apiCategories?.data.map((category, index) => ({
+  const featuredCategories =
+    categories?.slice(0, 4).map((category, index) => ({
       id: category.id,
       name: category.name,
       imageUrl:
@@ -63,7 +61,7 @@ const BrowseByCategory = () => {
       <div className="mx-auto max-w-5xl space-y-9 rounded-[40px] bg-[#F0F0F0] px-6 py-9 md:px-10 lg:space-y-12 lg:px-16 lg:py-14">
         <h1 className="section_title">Browse by dress style</h1>
         <div className="grid aspect-[1.5] grid-cols-1 gap-5 md:grid-cols-11 md:grid-rows-2 md:gap-4 lg:gap-5">
-          {categories.map((category, index) => (
+          {featuredCategories.map((category, index) => (
             <button
               key={category.id}
               className={classMerge(

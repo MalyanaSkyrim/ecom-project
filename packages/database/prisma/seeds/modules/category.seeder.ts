@@ -1,252 +1,233 @@
-import { faker } from '@faker-js/faker'
-
 import { db } from '../../../src'
 
-// Initialize faker with a seed for consistent results
-faker.seed(42)
-
-export interface CreateCategoryData {
-  storeId: string
+export interface CategorySeed {
   name: string
   slug: string
   description?: string
   imageUrl?: string
-  parentId?: string
   tags?: string[]
   isActive?: boolean
+  children?: CategorySeed[]
 }
 
-interface GeneratedCategoryData {
+export interface SeededCategory {
+  id: string
   name: string
   slug: string
-  description?: string
-  imageUrl?: string
-  tags: string[]
-  isActive: boolean
+  parentId?: string
 }
 
-/**
- * Generate a realistic category using Faker
- */
-function generateCategory(): GeneratedCategoryData {
-  // Define realistic category hierarchies
-  const categoryTemplates = [
-    {
-      name: 'Electronics',
-      subcategories: ['Smartphones', 'Laptops', 'Tablets', 'Audio', 'Gaming'],
-      tags: ['tech', 'digital', 'gadgets'],
-    },
-    {
-      name: 'Fashion',
-      subcategories: [
-        "Men's Clothing",
-        "Women's Clothing",
-        'Shoes',
-        'Accessories',
-        'Jewelry',
-      ],
-      tags: ['style', 'clothing', 'accessories'],
-    },
-    {
-      name: 'Home & Garden',
-      subcategories: ['Furniture', 'Kitchen', 'Bathroom', 'Garden', 'Decor'],
-      tags: ['home', 'furniture', 'decor'],
-    },
-    {
-      name: 'Sports & Fitness',
-      subcategories: [
-        'Exercise Equipment',
-        'Outdoor Gear',
-        'Team Sports',
-        'Fitness Apparel',
-      ],
-      tags: ['fitness', 'sports', 'health'],
-    },
-    {
-      name: 'Beauty & Health',
-      subcategories: ['Skincare', 'Makeup', 'Hair Care', 'Health Supplements'],
-      tags: ['beauty', 'health', 'wellness'],
-    },
-    {
-      name: 'Books & Media',
-      subcategories: [
-        'Fiction',
-        'Non-Fiction',
-        'Educational',
-        'Movies',
-        'Music',
-      ],
-      tags: ['books', 'media', 'education'],
-    },
-    {
-      name: 'Automotive',
-      subcategories: ['Car Parts', 'Tools', 'Accessories', 'Maintenance'],
-      tags: ['auto', 'vehicles', 'parts'],
-    },
-    {
-      name: 'Toys & Games',
-      subcategories: [
-        'Action Figures',
-        'Board Games',
-        'Educational Toys',
-        'Video Games',
-      ],
-      tags: ['toys', 'games', 'entertainment'],
-    },
-  ]
-
-  const template = faker.helpers.arrayElement(categoryTemplates)
-  const categoryName = faker.datatype.boolean()
-    ? template.name
-    : faker.helpers.arrayElement(template.subcategories)
-
-  // Generate realistic description
-  const descriptions = [
-    `Discover the best ${categoryName.toLowerCase()} products for your needs`,
-    `High-quality ${categoryName.toLowerCase()} from top brands`,
-    `Shop premium ${categoryName.toLowerCase()} with fast delivery`,
-    `Find the perfect ${categoryName.toLowerCase()} for every occasion`,
-  ]
-
-  return {
-    name: categoryName,
-    slug: faker.helpers.slugify(categoryName.toLowerCase()),
-    description: faker.helpers.arrayElement(descriptions),
-    imageUrl: faker.datatype.boolean({ probability: 0.3 })
-      ? faker.image.url({ width: 400, height: 300 })
-      : undefined,
-    tags: faker.helpers.arrayElements(template.tags, { min: 1, max: 3 }),
-    isActive: faker.datatype.boolean({ probability: 0.9 }), // 90% active
-  }
-}
-
-/**
- * Create a single category (idempotent)
- */
-export async function createSingleCategory(
-  data: CreateCategoryData,
-): Promise<{ id: string; name: string; slug: string }> {
-  const category = await db.category.upsert({
-    where: {
-      storeId_slug: {
-        storeId: data.storeId,
-        slug: data.slug,
+export const CATEGORY_TREE: CategorySeed[] = [
+  {
+    name: 'Women',
+    slug: 'women',
+    description: 'Contemporary womenswear essentials and statement looks.',
+    tags: ['women', 'apparel'],
+    children: [
+      {
+        name: 'Dresses',
+        slug: 'women-dresses',
+        description: 'Occasion, cocktail, and everyday dresses.',
+        tags: ['women', 'dresses'],
       },
-    },
-    update: {
-      name: data.name,
-      description: data.description,
-      imageUrl: data.imageUrl,
-      parentId: data.parentId,
-      tags: data.tags || [],
-      isActive: data.isActive ?? true,
-    },
-    create: {
-      storeId: data.storeId,
-      name: data.name,
-      slug: data.slug,
-      description: data.description,
-      imageUrl: data.imageUrl,
-      parentId: data.parentId,
-      tags: data.tags || [],
-      isActive: data.isActive ?? true,
-    },
-  })
-
-  console.log(`✓ Category ready: ${category.name} (${category.slug})`)
-  return category
-}
-
-/**
- * Create multiple categories for a store with optional hierarchy
- */
-export async function createManyCategories(
-  storeId: string,
-  size: number,
-  parentId?: string,
-): Promise<Array<{ id: string; name: string; slug: string }>> {
-  // Generate all categories data first
-  const categoriesData = []
-  for (let i = 0; i < size; i++) {
-    const categoryData = generateCategory()
-
-    // Ensure unique slugs by adding a random suffix
-    const baseSlug = categoryData.slug
-    const uniqueSuffix = faker.string.alphanumeric({
-      length: 6,
-      casing: 'lower',
-    })
-    const finalSlug = `${baseSlug}-${uniqueSuffix}`
-
-    categoriesData.push({
-      storeId,
-      name: categoryData.name,
-      slug: finalSlug,
-      description: categoryData.description,
-      imageUrl: categoryData.imageUrl,
-      parentId: parentId || null,
-      tags: categoryData.tags,
-      isActive: categoryData.isActive,
-    })
-  }
-
-  // Bulk insert all categories
-  const result = await db.category.createMany({
-    data: categoriesData,
-    skipDuplicates: true, // Skip if slug already exists
-  })
-
-  console.log(`✓ Created ${result.count} categories for store ${storeId}`)
-
-  // Retrieve the created categories
-  const createdCategories = await db.category.findMany({
-    where: {
-      storeId,
-      slug: {
-        in: categoriesData.map((c) => c.slug),
+      {
+        name: 'Outerwear',
+        slug: 'women-outerwear',
+        description: 'Layering pieces for every season.',
+        tags: ['women', 'jackets'],
       },
-    },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-    },
-  })
+      {
+        name: 'Footwear',
+        slug: 'women-footwear',
+        description: 'Heels, flats, and sneakers designed for comfort.',
+        tags: ['women', 'shoes'],
+      },
+    ],
+  },
+  {
+    name: 'Men',
+    slug: 'men',
+    description: 'Tailored menswear and elevated wardrobe staples.',
+    tags: ['men', 'apparel'],
+    children: [
+      {
+        name: 'Tops',
+        slug: 'men-tops',
+        description: 'Shirts, tees, and knitwear for every occasion.',
+        tags: ['men', 'tops'],
+      },
+      {
+        name: 'Bottoms',
+        slug: 'men-bottoms',
+        description: 'Denim, chinos, and tailored trousers.',
+        tags: ['men', 'bottoms'],
+      },
+      {
+        name: 'Sneakers',
+        slug: 'men-sneakers',
+        description: 'Performance and lifestyle sneakers.',
+        tags: ['men', 'sneakers'],
+      },
+    ],
+  },
+  {
+    name: 'Kids',
+    slug: 'kids',
+    description: 'Playful styles for growing imaginations.',
+    tags: ['kids', 'apparel'],
+    children: [
+      {
+        name: 'Girls',
+        slug: 'kids-girls',
+        description: 'Bright dresses and everyday essentials.',
+        tags: ['kids', 'girls'],
+      },
+      {
+        name: 'Boys',
+        slug: 'kids-boys',
+        description: 'Durable styles built for adventures.',
+        tags: ['kids', 'boys'],
+      },
+      {
+        name: 'Baby',
+        slug: 'kids-baby',
+        description: 'Soft sets designed for comfort.',
+        tags: ['kids', 'baby'],
+      },
+    ],
+  },
+  {
+    name: 'Home & Living',
+    slug: 'home-living',
+    description: 'Thoughtful accents that elevate every room.',
+    tags: ['home', 'decor'],
+    children: [
+      {
+        name: 'Decor',
+        slug: 'home-decor',
+        description: 'Artful decor to style your space.',
+        tags: ['home', 'decor'],
+      },
+      {
+        name: 'Kitchen & Dining',
+        slug: 'home-kitchen',
+        description: 'Serveware and tools for memorable meals.',
+        tags: ['home', 'kitchen'],
+      },
+      {
+        name: 'Bath & Spa',
+        slug: 'home-bath',
+        description: 'Luxe textiles and spa-inspired accessories.',
+        tags: ['home', 'bath'],
+      },
+    ],
+  },
+  {
+    name: 'Beauty & Wellness',
+    slug: 'beauty',
+    description: 'Self-care rituals and clean beauty favourites.',
+    tags: ['beauty', 'wellness'],
+    children: [
+      {
+        name: 'Skincare',
+        slug: 'beauty-skincare',
+        description: 'Targeted treatments and daily essentials.',
+        tags: ['beauty', 'skincare'],
+      },
+      {
+        name: 'Fragrance',
+        slug: 'beauty-fragrance',
+        description: 'Signature scents for day and night.',
+        tags: ['beauty', 'fragrance'],
+      },
+      {
+        name: 'Wellness',
+        slug: 'beauty-wellness',
+        description: 'Supplements and aromatherapy basics.',
+        tags: ['beauty', 'wellness'],
+      },
+    ],
+  },
+]
 
-  return createdCategories
-}
+const toSeededCategory = (record: {
+  id: string
+  name: string
+  slug: string
+  parentId: string | null
+}): SeededCategory => ({
+  id: record.id,
+  name: record.name,
+  slug: record.slug,
+  parentId: record.parentId ?? undefined,
+})
 
-/**
- * Create a category hierarchy (parent categories with subcategories)
- */
-export async function createCategoryHierarchy(
+export async function seedCategoryTree(
   storeId: string,
-  parentCount: number = 5,
-  subcategoriesPerParent: number = 3,
+  tree: CategorySeed[] = CATEGORY_TREE,
 ): Promise<{
-  parents: Array<{ id: string; name: string; slug: string }>
-  subcategories: Array<{ id: string; name: string; slug: string }>
+  parents: SeededCategory[]
+  all: SeededCategory[]
+  lookup: Map<string, SeededCategory>
 }> {
-  // First create parent categories
-  const parents = await createManyCategories(storeId, parentCount)
+  const lookup = new Map<string, SeededCategory>()
+  const parents: SeededCategory[] = []
 
-  // Then create subcategories for each parent
-  const allSubcategories = []
-  for (const parent of parents) {
-    const subcategories = await createManyCategories(
-      storeId,
-      subcategoriesPerParent,
-      parent.id,
-    )
-    allSubcategories.push(...subcategories)
+  const upsertCategory = async (
+    seed: CategorySeed,
+    parentId: string | null = null,
+  ): Promise<SeededCategory> => {
+    const category = await db.category.upsert({
+      where: {
+        storeId_slug: {
+          storeId,
+          slug: seed.slug,
+        },
+      },
+      update: {
+        name: seed.name,
+        description: seed.description,
+        imageUrl: seed.imageUrl,
+        parentId,
+        tags: seed.tags ?? [],
+        isActive: seed.isActive ?? true,
+      },
+      create: {
+        storeId,
+        name: seed.name,
+        slug: seed.slug,
+        description: seed.description,
+        imageUrl: seed.imageUrl,
+        parentId,
+        tags: seed.tags ?? [],
+        isActive: seed.isActive ?? true,
+      },
+    })
+
+    const result = toSeededCategory(category)
+    lookup.set(seed.slug, result)
+    return result
   }
 
+  for (const parentSeed of tree) {
+    const parent = await upsertCategory(parentSeed, null)
+    parents.push(parent)
+
+    if (parentSeed.children?.length) {
+      for (const childSeed of parentSeed.children) {
+        await upsertCategory(childSeed, parent.id)
+      }
+    }
+  }
+
+  const all = Array.from(lookup.values())
   console.log(
-    `✓ Created category hierarchy: ${parents.length} parents, ${allSubcategories.length} subcategories`,
+    `✓ Seeded category tree for store ${storeId}: ${parents.length} parents, ${all.length - parents.length} subcategories`,
   )
 
   return {
     parents,
-    subcategories: allSubcategories,
+    all,
+    lookup,
   }
 }

@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
-// Category response schema
-export const categoryResponseSchema = z.object({
+// Category reply schema
+export const categoryReplySchema = z.object({
   id: z.string(),
   storeId: z.string(),
   name: z.string(),
@@ -17,8 +17,6 @@ export const categoryResponseSchema = z.object({
 
 // Category list query schema
 export const categoryListQuerySchema = z.object({
-  pageSize: z.number().min(1).max(100).default(10),
-  pageIndex: z.number().min(0).default(0),
   search: z.string().optional(),
   parentId: z.string().optional(),
   isActive: z.boolean().optional(),
@@ -29,28 +27,16 @@ export const categoryParamsSchema = z.object({
   id: z.string(),
 })
 
-// Category success response schema
-export const categorySuccessResponseSchema = z.object({
-  category: categoryResponseSchema,
+// Category success reply schema
+export const categorySuccessReplySchema = z.object({
+  category: categoryReplySchema,
 })
 
-// Category list response schema
-export const categoryListResponseSchema = z.object({
-  data: z.array(categoryResponseSchema),
-  pagination: z.object({
-    totalCount: z.number(),
-    pageSize: z.number(),
-    pageIndex: z.number(),
-    totalPages: z.number(),
-    hasNextPage: z.boolean(),
-    hasPreviousPage: z.boolean(),
-  }),
-})
+// Category list reply schema
+export const categoryListReplySchema = z.array(categoryReplySchema)
 
-export type CategoryResponse = z.infer<typeof categoryResponseSchema>
+export type CategoryReply = z.infer<typeof categoryReplySchema>
 export type CategoryListQuery = z.infer<typeof categoryListQuerySchema>
 export type CategoryParams = z.infer<typeof categoryParamsSchema>
-export type CategorySuccessResponse = z.infer<
-  typeof categorySuccessResponseSchema
->
-export type CategoryListResponse = z.infer<typeof categoryListResponseSchema>
+export type CategorySuccessReply = z.infer<typeof categorySuccessReplySchema>
+export type CategoryListReply = z.infer<typeof categoryListReplySchema>

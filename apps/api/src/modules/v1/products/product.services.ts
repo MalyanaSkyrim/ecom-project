@@ -1,4 +1,4 @@
-import { db } from '@ecom/database'
+import { Prisma, db } from '@ecom/database'
 
 import type {
   CreateProductInput,
@@ -122,9 +122,18 @@ export const deleteProduct = async (
 
 // Get paginated list of products
 export const getProducts = async (storeId: string, query: ProductListQuery) => {
-  console.log('############# sky query', { query })
-
-  const { pageSize, pageIndex, isFeatured, searchText, sorting } = query
+  const {
+    pageSize,
+    pageIndex,
+    isFeatured,
+    searchText,
+    sorting,
+    categoryId,
+    priceMin,
+    priceMax,
+    colors,
+    sizes,
+  } = query
 
   // Build where clause
   const where: {
@@ -134,6 +143,7 @@ export const getProducts = async (storeId: string, query: ProductListQuery) => {
       name?: { contains: string; mode: 'insensitive' }
       description?: { contains: string; mode: 'insensitive' }
     }>
+    AND?: Prisma.ProductWhereInput[]
   } = {
     storeId,
   }
@@ -147,18 +157,58 @@ export const getProducts = async (storeId: string, query: ProductListQuery) => {
   if (searchText) {
     where.OR = [
       {
-        name: {
-          contains: searchText,
-          mode: 'insensitive',
-        },
+        name: { contains: searchText, mode: 'insensitive' },
       },
       {
-        description: {
-          contains: searchText,
-          mode: 'insensitive',
-        },
+        description: { contains: searchText, mode: 'insensitive' },
       },
     ]
+  }
+
+  const andConditions: Prisma.ProductWhereInput[] = []
+
+  if (categoryId) {
+    andConditions.push({
+      OR: [{ categoryId }, { category: { parentId: categoryId } }],
+    })
+  }
+
+  if (priceMin !== undefined || priceMax !== undefined) {
+    const priceFilter: Prisma.DecimalFilter = {}
+    if (priceMin !== undefined) {
+      priceFilter.gte = new Prisma.Decimal(Math.round(priceMin * 100))
+    }
+    if (priceMax !== undefined) {
+      priceFilter.lte = new Prisma.Decimal(Math.round(priceMax * 100))
+    }
+
+    andConditions.push({ price: priceFilter })
+  }
+
+  if (colors && colors.length > 0) {
+    andConditions.push({
+      OR: colors.map((color) => ({
+        description: {
+          contains: color,
+          mode: 'insensitive',
+        },
+      })),
+    })
+  }
+
+  if (sizes && sizes.length > 0) {
+    andConditions.push({
+      OR: sizes.map((size) => ({
+        description: {
+          contains: size,
+          mode: 'insensitive',
+        },
+      })),
+    })
+  }
+
+  if (andConditions.length > 0) {
+    where.AND = andConditions
   }
 
   // Build orderBy clause

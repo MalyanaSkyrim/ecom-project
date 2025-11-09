@@ -8,22 +8,6 @@ import type {
 } from './category.schema'
 
 // Helper function to calculate pagination metadata
-export const calculatePaginationMeta = (
-  totalCount: number,
-  pageSize: number,
-  pageIndex: number,
-) => {
-  const totalPages = Math.ceil(totalCount / pageSize)
-  return {
-    totalCount,
-    pageSize,
-    pageIndex,
-    totalPages,
-    hasNextPage: pageIndex < totalPages - 1,
-    hasPreviousPage: pageIndex > 0,
-  }
-}
-
 // Create a new category
 export const createCategory = async (
   storeId: string,
@@ -113,9 +97,8 @@ export const getCategories = async (
   storeId: string,
   query: CategoryListQuery,
 ) => {
-  const { pageSize, pageIndex, searchText, parentId, isActive, sorting } = query
+  const { searchText, parentId, isActive } = query
 
-  // Build where clause
   const where: {
     storeId: string
     parentId?: string | null
@@ -128,17 +111,14 @@ export const getCategories = async (
     storeId,
   }
 
-  // Add parent filter if provided
   if (parentId !== undefined) {
     where.parentId = parentId || null
   }
 
-  // Add active filter if provided
   if (isActive !== undefined) {
     where.isActive = isActive
   }
 
-  // Add search filter if provided
   if (searchText) {
     where.OR = [
       {
@@ -156,34 +136,10 @@ export const getCategories = async (
     ]
   }
 
-  // Build orderBy clause
-  let orderBy: Array<Record<string, 'asc' | 'desc'>> = []
-
-  if (sorting && sorting.length > 0) {
-    // Convert sorting array to Prisma orderBy format
-    orderBy = sorting.map((sort) => ({
-      [sort.id]: sort.direction,
-    }))
-  } else {
-    // Default sorting: parent categories first, then by name
-    orderBy = [{ parentId: 'asc' }, { name: 'asc' }]
-  }
-
-  // Get total count for pagination
-  const totalCount = await db.category.count({ where })
-
-  // Get categories with pagination
-  const categories = await db.category.findMany({
+  return db.category.findMany({
     where,
-    skip: pageIndex * pageSize,
-    take: pageSize,
-    orderBy,
+    orderBy: [{ parentId: 'asc' }, { name: 'asc' }],
   })
-
-  return {
-    data: categories,
-    pagination: calculatePaginationMeta(totalCount, pageSize, pageIndex),
-  }
 }
 
 // Check if category slug is unique within a store

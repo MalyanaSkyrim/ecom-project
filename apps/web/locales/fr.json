@@ -8,6 +8,10 @@
   "fr": "Français",
   "orders": "Commandes",
   "app_description": "Découvrez la qualité. Faites vos achats en toute confiance.",
+  "common": {
+    "home": "Accueil",
+    "products": "Produits"
+  },
   "navigation": {
     "shop": "Boutique",
     "new_arrivals": "Nouveautés",

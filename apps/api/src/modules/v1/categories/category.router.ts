@@ -5,7 +5,6 @@ import {
   deleteCategoryHandler,
   getCategoriesHandler,
   getCategoryHandler,
-  getCategoryHierarchyHandler,
   updateCategoryHandler,
 } from './category.controller'
 import {
@@ -14,7 +13,6 @@ import {
   getCategoriesSchema,
   getCategorySchema,
   updateCategorySchema,
-  categoryRef,
 } from './category.schema'
 
 /**
@@ -29,33 +27,6 @@ const categoryRoutes: FastifyPluginAsync = async (fastify): Promise<void> => {
       schema: getCategoriesSchema,
     },
     getCategoriesHandler,
-  )
-
-  // GET /categories/hierarchy - Get category hierarchy
-  fastify.get(
-    '/hierarchy',
-    {
-      schema: {
-        tags: ['Categories'],
-        description: 'Get category hierarchy',
-        security: [{ apiKey: [] }],
-        summary: 'Get category hierarchy',
-        operationId: 'getCategoryHierarchy',
-        response: {
-          '200': {
-            type: 'object',
-            properties: {
-              categories: {
-                type: 'array',
-                items: categoryRef('categoryResponseSchema'),
-              },
-            },
-          },
-          '500': categoryRef('errorReplySchema'),
-        },
-      },
-    },
-    getCategoryHierarchyHandler,
   )
 
   // POST /categories - Create a new category

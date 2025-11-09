@@ -7,7 +7,7 @@ const PageLoader = () => {
     <div className="flex h-screen w-screen items-center justify-center">
       <div className="flex items-center -space-x-12">
         <DotLottieReact
-          src="./lotties/shopping-cart-loading.lottie"
+          src="/lotties/shopping-cart-loading.lottie"
           loop
           autoplay
           className="w-[240px]"

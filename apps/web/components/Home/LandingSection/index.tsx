@@ -9,7 +9,6 @@ import StatsBanner from './StatsBanner'
 const LandingSection = () => {
   const { width, height } = useWindowSize()
   const ratio = Math.max(height / width)
-  console.log('sky', { ratio })
 
   return (
     <div className="relative flex h-[calc(100vh-80px)] w-full flex-col justify-between overflow-hidden bg-[#F2F0F1] px-5 py-6 md:px-8 md:py-9 lg:p-10 xl:px-20 xl:py-0 landscape:flex-row">

@@ -1,213 +1,380 @@
-import { faker } from '@faker-js/faker'
-import { Prisma, PrismaClient } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 
-const prisma = new PrismaClient()
+import { db } from '../../../src'
+import type { SeededCategory } from './category.seeder'
 
-// Initialize faker with a seed for consistent results
-faker.seed(42)
-
-export interface CreateProductData {
-  storeId: string
+export interface ProductSeed {
   name: string
-  slug: string
-  description?: string
-  price: number | string
+  slug?: string
+  description: string
+  priceCents: number
   isActive?: boolean
   isFeatured?: boolean
   rating?: number
   totalSales?: number
+  colors?: string[]
+  sizes?: string[]
+  categorySlug?: string
 }
 
-interface GeneratedProductData {
+export interface SeededProduct {
+  id: string
   name: string
   slug: string
-  description?: string
-  price: number
-  isActive?: boolean
-  isFeatured?: boolean
-  rating?: number
-  totalSales?: number
+  categoryId?: string
 }
 
-/**
- * Generate a realistic product using Faker
- */
-function generateProduct(): GeneratedProductData {
-  // Define realistic product categories with specific types
-  const productTypes = [
-    {
-      category: 'Electronics',
-      types: ['Smartphone', 'Laptop', 'Tablet', 'Smartwatch', 'Headphones'],
-    },
-    {
-      category: 'Home & Garden',
-      types: ['Coffee Maker', 'Blender', 'Vacuum Cleaner', 'Air Purifier'],
-    },
-    {
-      category: 'Fashion',
-      types: ['T-Shirt', 'Jeans', 'Sneakers', 'Jacket', 'Dress'],
-    },
-    {
-      category: 'Sports',
-      types: ['Running Shoes', 'Yoga Mat', 'Dumbbells', 'Bicycle'],
-    },
-    {
-      category: 'Beauty',
-      types: ['Skincare Set', 'Shampoo', 'Perfume', 'Makeup Kit'],
-    },
-    {
-      category: 'Books',
-      types: ['Novel', 'Textbook', 'Cookbook', 'Biography'],
-    },
-    {
-      category: 'Gaming',
-      types: [
-        'Gaming Mouse',
-        'Mechanical Keyboard',
-        'Gaming Chair',
-        'Controller',
-      ],
-    },
-    {
-      category: 'Office',
-      types: ['Desk Lamp', 'Monitor', 'Office Chair', 'Notebook'],
-    },
-  ]
+const normalizeSlug = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
 
-  const selectedCategory = faker.helpers.arrayElement(productTypes)
-  const productType = faker.helpers.arrayElement(selectedCategory.types)
-  const brand = faker.company.name()
-
-  // Create a more realistic product name
-  const adjectives = [
-    'Professional',
-    'Premium',
-    'Advanced',
-    'Elite',
-    'Smart',
-    'Wireless',
-    'Heavy Duty',
-    'Compact',
-  ]
-  const adjective = faker.helpers.arrayElement(adjectives)
-  const productName = faker.datatype.boolean()
-    ? `${brand} ${adjective} ${productType}`
-    : `${brand} ${productType}`
-
-  // Generate price in cents (minimum $0.99, maximum $1999.99)
-  const price = faker.number.int({ min: 99, max: 199999 })
-
-  return {
-    name: productName,
-    slug: faker.helpers.slugify(productName.toLowerCase()),
-    description: `${faker.commerce.productDescription()} Perfect for ${faker.helpers.arrayElement(['home use', 'professional', 'daily activities', 'gift giving', 'personal use'])}.`,
-    price,
-    isFeatured: faker.datatype.boolean({ probability: 0.25 }),
-    rating: Number(faker.number.float({ min: 2.5, max: 5, fractionDigits: 1 })),
-    totalSales: faker.number.int({ min: 0, max: 2000 }),
+const appendVariants = (
+  description: string,
+  colors?: string[],
+  sizes?: string[],
+) => {
+  const variants: string[] = []
+  if (colors?.length) {
+    variants.push(`Colors: ${colors.join(', ')}`)
   }
+  if (sizes?.length) {
+    variants.push(`Sizes: ${sizes.join(', ')}`)
+  }
+
+  if (!variants.length) return description.trim()
+  return `${description.trim()} ${variants.join(' | ')}.`
 }
 
-/**
- * Create a single product (idempotent)
- */
-export async function createSingleProduct(
-  data: CreateProductData,
-): Promise<{ id: string; name: string; slug: string; price: Prisma.Decimal }> {
-  const product = await prisma.product.upsert({
-    where: {
-      storeId_slug: {
-        storeId: data.storeId,
-        slug: data.slug,
-      },
-    },
-    update: {
-      name: data.name,
-      description: data.description,
-      price: new Prisma.Decimal(data.price),
-      isActive: data.isActive ?? true,
-      isFeatured: data.isFeatured ?? false,
-      rating: data.rating ?? 0,
-      totalSales: data.totalSales ?? 0,
-    },
-    create: {
-      storeId: data.storeId,
-      name: data.name,
-      slug: data.slug,
-      description: data.description,
-      price: new Prisma.Decimal(data.price),
-      isActive: data.isActive ?? true,
-      isFeatured: data.isFeatured ?? false,
-      rating: data.rating ?? 0,
-      totalSales: data.totalSales ?? 0,
-    },
-  })
+export const PRODUCT_CATALOG: ProductSeed[] = [
+  {
+    name: 'Aurora Silk Midi Dress',
+    description:
+      'A flowing midi dress cut from washable silk with a subtle high-low hem and removable waist tie.',
+    priceCents: 18900,
+    isFeatured: true,
+    rating: 4.7,
+    totalSales: 320,
+    colors: ['Blush Pink', 'Emerald', 'Ivory'],
+    sizes: ['XS', 'S', 'M', 'L'],
+    categorySlug: 'women-dresses',
+  },
+  {
+    name: 'Solstice Linen Blazer',
+    description:
+      'Relaxed linen tailoring with a soft shoulder, horn buttons, and breathable half lining.',
+    priceCents: 22500,
+    rating: 4.5,
+    totalSales: 210,
+    colors: ['Natural', 'Black'],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    categorySlug: 'women-outerwear',
+  },
+  {
+    name: 'Horizon Leather Slingback',
+    description:
+      'Pointed-toe slingbacks crafted in Naples from Italian nappa leather with memory foam cushioning.',
+    priceCents: 16500,
+    rating: 4.6,
+    totalSales: 275,
+    colors: ['Black', 'Warm Taupe'],
+    sizes: ['US 6', 'US 7', 'US 8', 'US 9', 'US 10'],
+    categorySlug: 'women-footwear',
+  },
+  {
+    name: 'Atlas Oxford Shirt',
+    description:
+      'Classic button-down woven on heritage looms with a softly structured collar and reinforced seams.',
+    priceCents: 9800,
+    rating: 4.8,
+    totalSales: 410,
+    colors: ['Sky Blue', 'White', 'Navy'],
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    categorySlug: 'men-tops',
+  },
+  {
+    name: 'Harbor Selvedge Denim',
+    description:
+      '12.5oz Japanese selvedge denim with a tailored taper, antique copper hardware, and chain-stitched hems.',
+    priceCents: 13500,
+    rating: 4.6,
+    totalSales: 365,
+    colors: ['Indigo'],
+    sizes: ['29', '30', '31', '32', '33', '34', '36'],
+    categorySlug: 'men-bottoms',
+  },
+  {
+    name: 'Velocity Knit Runner',
+    description:
+      'Responsive knit sneaker with algae-based cushioning and recycled rubber outsoles.',
+    priceCents: 14800,
+    isFeatured: true,
+    rating: 4.9,
+    totalSales: 520,
+    colors: ['Graphite', 'Arctic White', 'Olive'],
+    sizes: ['US 8', 'US 9', 'US 10', 'US 11', 'US 12'],
+    categorySlug: 'men-sneakers',
+  },
+  {
+    name: 'Starlit Tiered Dress',
+    description:
+      'Soft cotton voile dress with flutter sleeves, hidden pockets, and hand-embroidered stars.',
+    priceCents: 6200,
+    rating: 4.7,
+    totalSales: 195,
+    colors: ['Rose', 'Midnight'],
+    sizes: ['2T', '3T', '4T', '5T', '6'],
+    categorySlug: 'kids-girls',
+  },
+  {
+    name: 'Trailblazer Cargo Jacket',
+    description:
+      'Water-resistant cotton jacket with insulated lining, reflective trims, and expandable pockets.',
+    priceCents: 7800,
+    rating: 4.5,
+    totalSales: 160,
+    colors: ['Forest', 'Slate'],
+    sizes: ['XS', 'S', 'M', 'L'],
+    categorySlug: 'kids-boys',
+  },
+  {
+    name: 'Cloudsoft Knit Set',
+    description:
+      'Organic cotton knit two-piece with envelope neckline and fold-over cuffs for newborn comfort.',
+    priceCents: 5400,
+    rating: 4.9,
+    totalSales: 240,
+    colors: ['Oat', 'Dusty Blue'],
+    sizes: ['0-3M', '3-6M', '6-9M', '9-12M'],
+    categorySlug: 'kids-baby',
+  },
+  {
+    name: 'Cascade Marble Candle',
+    description:
+      'Hand-poured soy candle housed in reclaimed Carrara marble with reusable vessel.',
+    priceCents: 3800,
+    rating: 4.4,
+    totalSales: 310,
+    colors: ['White Marble'],
+    sizes: ['12 oz'],
+    categorySlug: 'home-decor',
+  },
+  {
+    name: 'Stoneware Dinner Collection',
+    description:
+      'Twelve-piece reactive glaze stoneware set fired at high temperatures for exceptional durability.',
+    priceCents: 16800,
+    rating: 4.8,
+    totalSales: 150,
+    colors: ['Charcoal', 'Sea Mist'],
+    sizes: ['Service for 4'],
+    categorySlug: 'home-kitchen',
+  },
+  {
+    name: 'Spa-Loom Towel Set',
+    description:
+      'Long-staple Turkish cotton towels with zero-twist loops and double-needle hems.',
+    priceCents: 11200,
+    rating: 4.7,
+    totalSales: 280,
+    colors: ['Cloud', 'Sand'],
+    sizes: ['Bath', 'Hand', 'Wash'],
+    categorySlug: 'home-bath',
+  },
+  {
+    name: 'Enzyme Renewal Serum',
+    description:
+      'Daily resurfacing serum blending fruit enzymes, niacinamide, and hyaluronic acid.',
+    priceCents: 7200,
+    isFeatured: true,
+    rating: 4.9,
+    totalSales: 460,
+    colors: ['Translucent'],
+    sizes: ['30 ml'],
+    categorySlug: 'beauty-skincare',
+  },
+  {
+    name: 'Cedar Atlas Eau de Parfum',
+    description:
+      'Unisex fragrance layering cedar atlas, bergamot, and smoked vanilla with 18-hour wear.',
+    priceCents: 9800,
+    rating: 4.6,
+    totalSales: 190,
+    colors: ['Amber'],
+    sizes: ['50 ml', '100 ml'],
+    categorySlug: 'beauty-fragrance',
+  },
+  {
+    name: 'Calm Focus Adaptogen Powder',
+    description:
+      'A daily adaptogenic blend of lion’s mane, ashwagandha, and cacao to support clarity.',
+    priceCents: 5800,
+    rating: 4.5,
+    totalSales: 170,
+    colors: ['Cacao'],
+    sizes: ['150 g'],
+    categorySlug: 'beauty-wellness',
+  },
+  {
+    name: 'Midnight Merino Cardigan',
+    description:
+      'Fine-gauge merino cardigan with corozo buttons and tubular stitching for a clean finish.',
+    priceCents: 12800,
+    rating: 4.7,
+    totalSales: 230,
+    colors: ['Midnight', 'Heather Grey'],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    categorySlug: 'women-outerwear',
+  },
+  {
+    name: 'Lumen Pleated Trouser',
+    description:
+      'High-rise trouser featuring double pleats, pressed seams, and a cropped ankle length.',
+    priceCents: 14200,
+    rating: 4.6,
+    totalSales: 185,
+    colors: ['Stone', 'Black'],
+    sizes: ['0', '2', '4', '6', '8', '10', '12'],
+    categorySlug: 'women-dresses',
+  },
+  {
+    name: 'Summit Quilted Vest',
+    description:
+      'Recycled nylon vest with PrimaLoft insulation, weather-ready coating, and interior media pocket.',
+    priceCents: 11500,
+    rating: 4.5,
+    totalSales: 205,
+    colors: ['Pine', 'Navy', 'Charcoal'],
+    sizes: ['S', 'M', 'L', 'XL'],
+    categorySlug: 'men-outerwear',
+  },
+  {
+    name: 'Heritage Cashmere Crew',
+    description:
+      'Grade-A Mongolian cashmere knit with fully fashioned construction and rib trims.',
+    priceCents: 19800,
+    rating: 4.9,
+    totalSales: 260,
+    colors: ['Camel', 'Charcoal', 'Navy'],
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    categorySlug: 'men-tops',
+  },
+  {
+    name: 'Coastal Canvas Sneaker',
+    description:
+      'Low-profile sneaker with natural rubber foxing, cork footbed, and organic cotton canvas.',
+    priceCents: 8900,
+    rating: 4.4,
+    totalSales: 310,
+    colors: ['Seafoam', 'Natural'],
+    sizes: ['US 5', 'US 6', 'US 7', 'US 8', 'US 9', 'US 10'],
+    categorySlug: 'women-footwear',
+  },
+  {
+    name: 'Echo Studio Monitor',
+    description:
+      'Wireless speaker engineered with walnut veneer housing, dual tweeters, and room calibration.',
+    priceCents: 26500,
+    rating: 4.3,
+    totalSales: 145,
+    colors: ['Walnut'],
+    sizes: ['One Size'],
+    categorySlug: 'home-decor',
+  },
+  {
+    name: 'Artisan Coffee Brewer',
+    description:
+      'Precision pour-over brewer with copper coil temperature control and handblown glass carafe.',
+    priceCents: 15800,
+    rating: 4.7,
+    totalSales: 225,
+    colors: ['Matte Black', 'Brushed Steel'],
+    sizes: ['1.2 L'],
+    categorySlug: 'home-kitchen',
+  },
+  {
+    name: 'Botanical Bath Elixir',
+    description:
+      'Concentrated bath oil with eucalyptus, neroli, and vitamin E to restore and hydrate.',
+    priceCents: 4800,
+    rating: 4.6,
+    totalSales: 140,
+    colors: ['Golden'],
+    sizes: ['200 ml'],
+    categorySlug: 'home-bath',
+  },
+  {
+    name: 'Radiant Glow Moisturizer',
+    description:
+      'Lightweight daily moisturizer with vitamin C, squalane, and mineral SPF 30 protection.',
+    priceCents: 6800,
+    rating: 4.8,
+    totalSales: 330,
+    colors: ['Pearl'],
+    sizes: ['50 ml'],
+    categorySlug: 'beauty-skincare',
+  },
+]
 
-  console.log(
-    `✓ Product ready: ${product.name} ($${(Number(product.price) / 100).toFixed(2)})`,
-  )
-  return product
-}
-
-/**
- * Create multiple products for a store
- */
-export async function createManyProducts(
+export async function seedProductCatalog(
   storeId: string,
-  size: number,
-): Promise<
-  Array<{ id: string; name: string; slug: string; price: Prisma.Decimal }>
-> {
-  // Generate all products data first
-  const productsData = []
-  for (let i = 0; i < size; i++) {
-    const productData = generateProduct()
+  seeds: ProductSeed[] = PRODUCT_CATALOG,
+  categoryLookup?: Map<string, SeededCategory>,
+): Promise<SeededProduct[]> {
+  const seeded: SeededProduct[] = []
 
-    // Ensure unique slugs by adding a random suffix
-    const baseSlug = productData.slug
-    const uniqueSuffix = faker.string.alphanumeric({
-      length: 8,
-      casing: 'lower',
+  for (const seed of seeds) {
+    const slug = seed.slug ? normalizeSlug(seed.slug) : normalizeSlug(seed.name)
+    const categoryId = seed.categorySlug
+      ? (categoryLookup?.get(seed.categorySlug)?.id ?? null)
+      : null
+
+    const description = appendVariants(
+      seed.description,
+      seed.colors,
+      seed.sizes,
+    )
+
+    const product = await db.product.upsert({
+      where: {
+        storeId_slug: {
+          storeId,
+          slug,
+        },
+      },
+      update: {
+        name: seed.name,
+        description,
+        price: new Prisma.Decimal(seed.priceCents),
+        isActive: seed.isActive ?? true,
+        isFeatured: seed.isFeatured ?? false,
+        rating: seed.rating ?? 0,
+        totalSales: seed.totalSales ?? 0,
+        categoryId,
+      },
+      create: {
+        storeId,
+        name: seed.name,
+        slug,
+        description,
+        price: new Prisma.Decimal(seed.priceCents),
+        isActive: seed.isActive ?? true,
+        isFeatured: seed.isFeatured ?? false,
+        rating: seed.rating ?? 0,
+        totalSales: seed.totalSales ?? 0,
+        categoryId,
+      },
     })
-    const finalSlug = `${baseSlug}-${uniqueSuffix}`
 
-    productsData.push({
-      storeId,
-      name: productData.name,
-      slug: finalSlug,
-      description: productData.description,
-      price: new Prisma.Decimal(productData.price),
-      isActive: true,
-      isFeatured: productData.isFeatured ?? false,
-      rating: productData.rating ?? 0,
-      totalSales: productData.totalSales ?? 0,
+    seeded.push({
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      categoryId: product.categoryId ?? undefined,
     })
   }
 
-  // Bulk insert all products
-  const result = await prisma.product.createMany({
-    data: productsData,
-    skipDuplicates: true, // Skip if slug already exists
-  })
-
-  console.log(`✓ Created ${result.count} products for store ${storeId}`)
-
-  // Optionally retrieve the created products if needed
-  // Note: createMany doesn't return the created records
-  const createdProducts = await prisma.product.findMany({
-    where: {
-      storeId,
-      slug: {
-        in: productsData.map((p) => p.slug),
-      },
-    },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      price: true,
-    },
-  })
-
-  return createdProducts
+  console.log(`✓ Seeded ${seeded.length} products for store ${storeId}`)
+  return seeded
 }

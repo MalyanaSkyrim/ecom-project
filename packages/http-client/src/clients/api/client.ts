@@ -215,9 +215,7 @@ export class ApiClient {
   }
 
   // Category methods
-  async getCategories(
-    query: CategoryListQuery = { pageSize: 10, pageIndex: 0 },
-  ) {
+  async getCategories(query: CategoryListQuery = {}) {
     return this.client('@get/v1/categories', {
       query,
       headers: this.getRequestHeaders(),

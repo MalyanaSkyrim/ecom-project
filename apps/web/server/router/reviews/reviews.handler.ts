@@ -14,7 +14,6 @@ export const getStoreReviews = async (
     const result = await apiClient.getStoreReviews(query)
     return result
   } catch (error: unknown) {
-    console.log('##########@ error', error)
     if (error && typeof error === 'object' && 'response' in error) {
       const responseError = error as {
         response?: { body?: { message?: string } }

@@ -45,8 +45,6 @@ export const Carousel: React.FC<CarouselProps> = ({
 
   if (autoplay) swiperModules.push(Autoplay)
 
-  console.log('sky', { slidesPerView })
-
   return (
     <div className={`carousel-container space-y-5 ${className}`}>
       {showTopArrows && (

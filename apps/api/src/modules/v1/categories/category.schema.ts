@@ -45,37 +45,17 @@ export const categoryParamsSchema = z.object({
 })
 
 export const categoryListQuerySchema = z.object({
-  pageSize: z.coerce.number().min(1).max(100).default(10),
-  pageIndex: z.coerce.number().min(0).default(0),
   searchText: z.string().optional(),
   parentId: z.string().uuid().optional(),
   isActive: z.coerce.boolean().optional(),
-  sorting: z
-    .array(
-      z.object({
-        id: z.string(),
-        direction: z.enum(['asc', 'desc']),
-      }),
-    )
-    .optional(),
 })
 
-// Response schemas
-export const categoryResponseSchema = categorySchema
-export const categoryListResponseSchema = z.object({
-  data: z.array(categoryResponseSchema),
-  pagination: z.object({
-    totalCount: z.number(),
-    pageSize: z.number(),
-    pageIndex: z.number(),
-    totalPages: z.number(),
-    hasNextPage: z.boolean(),
-    hasPreviousPage: z.boolean(),
-  }),
-})
+// Reply schemas
+export const categoryReplySchema = categorySchema
+export const categoryListReplySchema = z.array(categoryReplySchema)
 
 export const categorySuccessReplySchema = z.object({
-  category: categoryResponseSchema,
+  category: categoryReplySchema,
 })
 
 export const errorReplySchema = z.object({
@@ -90,8 +70,8 @@ export type CreateCategoryInput = z.infer<typeof createCategoryBodySchema>
 export type UpdateCategoryInput = z.infer<typeof updateCategoryBodySchema>
 export type CategoryParams = z.infer<typeof categoryParamsSchema>
 export type CategoryListQuery = z.infer<typeof categoryListQuerySchema>
-export type CategoryResponse = z.infer<typeof categoryResponseSchema>
-export type CategoryListResponse = z.infer<typeof categoryListResponseSchema>
+export type CategoryReply = z.infer<typeof categoryReplySchema>
+export type CategoryListReply = z.infer<typeof categoryListReplySchema>
 export type CategorySuccessOutput = z.infer<typeof categorySuccessReplySchema>
 export type CategoryErrorOutput = z.infer<typeof errorReplySchema>
 
@@ -110,17 +90,7 @@ const categoryExample = {
   updatedAt: new Date('2024-01-20T14:45:00Z'),
 }
 
-const categoryListExample: CategoryListResponse = {
-  data: [categoryExample],
-  pagination: {
-    totalCount: 1,
-    pageSize: 10,
-    pageIndex: 0,
-    totalPages: 1,
-    hasNextPage: false,
-    hasPreviousPage: false,
-  },
-}
+const categoryListExample: CategoryListReply = [categoryExample]
 
 const categoryErrorExample: CategoryErrorOutput = {
   message: 'Category not found',
@@ -140,8 +110,8 @@ export const { schemas: categorySchemas, $ref: categoryRef } = buildJsonSchemas(
     updateCategoryBodySchema,
     categoryListQuerySchema,
     categoryParamsSchema,
-    categoryResponseSchema,
-    categoryListResponseSchema,
+    categoryReplySchema,
+    categoryListReplySchema,
     categorySuccessReplySchema,
     errorReplySchema,
   },
@@ -214,13 +184,13 @@ export const deleteCategorySchema: FastifySchema = {
 
 export const getCategoriesSchema: FastifySchema = {
   tags: ['Categories'],
-  description: 'Get a paginated list of categories',
+  description: 'Get categories with optional pagination and filtering',
   security: [{ apiKey: [] }],
-  summary: 'Get categories with pagination and filtering',
+  summary: 'Get categories',
   operationId: 'getCategories',
   querystring: categoryRef('categoryListQuerySchema'),
   response: {
-    '200': categoryRef('categoryListResponseSchema'),
+    '200': categoryRef('categoryListReplySchema'),
     '400': categoryRef('errorReplySchema'),
     '500': categoryRef('errorReplySchema'),
   },

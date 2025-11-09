@@ -16,10 +16,9 @@ seeds/
 └── README.md             # This file
 ```
 
-Each seeder module follows a consistent pattern with two main functions:
-
-- `createSingle<Entity>()` - Creates a single entity with custom data
-- `createMany<Entity>()` - Creates multiple entities with generated data
+Each seeder module exposes helpers tailored to the entity it manages—some provide
+`createSingle`/`createMany` utilities, while others (like catalog seeders) ship
+with curated datasets you can import directly.
 
 ## Available Seeders
 
@@ -100,36 +99,24 @@ const apiKeys = await createManyApiKeys('store-id', 2)
 
 **Functions:**
 
-- `createSingleProduct(data)` - Create a product with custom data
-- `createManyProducts(storeId, size)` - Create multiple products
+- `PRODUCT_CATALOG` - Opinionated list of real products, including metadata used by the app
+- `seedProductCatalog(storeId, seeds, categoryLookup?)` - Persist the catalog for a store (idempotent)
 
 **Features:**
 
-- Uses realistic sample product data (up to 10 products)
-- Generates random products if more than 10 are requested
-- Includes pricing, ratings, and sales data
+- Curated set of apparel, home, and beauty products with pricing, ratings, sales, and variant cues
+- Automatically links products to categories via slug lookups
+- Idempotent upsert behaviour so you can re-run seeds safely
 
 **Example:**
 
 ```typescript
-import {
-  createSingleProduct,
-  createManyProducts,
-} from './modules/product.seeder'
+import { seedCategoryTree } from './modules/category.seeder'
+import { PRODUCT_CATALOG, seedProductCatalog } from './modules/product.seeder'
 
-// Create a single product
-const product = await createSingleProduct({
-  storeId: 'store-id',
-  name: 'Premium Headphones',
-  slug: 'premium-headphones',
-  description: 'High-quality wireless headphones',
-  price: 299.99,
-  isFeatured: true,
-  rating: 4.8,
-})
+const { lookup } = await seedCategoryTree(store.id)
 
-// Create 20 products (uses samples + generated)
-const products = await createManyProducts('store-id', 20)
+await seedProductCatalog(store.id, PRODUCT_CATALOG, lookup)
 ```
 
 ## Initial Seed Script
@@ -139,7 +126,9 @@ The main seed script is located at `prisma/seeds/initialSeed.ts` and creates a c
 - 1 User (john.doe@example.com / password123)
 - 1 Store (Demo Store)
 - 1 API Key
-- 10 Products (realistic sample data)
+- 15 curated categories + subcategories
+- 24 Products linked to those categories
+- Sample customers and reviews for richer demo data
 
 **Run the seed:**
 
@@ -163,7 +152,9 @@ import { PrismaClient } from '@prisma/client'
 import {
   createSingleUser,
   createSingleStore,
-  createManyProducts,
+  seedProductCatalog,
+  PRODUCT_CATALOG,
+  seedCategoryTree,
 } from './modules'
 
 const prisma = new PrismaClient()
@@ -183,7 +174,8 @@ async function customSeed() {
     userId: user.id,
   })
 
-  await createManyProducts(store.id, 50)
+  const { lookup } = await seedCategoryTree(store.id)
+  await seedProductCatalog(store.id, PRODUCT_CATALOG, lookup)
 
   await prisma.$disconnect()
 }

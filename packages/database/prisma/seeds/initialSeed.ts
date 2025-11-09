@@ -1,11 +1,11 @@
 import { db } from '../../src'
 import { createConsistentApiKey } from './modules/apiKey.seeder'
-import { createCategoryHierarchy } from './modules/category.seeder'
+import { CATEGORY_TREE, seedCategoryTree } from './modules/category.seeder'
 import {
   createCustomerWithAuth,
   createManyCustomers,
 } from './modules/customer.seeder'
-import { createManyProducts } from './modules/product.seeder'
+import { PRODUCT_CATALOG, seedProductCatalog } from './modules/product.seeder'
 import {
   createProductReviews,
   createStoreReviews,
@@ -63,12 +63,11 @@ async function main() {
 
     // 4. Create categories for the store
     console.log('📂 Creating categories...')
-    const { parents, subcategories } = await createCategoryHierarchy(
-      store.id,
-      5,
-      3,
-    )
-    const allCategories = [...parents, ...subcategories]
+    const {
+      parents: parentCategories,
+      all: allCategories,
+      lookup: categoryLookup,
+    } = await seedCategoryTree(store.id, CATEGORY_TREE)
     console.log(`✅ ${allCategories.length} categories created`)
 
     // 5. Create customers for the store
@@ -86,37 +85,22 @@ async function main() {
 
     // 6. Create products for the store
     console.log('📦 Creating products...')
-    const products = await createManyProducts(store.id, 100)
+    const products = await seedProductCatalog(
+      store.id,
+      PRODUCT_CATALOG,
+      categoryLookup,
+    )
     console.log(`✅ ${products.length} products created`)
 
-    // 7. Assign some products to categories
-    console.log('🔗 Assigning products to categories...')
-    const categoryIds = allCategories.map((c) => c.id)
-    const productIds = products.map((p) => p.id)
-
-    // Assign 60% of products to random categories
-    const productsToCategorize = Math.floor(productIds.length * 0.6)
-    for (let i = 0; i < productsToCategorize; i++) {
-      const productId = productIds[i]
-      const categoryId =
-        categoryIds[Math.floor(Math.random() * categoryIds.length)]
-
-      await db.product.update({
-        where: { id: productId },
-        data: { categoryId },
-      })
-    }
-    console.log(`✅ ${productsToCategorize} products categorized`)
-
-    // 8. Create reviews
+    // 7. Create reviews
     console.log('⭐ Creating reviews...')
     const customerIds = allCustomers.map((c) => c.id)
     const productReviews = await createProductReviews(
       store.id,
       customerIds,
-      productIds.slice(0, 50),
+      products.slice(0, Math.min(15, products.length)).map((p) => p.id),
       3,
-    ) // 3 reviews per product for first 50 products
+    ) // 3 reviews per product for the first few products
     const storeReviews = await createStoreReviews(store.id, customerIds, 20) // 20 store reviews
     const totalReviews = productReviews.length + storeReviews.length
     console.log(`✅ ${totalReviews} reviews created`)
@@ -125,6 +109,11 @@ async function main() {
     console.log('\n🎉 Seed completed successfully!')
     console.log(`📊 Store ID: ${store.id}`)
     console.log(`🔑 API Key: ${apiKey.apiKey}\n`)
+    console.log(
+      `🛍️ Highlighted categories: ${parentCategories
+        .map((category) => category.name)
+        .join(', ')}`,
+    )
   } catch (error) {
     console.error('❌ Error during seed:', error)
     throw error

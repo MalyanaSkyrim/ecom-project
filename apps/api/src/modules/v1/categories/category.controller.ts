@@ -206,9 +206,9 @@ export const getCategoriesHandler: RouteHandler<{
     throw new StoreIdRequiredError()
   }
 
-  const result = await getCategories(storeId, query)
+  const categories = await getCategories(storeId, query)
 
-  return reply.code(200).send(result)
+  return reply.code(200).send(categories)
 }
 
 // Get category hierarchy handler

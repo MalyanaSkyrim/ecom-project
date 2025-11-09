@@ -6,7 +6,22 @@ import * as React from 'react'
 
 import { classMerge } from '@ecom/ui/lib/utils'
 
-const Select = SelectPrimitive.Root
+export type SelectOption = {
+  id: string
+  label: string
+  disabled?: boolean
+}
+
+export type SelectProps = {
+  options: SelectOption[]
+  onSelect: (option: SelectOption) => void
+  disabled?: boolean
+  default?: string
+  renderOption?: (option: SelectOption) => React.ReactNode
+  placeholder?: string
+  triggerClassName?: string
+  contentClassName?: string
+}
 
 const SelectGroup = SelectPrimitive.Group
 
@@ -139,15 +154,76 @@ const SelectSeparator = React.forwardRef<
 ))
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName
 
-export {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectScrollDownButton,
-  SelectScrollUpButton,
-  SelectSeparator,
-  SelectTrigger,
-  SelectValue,
-}
+const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
+  (
+    {
+      options,
+      onSelect,
+      disabled,
+      default: defaultId,
+      renderOption,
+      placeholder = 'Select an option',
+      triggerClassName,
+      contentClassName,
+    },
+    ref,
+  ) => {
+    const [selectedId, setSelectedId] = React.useState<string | undefined>(
+      defaultId,
+    )
+
+    const selectedOption = options.find((option) => option.id === selectedId)
+    const handleValueChange = React.useCallback(
+      (value: string) => {
+        const option = options.find((option) => option.id === value)
+        if (!option) {
+          return
+        }
+
+        setSelectedId(option.id)
+        onSelect(option)
+      },
+      [options, onSelect],
+    )
+
+    const rootProps: { value?: string } = {}
+    if (selectedId !== undefined) {
+      rootProps.value = selectedId
+    }
+
+    return (
+      <SelectPrimitive.Root
+        {...rootProps}
+        onValueChange={handleValueChange}
+        disabled={disabled}>
+        <SelectTrigger
+          ref={ref}
+          disabled={disabled}
+          className={triggerClassName}>
+          {selectedOption && renderOption ? (
+            <div className="line-clamp-1 text-left text-sm">
+              {renderOption(selectedOption)}
+            </div>
+          ) : (
+            <span className="line-clamp-1 text-left text-sm">
+              {selectedOption ? selectedOption.label : placeholder}
+            </span>
+          )}
+        </SelectTrigger>
+        <SelectContent className={contentClassName}>
+          {options.map((option) => (
+            <SelectItem
+              key={option.id}
+              value={option.id}
+              disabled={option.disabled}>
+              {renderOption ? renderOption(option) : option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </SelectPrimitive.Root>
+    )
+  },
+)
+Select.displayName = 'Select'
+
+export { Select }
